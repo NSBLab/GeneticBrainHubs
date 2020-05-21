@@ -1,6 +1,7 @@
 %-------------------------------------------------------------------------------
 %% Add paths
 %-------------------------------------------------------------------------------
+function setupPaths()
 mkdir makeFigures
 
 fprintf(1,'Adding all subdirectories to the Matlab path...');
@@ -17,3 +18,4 @@ for j = 1:length(paths)
     addpath(genpath(paths{j}))
 end
 fprintf(1,' Added.\n');
+end
