@@ -1,6 +1,8 @@
 %-------------------------------------------------------------------------------
 %% Add paths
 %-------------------------------------------------------------------------------
+mkdir makeFigures
+
 fprintf(1,'Adding all subdirectories to the Matlab path...');
 % Add paths required for the project (ignoring hidden, including version control)
 files = dir;
