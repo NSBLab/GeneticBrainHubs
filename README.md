@@ -8,5 +8,5 @@ Data files required for this project are hosted on [this figshare repository](ht
 Please download and unzip the data in the root directory.
 
 ### Reproducing figures
-Code to reproduce the figures is located in the `generateFigures` folder. Run the scripts from the root directory. 
+Code to reproduce the figures is located in the `generateFigures` folder. Run the scripts from the root directory. Figures will be saved in `makeFigures` folder in the root directory. 
 
