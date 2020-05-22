@@ -11,32 +11,29 @@ Please download and unzip the data in the root directory.
 First, add all sub-folders to the path using `setupPaths()` function from the root directory. This will also create a `makeFigures` folder.
 Code to reproduce the figures is located in the `generateFigures` folder. Script `generateFigures.m` calls all the functions to plot the figures. Run the scripts from the root directory. Figures will be saved in `makeFigures` folder in the root directory.
 
-Figure 2 - main text: heritability
-`Figure2()`
 
-Figure 3 - main text: correlated gene expression
-`Figure3()`
+`Figure2()` - main text: heritability
 
 
-Figure 4 - main text: generative modelling
-`Figure4()`
+`Figure3()` - main text: correlated gene expression
 
 
-Figure S1 - supplementary: topological properties of the connectome
-`FigureS1()`
-
-Figure S2-S5 - supplementary: heritability-related analyses
-`FigureS2_S5()`
+`Figure4()` - main text: generative modelling
 
 
-Figure S6-S11 - supplementary: correlated gene expression related analyses
-`FigureS6_S11()`
+`FigureS1()` - supplementary: topological properties of the connectome
 
-Figure S12 - supplementary: microstructure related analysis
-`FigureS12()`
 
-Figure S13 - supplementary: generative modelling
-`FigureS13()`
+`FigureS2_S5()` - supplementary: heritability-related analyses
 
-edge-wise GWAS results
-`[pORA_eQTL_Monash, pORA_eQTL_HCP] = edgeGWAS_eQTL_ORA;`
+
+`FigureS6_S11()` - supplementary: correlated gene expression related analyses
+
+
+`FigureS12()` - supplementary: microstructure related analysis
+
+
+`FigureS13()` - supplementary: generative modelling
+
+
+`[pORA_eQTL_Monash, pORA_eQTL_HCP] = edgeGWAS_eQTL_ORA;` - edge-wise GWAS results
