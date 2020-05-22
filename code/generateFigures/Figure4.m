@@ -135,7 +135,7 @@ switch whatLine
     case 'fit'
         h2 = lsline;
         h2.LineWidth = 4;
-        h2.LineStyle = ":";
+        h2.LineStyle = ':';
         h2.Color = [0.2, 0.2, 0.2];
 end
 axis square

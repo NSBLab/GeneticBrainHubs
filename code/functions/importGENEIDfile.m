@@ -23,25 +23,25 @@ if nargin < 2
 end
 
 %% Setup the Import Options and import the data
-opts = delimitedTextImportOptions("NumVariables", 5);
+opts = delimitedTextImportOptions('NumVariables', 5);
 
 % Specify range and delimiter
 opts.DataLines = dataLines;
-opts.Delimiter = ",";
+opts.Delimiter = ',';
 
 % Specify column names and types
-opts.VariableNames = ["initial_alias", "converted_alias", "name", "description", "namespace"];
-opts.VariableTypes = ["double", "double", "string", "string", "categorical"];
+opts.VariableNames = ['initial_alias', 'converted_alias', 'name', 'description', 'namespace'];
+opts.VariableTypes = ['double', 'double', 'string', 'string', 'categorical'];
 
 % Specify file level properties
-opts.ExtraColumnsRule = "ignore";
-opts.EmptyLineRule = "read";
+opts.ExtraColumnsRule = 'ignore';
+opts.EmptyLineRule = 'read';
 
 % Specify variable properties
-opts = setvaropts(opts, ["name", "description"], "WhitespaceRule", "preserve");
-opts = setvaropts(opts, ["name", "description", "namespace"], "EmptyFieldRule", "auto");
-opts = setvaropts(opts, "initial_alias", "TrimNonNumeric", true);
-opts = setvaropts(opts, "initial_alias", "ThousandsSeparator", ",");
+opts = setvaropts(opts, ['name', 'description'], 'WhitespaceRule', 'preserve');
+opts = setvaropts(opts, ['name', 'description', 'namespace'], 'EmptyFieldRule', 'auto');
+opts = setvaropts(opts, 'initial_alias', 'TrimNonNumeric', true);
+opts = setvaropts(opts, 'initial_alias', 'ThousandsSeparator', ',');
 
 % Import the data
 HCPlistGenesentrezID = readtable(filename, opts);
