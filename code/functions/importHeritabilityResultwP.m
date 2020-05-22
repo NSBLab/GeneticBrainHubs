@@ -11,7 +11,7 @@ function heritabilityACE = importHeritabilityResultwP(filename, dataLines)
 %  dis-contiguous row intervals.
 %
 %  Example:
-%  heritabilityACTEnoOUTLIERSwSATpValsallEdgestwinEdgesrandom500iF = importfile("/Users/aurinaa/Google_drive/Genetics_connectome/HumanHubs_figures/data/heritability/heritabilityACTEnoOUTLIERS_wSATpVals_allEdges_twinEdges_random500_iFOD2_FA_strength10.mat-1.txt", [2, Inf]);
+%  heritabilityACTEnoOUTLIERSwSATpValsallEdgestwinEdgesrandom500iF = importfile('/Users/aurinaa/Google_drive/Genetics_connectome/HumanHubs_figures/data/heritability/heritabilityACTEnoOUTLIERS_wSATpVals_allEdges_twinEdges_random500_iFOD2_FA_strength10.mat-1.txt', [2, Inf]);
 %
 %  See also READTABLE.
 %
