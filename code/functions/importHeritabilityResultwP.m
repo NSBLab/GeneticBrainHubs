@@ -11,7 +11,7 @@ function heritabilityACE = importHeritabilityResultwP(filename, dataLines)
 %  dis-contiguous row intervals.
 %
 %  Example:
-%  heritabilityACTEnoOUTLIERSwSATpValsallEdgestwinEdgesrandom500iF = importfile('/Users/aurinaa/Google_drive/Genetics_connectome/HumanHubs_figures/data/heritability/heritabilityACTEnoOUTLIERS_wSATpVals_allEdges_twinEdges_random500_iFOD2_FA_strength10.mat-1.txt', [2, Inf]);
+%  heritabilityACTEnoOUTLIERSwSATpValsallEdgestwinEdgesrandom500iF = importfile("/Users/aurinaa/Google_drive/Genetics_connectome/HumanHubs_figures/data/heritability/heritabilityACTEnoOUTLIERS_wSATpVals_allEdges_twinEdges_random500_iFOD2_FA_strength10.mat-1.txt", [2, Inf]);
 %
 %  See also READTABLE.
 %
@@ -25,19 +25,19 @@ if nargin < 2
 end
 
 %% Setup the Import Options and import the data
-opts = delimitedTextImportOptions('NumVariables', 6);
+opts = delimitedTextImportOptions("NumVariables", 6);
 
 % Specify range and delimiter
 opts.DataLines = dataLines;
-opts.Delimiter = ',';
+opts.Delimiter = ",";
 
 % Specify column names and types
-opts.VariableNames = ['heritabilityA', 'heritabilityC', 'heritabilityT', 'heritabilityE', 'heritabilityS', 'heritabilitySp'];
-opts.VariableTypes = ['double', 'double', 'double', 'double', 'double', 'double'];
+opts.VariableNames = ["heritabilityA", "heritabilityC", "heritabilityT", "heritabilityE", "heritabilityS", "heritabilitySp"];
+opts.VariableTypes = ["double", "double", "double", "double", "double", "double"];
 
 % Specify file level properties
-opts.ExtraColumnsRule = 'ignore';
-opts.EmptyLineRule = 'read';
+opts.ExtraColumnsRule = "ignore";
+opts.EmptyLineRule = "read";
 
 % Import the data
 heritabilityACE = readtable(filename, opts);
