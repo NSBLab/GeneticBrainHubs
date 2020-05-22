@@ -2,8 +2,7 @@
 %--------------------------------------------------% 
 % Figure 3
 %--------------------------------------------------%
-clear all;
-close all;
+function Figure3()
 
 whatDWI = 'HCP';
 weight = 'standard'; %for GenCog'standard'; 
@@ -97,5 +96,6 @@ ylim([0.6 1.1])
 
 figureName = sprintf('makeFigures/MPCmean_%s_%d.png', parc, round(op.densThreshold*100));
 print(gcf,figureName,'-dpng','-r600');
+end
 
 

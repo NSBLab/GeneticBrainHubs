@@ -1,8 +1,7 @@
 %--------------------------------------------------% 
 % Figure S12
 %--------------------------------------------------%
-clear all;
-close all;
+function FigureS12()
 
 weight = 'standard'; %for GenCog'standard'; 
 parc = 'random500';
@@ -34,3 +33,4 @@ ylim([0.6 1.1])
 
 figureName = sprintf('makeFigures/MPCmean_%s_%d.png', parc, round(op.densThreshold*100));
 print(gcf,figureName,'-dpng','-r600');
+end

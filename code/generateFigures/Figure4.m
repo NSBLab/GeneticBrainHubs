@@ -1,8 +1,7 @@
-%--------------------------------------------------% 
+%--------------------------------------------------%
 % Figure 4
 %--------------------------------------------------%
-clear all;
-close all;
+function Figure4()
 
 hemi = 'left'; %if using degCorr, select only 'left'
 parcellation = 'HCP';
@@ -36,7 +35,7 @@ numNET = length(BestParamNetworksENERGY{1, 1}{1,1});
 
 switch optimiseWhat
     case 'degCorr' % for degree correlations look for max values
-
+        
         for m=1:numMOD
             for n=1:numNET
                 networkSEL = BestParamNetworks{rowIND,colIND}{1,m}{n};
@@ -44,23 +43,23 @@ switch optimiseWhat
                 BestParamNetworksCORR{rowIND, colIND}{1,m}(n) = corr(degEMP', degnetworkSEL', 'type', 'Spearman');
             end
         end
-
+        
         % plot top 100 highest correlation values
         [S, INDselected] = plotMODviolin(SPTLCORR{rowIND,colIND}, 100, mtype, 'highest');
         set(gca,'FontSize',18)
         ylabel('Degree correlation')
         figureName = sprintf('makeFigures/MODELfit_%s_%s_Highestcorrelation_optimise_%s.png',parcellation, hemi, optimiseWhat);
         print(gcf,figureName,'-dpng','-r600');
-
+        
         % get CORRELATION values for those selected networks
         CS = cell(1,length(mtype)-1);
         for p=1:length(mtype)-1
             CS{p} = SPTLCORR{rowIND,colIND}{p}(INDselected{p});
         end
-
+        
         
     case 'energy' % for KS look for minimal values
-
+        
         [S, INDselected] = plotMODviolin(ENERGY{rowIND,colIND}, 100, mtype, 'lowest');
         set(gca,'FontSize',18)
         ylabel('Model fit (KS)')
@@ -81,12 +80,12 @@ end
 for t=1:length(mtype)-1
     switch optimiseWhat
         case 'energy'
-    Menergy(t) = min(ENERGY{rowIND,colIND}{1,t}(:));
-    [~,V] = min(Menergy);
+            Menergy(t) = min(ENERGY{rowIND,colIND}{1,t}(:));
+            [~,V] = min(Menergy);
         case 'degCorr'
-    Menergy(t) = max(SPTLCORR{rowIND,colIND}{1,t}(:));
-    [~,V] = max(Menergy);
-    end     
+            Menergy(t) = max(SPTLCORR{rowIND,colIND}{1,t}(:));
+            [~,V] = max(Menergy);
+    end
 end
 
 BESTmodel = BestNetwork{rowIND,colIND}{1,V};
@@ -103,7 +102,7 @@ degMOD = degrees_und(BESTmodel);
 [rP,pP] = corr(degMOD', degEMP');
 CorrLE_ALL = cat(1, CS{:});
 
-whatLine = 'fit'; 
+whatLine = 'fit';
 figure('color','w');
 set(gcf, 'Position', [500 500 500 750])
 
@@ -112,20 +111,20 @@ scatter(degEMP, degMOD, 150,'MarkerEdgeColor',[69,117,180]/255,'MarkerFaceColor'
 hold on;
 switch optimiseWhat
     case 'energy'
-xlim([0 200]);
-ylim([0 200]);
-% plot degree on brain for empirical and mode network
-d = 25;
-tsEMP = [145-d,125-d,105-d];
-tsMOD = [145-d,125-d,105-d];
+        xlim([0 200]);
+        ylim([0 200]);
+        % plot degree on brain for empirical and mode network
+        d = 25;
+        tsEMP = [145-d,125-d,105-d];
+        tsMOD = [145-d,125-d,105-d];
     case 'degCorr'
-xlim([0 150]);
-ylim([0 150]);
-% plot degree on brain for empirical and mode network
-demp = 25;
-% use different thresholds for degre-optimised modelling - the distribution is very narrow
-tsEMP = [145-demp,125-demp,105-demp];
-tsMOD = [65,60,55];
+        xlim([0 150]);
+        ylim([0 150]);
+        % plot degree on brain for empirical and mode network
+        demp = 25;
+        % use different thresholds for degre-optimised modelling - the distribution is very narrow
+        tsEMP = [145-demp,125-demp,105-demp];
+        tsMOD = [65,60,55];
 end
 
 switch whatLine
@@ -182,4 +181,5 @@ for s=1:2
         print(gcf,figureName,'-dpng','-r1200');
         
     end
+end
 end

@@ -1,8 +1,7 @@
 %--------------------------------------------------%
 % Figure S13
 %--------------------------------------------------%
-clear all;
-close all;
+function FigureS13()
 
 hemi = 'left'; %if using degCorr, select only 'left'
 parc = 'HCP';
@@ -187,4 +186,5 @@ for s=1:2
         print(gcf,figureName,'-dpng','-r1200');
         
     end
+end
 end

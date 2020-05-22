@@ -1,10 +1,7 @@
 %--------------------------------------------------%
 % Figure S6-S9, S11-S12: CGE and MPC
 %--------------------------------------------------%
-
-clear all;
-close all;
-
+function FigureS6_S11()
 whatDWI = 'HCP';
 weight = 'standard'; %for GenCog'standard';
 parc = 'HCP';
@@ -164,6 +161,7 @@ ylim([-0.05 0.1])
 
 figureName = sprintf('makeFigures/CGEcurves_%s_%d_%s.png', parc, densThreshold, whatDWI);
 print(gcf,figureName,'-dpng','-r600');
+end
 
 
 

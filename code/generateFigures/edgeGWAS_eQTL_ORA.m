@@ -1,12 +1,12 @@
 % perform over-representation analysis for eQTL genes
 % load a list of genes from eQTL mapping
-clear all; close all; 
+function [pORA_eQTL_Monash, pORA_eQTL_HCP] = edgeGWAS_eQTL_ORA()
 
-uGenesHCP = importGeneList('HCP_listGenes_onlyEntrezID.txt'); 
-uGenesHCP = uGenesHCP(~isnan(uGenesHCP)); 
+uGenesHCP = importGeneList('HCP_listGenes_onlyEntrezID.txt');
+uGenesHCP = uGenesHCP(~isnan(uGenesHCP));
 
-uGenesMonash = importGeneList('GenCog_listGenes_onlyEntrezID.txt'); 
-uGenesMonash = uGenesMonash(~isnan(uGenesMonash)); 
+uGenesMonash = importGeneList('GenCog_listGenes_onlyEntrezID.txt');
+uGenesMonash = uGenesMonash(~isnan(uGenesMonash));
 
 % compare the overlap between lists
 % select only annotated genes
@@ -17,24 +17,24 @@ D = length(uGenesMonash); % genes in group 2
 N = 15626; % total number of proteing-coding genes considered in eQTL mapping.
 
 % probability of overlap from 0 to x genes?
-Y = hygepdf(0:x,N,D,n); 
+Y = hygepdf(0:x,N,D,n);
 
 % calculate the complement of the hypergeometric pdf
 % This will give a probability of getting more than x gene overlap
-p = hygecdf(x,N,D,n, 'upper'); 
+p = hygecdf(x,N,D,n, 'upper');
 fprintf('The probability of overlap more than %d, is p=%d\n', x, p)
 
 % get gene names for overlapping genes
-HCPgeneID = importGENEIDfile('HCP_listGenes_entrezID.csv'); 
-gENTREZID = intersect(uGenesHCP, uGenesMonash); 
-[~, indSEL] = intersect(HCPgeneID.converted_alias, gENTREZID); 
-gNAMES = HCPgeneID.name(indSEL); 
-
+HCPgeneID = importGENEIDfile('HCP_listGenes_entrezID.csv');
+gENTREZID = intersect(uGenesHCP, uGenesMonash);
+[~, indSEL] = intersect(HCPgeneID.converted_alias, gENTREZID);
+gNAMES = HCPgeneID.name(indSEL);
 
 % compare overlap with disorder and IQ GWAS lists of genes
 pORA_eQTL_Monash = eQTL_ORA(uGenesMonash, N);
 
 % compare overlap with disorder and IQ GWAS lists of genes
-pORA_eQTL_HCP = eQTL_ORA(uGenesHCP, N); 
+pORA_eQTL_HCP = eQTL_ORA(uGenesHCP, N);
+end
 
 

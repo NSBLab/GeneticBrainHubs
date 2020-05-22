@@ -1,11 +1,10 @@
-%--------------------------------------------------% 
+%--------------------------------------------------%
 % Figure S1
 %--------------------------------------------------%
-close all;
-clear all;
+function FigureS1()
 
 whatDWI = 'HCP';
-weight = 'standard'; 
+weight = 'standard';
 parcellation = 'HCP';
 
 op = selectCONmetrics(parcellation, weight);
@@ -16,7 +15,7 @@ if strcmp(whatDWI, 'HCP')
     [~, ~, M, ~, avWeightFA] = giveConnExp_HCP(parcellation,op.tract,op.probe,'FA',op.brainPart, 0);
     
 elseif strcmp(whatDWI, 'GenCog')
-
+    
     [coexpData, A, matrices, coordinates, avWeight] = giveConnExp_GenCog(parcellation,op.tract,op.probe,weight,op.brainPart,op.nRem);
     [~, ~, M, ~, avWeightFA] = giveConnExp_GenCog(parcellation,op.tract,op.probe,'FA',op.brainPart, 0);
     
@@ -24,18 +23,18 @@ end
 
 yVals = [0.95 1.35];
 yValsFA = [0.95 1.15];
-numRepeats = 1000; 
-numShuffle = 50; 
-whatDistribution = 'histogram'; 
+numRepeats = 1000;
+numShuffle = 50;
+whatDistribution = 'histogram';
 
 % choose colors
 colorOut = [82 82 82]/255; % outside of the circles
 colorIn = [1 1 1]; % inside of the circles
 
 [GrSC, mDIST] = giveMeRichClub(matrices, coordinates, op.groupConn, op.densThreshold, false, op.cvMeasure, op.consThr, 50, 100 , 'bu', 'randmio_und', yVals);
-GrFA = avWeightFA.*logical(GrSC); 
-GrSClog = log(GrSC); 
-GrSClog(isinf(GrSClog)) = 0; 
+GrFA = avWeightFA.*logical(GrSC);
+GrSClog = log(GrSC);
+GrSClog(isinf(GrSClog)) = 0;
 nodeDeg = degrees_und(GrSC);
 
 % a) topological RC
@@ -64,7 +63,7 @@ print(gcf,figureName,'-dpng','-r300');
 
 % e) binary normalised edge communicability as a function of degree
 % - null, is randomising topology
-ComNormBIN = normCommunicability(GrFA, 'bin', numShuffle, numRepeats, 'randmio_und'); 
+ComNormBIN = normCommunicability(GrFA, 'bin', numShuffle, numRepeats, 'randmio_und');
 RichClubHuman_TOPO(GrFA,ComNormBIN,nodeDeg, true, whatDistribution, colorOut, colorIn);
 axisName = {'Mean normalised binary', 'connection communicability'};
 ylabel(axisName, 'FontSize', 18)
@@ -74,15 +73,14 @@ print(gcf,figureName,'-dpng','-r300');
 
 % f) weighted normalised edge communicability as a function of degree
 % - null, is randomising weights while keeping the topology
-ComNormWEI = normCommunicability(GrFA, 'wei', numShuffle, numRepeats, 'shuffleWeights'); 
+ComNormWEI = normCommunicability(GrFA, 'wei', numShuffle, numRepeats, 'shuffleWeights');
 RichClubHuman_TOPO(GrFA,ComNormWEI, nodeDeg, true, whatDistribution, colorOut, colorIn);
 axisName = {'Mean normalised weighted', 'connection communicability'};
 ylabel(axisName, 'FontSize', 18)
 xlabel('Node degree, k','FontSize', 18);
 figureName = sprintf('makeFigures/COMMwei_%s_%d.png', parcellation, round(op.densThreshold*100));
 print(gcf,figureName,'-dpng','-r300');
+end
 
 
-                
-                
-                
+
