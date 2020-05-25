@@ -1,6 +1,7 @@
 %--------------------------------------------------% 
 % This script runs all the functions to reproduce figures in the manuscript
 %--------------------------------------------------%
+
 setupPaths()
 %--------------------------------------------------%
 % Figure 2 - main text: heritability

@@ -1,4 +1,4 @@
-function geneListEXP = selectGWASgenes_eQTL(disorder, brainParts, numTissues, listGenes, correctMultiple)
+function geneListEXP = selectGWASgenes_eQTL(disorder, brainParts, numTissues, listGenes, correctMultiple, whatAnnotation)
 % This part of the script
 % 1. reads in gene lists based on GWAS data for each disorder;
 % 2. corrects p values within each list
@@ -11,8 +11,17 @@ function geneListEXP = selectGWASgenes_eQTL(disorder, brainParts, numTissues, li
 % get list across all tissues
 for i=1:numTissues
     
+    switch whatAnnotation
+        case 'GTEx'
     filename = sprintf('data/emagma_results/%s_emagma_results/emagma_Brain_%s.csv', disorder, brainParts{i});
     emagmaBrain = importEMAGMA(filename);
+        case 'PSYCHENCODE'
+    filename = sprintf('data/emagma_results/emagma_pec/pec_%s.genes.out.annot.csv', disorder);
+    emagmaBrain = importEMAGMApec(filename); 
+    emagmaBrain.GENE = emagmaBrain.ENTREZID; 
+    % remove NaN entries
+    emagmaBrain(isnan(emagmaBrain.GENE),:) = []; 
+    end
     
     if correctMultiple
         pthr = 0.05/size(emagmaBrain,1);

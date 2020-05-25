@@ -14,10 +14,7 @@ uGenesMonash = uGenesMonash(~isnan(uGenesMonash));
 n = length(uGenesHCP); % genes in group 1
 x = length(intersect(uGenesHCP, uGenesMonash)); % genes between groups
 D = length(uGenesMonash); % genes in group 2
-N = 15626; % total number of proteing-coding genes considered in eQTL mapping.
-
-% probability of overlap from 0 to x genes?
-Y = hygepdf(0:x,N,D,n);
+N = 25699; % total number of proteing-coding genes considered in eQTL mapping.
 
 % calculate the complement of the hypergeometric pdf
 % This will give a probability of getting more than x gene overlap
@@ -31,10 +28,11 @@ gENTREZID = intersect(uGenesHCP, uGenesMonash);
 gNAMES = HCPgeneID.name(indSEL);
 
 % compare overlap with disorder and IQ GWAS lists of genes
-pORA_eQTL_Monash = eQTL_ORA(uGenesMonash, N);
+whatAnnotation = 'PSYCHENCODE'; % 'GTEx'; 
+pORA_eQTL_Monash = eQTL_ORA(uGenesMonash, N, whatAnnotation);
 
 % compare overlap with disorder and IQ GWAS lists of genes
-pORA_eQTL_HCP = eQTL_ORA(uGenesHCP, N);
+pORA_eQTL_HCP = eQTL_ORA(uGenesHCP, N, whatAnnotation); 
 end
 
 
