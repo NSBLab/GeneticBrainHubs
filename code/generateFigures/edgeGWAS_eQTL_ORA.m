@@ -28,7 +28,9 @@ gENTREZID = intersect(uGenesHCP, uGenesMonash);
 gNAMES = HCPgeneID.name(indSEL);
 
 % compare overlap with disorder and IQ GWAS lists of genes
-whatAnnotation = 'PSYCHENCODE'; % 'GTEx'; 
+% choose eQTL annotation used: PSYCHENCODE or GTEx; 
+
+whatAnnotation = 'PSYCHENCODE'; 
 pORA_eQTL_Monash = eQTL_ORA(uGenesMonash, N, whatAnnotation);
 
 % compare overlap with disorder and IQ GWAS lists of genes
