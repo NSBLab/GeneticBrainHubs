@@ -22,7 +22,6 @@ for l=1:length(lists)
         empOverlap = intersect(eQTLgenes, selectedGenes);
         % X = 0:length(empOverlap);
         % M - total population size (all genes that were considered)
-        % M = 15626;
         % K - number of items with a desired characteristic (number of genes in a
         % specific list)
         K = length(selectedGenes);
