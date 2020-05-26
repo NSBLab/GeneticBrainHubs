@@ -1,4 +1,4 @@
-function geneListEXP = selectGWASgenes_eQTL(disorder, brainParts, numTissues, listGenes, correctMultiple, whatAnnotation)
+function [geneListEXP,geneListNames] = selectGWASgenes_eQTL(disorder, brainParts, numTissues, listGenes, correctMultiple, whatAnnotation)
 % This part of the script
 % 1. reads in gene lists based on GWAS data for each disorder;
 % 2. corrects p values within each list
@@ -27,6 +27,9 @@ for i=1:numTissues
     end
     
     geneList.(disorder).(brainParts{i}) = emagmaBrain.GENE(emagmaBrain.P<pthr,:);
+    if strcmp(whatAnnotation, 'PSYCHENCODE')
+    geneListNames.(disorder) = emagmaBrain.SYMBOL(emagmaBrain.P<pthr,:);
+    end
     
 end
 
@@ -37,6 +40,7 @@ switch listGenes
         geneListEXP.(disorder) = intersect(geneList.(disorder).(brainParts{1}), intersect(geneList.(disorder).(brainParts{2}), geneList.(disorder).(brainParts{3})));
     case 'oneList'
         geneListEXP.(disorder) = geneList.(disorder).(brainParts{i});
+ 
 end
 
 end

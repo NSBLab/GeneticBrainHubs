@@ -11,10 +11,17 @@ uGenesMonash = uGenesMonash(~isnan(uGenesMonash));
 % compare the overlap between lists
 % select only annotated genes
 
+whatAnnotation = 'PSYCHENCODE'; 
+
 n = length(uGenesHCP); % genes in group 1
 x = length(intersect(uGenesHCP, uGenesMonash)); % genes between groups
 D = length(uGenesMonash); % genes in group 2
-N = 25699; % total number of proteing-coding genes considered in eQTL mapping.
+switch whatAnnotation
+    case 'GTEx'
+        N = 15626; % total number of proteing-coding genes considered in eQTL mapping.
+    case 'PSYCHENCODE'
+        N = 25699; % total number of genes considered in eQTL mapping.
+end
 
 % calculate the complement of the hypergeometric pdf
 % This will give a probability of getting more than x gene overlap
@@ -30,7 +37,7 @@ gNAMES = HCPgeneID.name(indSEL);
 % compare overlap with disorder and IQ GWAS lists of genes
 % choose eQTL annotation used: PSYCHENCODE or GTEx; 
 
-whatAnnotation = 'PSYCHENCODE'; 
+
 pORA_eQTL_Monash = eQTL_ORA(uGenesMonash, N, whatAnnotation);
 
 % compare overlap with disorder and IQ GWAS lists of genes
