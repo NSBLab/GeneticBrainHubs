@@ -96,7 +96,7 @@ for pa=1:length(parcs)
     parc = parcs{pa};
     
     [coexpData, ~, matrices, coordinates] = giveConnExp_HCP(parc,op.tract,op.probe,weight,op.brainPart,op.nRem);
-    
+  
     
     for de=1:size(densThresholds,2)
         densThreshold = densThresholds(pa,de);

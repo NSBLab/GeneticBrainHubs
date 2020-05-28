@@ -6,7 +6,7 @@ numTissues = length(brainParts);
 
 for l=1:length(lists)
     whatGeneSet = lists{l};
-    results = selectGWASgenes_eQTL(whatGeneSet, brainParts, numTissues, 'oneList', 1);
+    results = selectGWASgenes_eQTL(whatGeneSet, brainParts, numTissues, 'oneList', 1, 'PSYCHENCODE');
     [~, ind] = intersect(coexpData.probeInformation.EntrezID, results.(whatGeneSet), 'stable'); 
     % get gene names
     N{l} = coexpData.probeInformation.GeneSymbol(ind); 

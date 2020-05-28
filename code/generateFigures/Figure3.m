@@ -8,7 +8,6 @@ whatDWI = 'HCP';
 weight = 'standard'; %for GenCog'standard'; 
 parc = 'HCP';
 op = selectCONmetrics(parc, weight); 
-numThr = 4;
 
 plotOptions.colIn = [1 1 1];
 plotOptions.colorOut = [82 82 82]/255; %[0,69,41]/255; %[.35 .35 .35]; %[4 90 141]/255; %[.45 .45 .45]; %[5 113 176]/255; 
@@ -17,31 +16,30 @@ plotOptions.whatDistribution = 'histogram';
 if strcmp(whatDWI, 'HCP')
     
     [coexpData, A, matrices, coordinates, avWeight] = giveConnExp_HCP(parc,op.tract,op.probe,weight,op.brainPart,op.nRem);
-    [~, ~, M, ~, avWeightFA] = giveConnExp_HCP(parc,op.tract,op.probe,'FA',op.brainPart, 0);
+    
     
 elseif strcmp(whatDWI, 'GenCog')
 
     [coexpData, A, matrices, coordinates, avWeight] = giveConnExp_GenCog(parc,op.tract,op.probe,weight,op.brainPart,op.nRem);
-    [~, ~, M, ~, avWeightFA] = giveConnExp_GenCog(parc,op.tract,op.probe,'FA',op.brainPart, 0);
+   
     
 end
 
 numLC = size(coexpData.averageCoexpression,1); 
 
-[GrSC, mDIST] = giveMeRichClub(matrices, coordinates, op.groupConn ,op.densThreshold, false, op.cvMeasure, op.consThr);
-GrFA = avWeightFA.*logical(GrSC); 
+[GrSC] = giveMeRichClub(matrices, coordinates, op.groupConn ,op.densThreshold, false, op.cvMeasure, op.consThr);
 groupAdjlog = logical(GrSC); 
 nodeData = degrees_und(groupAdjlog);
 
-% Define distance based on the distance between regions on the surface - it's more relevant for CGE then connection distance based on the tract length. 
-distMatr = coexpData.averageDistance; 
+
 % select left hemisphere data for connectivity matrix, degree distribution
 groupAdjlog = groupAdjlog(1:numLC, 1:numLC); 
 nodeData = nodeData(1:numLC); 
 
 % use exponential fit to correct for distance effect
+
 CGEmatrix_uncorrected = corr(coexpData.parcelExpression(:,2:end)');
-[CGEmatrix, FitCurve, c] = measure_correctDistance(CGEmatrix_uncorrected, coexpData.averageDistance, 'Correlated gene expression', 'exp', false);
+[CGEmatrix, FitCurve] = measure_correctDistance(CGEmatrix_uncorrected, coexpData.averageDistance, 'Correlated gene expression', 'exp', false);
 CGEmatrix(groupAdjlog==0) = NaN; 
 
 % plot R/F/P lines for CGE
@@ -77,6 +75,20 @@ end
 
 % for each cell-specific list of genes find ones in the expression data
 listGenes = getCellExpression(cellGenesUNIQUE,cellGroups,coexpData); 
+% make iq and scz lists mutually exclusive
+for o=1:size(listGenes,1)
+    
+    l1(o) = listGenes{o,1}==lists{1}; 
+    l2(o) = listGenes{o,1}==lists{2}; 
+    
+end
+
+[~,i8, i9] = intersect(listGenes{find(l1),2}, listGenes{find(l2),2}); 
+listGenes{find(l1),4}(i8) = []; 
+listGenes{find(l1),5}(i8) = []; 
+listGenes{find(l2),4}(i9) = []; 
+listGenes{find(l2),5}(i9) = []; 
+
 [T, geneList, fig] = GCCttest(coexpData, FitCurve, groupAdjlog, nodeData, op.khub, listGenes); 
 
 figureName = sprintf('makeFigures/GCCdistributions_%s_%d.png',  parc, round(op.densThreshold*100));

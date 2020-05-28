@@ -162,9 +162,6 @@ end
 out.vertices = g.vertices;
 out.faces = g.faces;
 
-% out.vertices = g_inflated.vertices;
-% out.faces = g_inflated.faces;
 out.cdata = parcdata;
-
 
 end
