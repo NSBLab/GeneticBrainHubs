@@ -1,14 +1,12 @@
 function [f, out]  = plot_measureONsurface(parcellation, data, plotWhat, whatMap, whatHemisphere)
 if nargin<4
     whatMap = 'magma';
+    whatHemisphere = 'lh';
 end
 
 if nargin<5
-    whatMap = 'lh';
+    whatHemisphere = 'lh';
 end
-
-% addpath /Users/Aurina/GoogleDrive/Genetics_connectome/visualisation/gifti-1.8/
-% addpath /Users/Aurina/GoogleDrive/Genetics_connectome/visualisation/cbrewer
 
 load('data/modules/FSAVERAGE_DATA_inflated.mat')
 load('data/modules/fsaverage_surface_data.mat')
