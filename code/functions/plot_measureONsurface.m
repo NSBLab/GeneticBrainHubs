@@ -18,7 +18,7 @@ switch parcellation
     
     case 'random500'
         
-        %parcdata = custom500;
+    
         switch whatHemisphere
             case 'lh'
                 parcdata = importVERTfile('data/modules/lh.random500.txt');
@@ -29,7 +29,7 @@ switch parcellation
         
     case 'random200'
         
-        %parcdata = custom500;
+    
         switch whatHemisphere
             case 'lh'
                 parcdata = importVERTfile('data/modules/lh.random200.txt');
@@ -41,7 +41,7 @@ switch parcellation
         
     case 'custom500'
         
-        %parcdata = custom500;
+     
         switch whatHemisphere
             case 'lh'
                 parcdata = importVERTfile('data/modules/lh.custom500.txt');
@@ -150,10 +150,6 @@ elseif strcmp(plotWhat, 'outside') && strcmp(whatHemisphere, 'lh')
     turnAngle = -90;
 end
 
-
-
-switch plotWhat
-    case 'inside'
         f=figure;
         set(gcf,'color','w');
         set(gcf, 'Position', [500 500 950 750])
@@ -162,20 +158,7 @@ switch plotWhat
         material dull
         view(turnAngle,0)
         camlight('headlight')
-        %c = colorbar;
-        %c.Limits = [cmin cmax];
-    case 'outside'
-        f=figure;
-        set(gcf,'color','w');
-        set(gcf, 'Position', [500 500 950 750])
-        plot(g,gg)
-        colormap(cmap)
-        material dull
-        view(turnAngle,0)
-        camlight('headlight')
-        %c = colorbar;
-        %c.Limits = [cmin cmax];
-end
+
 out.vertices = g.vertices;
 out.faces = g.faces;
 
