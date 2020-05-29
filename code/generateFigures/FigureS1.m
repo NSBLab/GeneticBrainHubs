@@ -65,7 +65,7 @@ print(gcf,figureName,'-dpng','-r300');
 % - null, is randomising topology
 ComNormBIN = normCommunicability(GrFA, 'bin', numShuffle, numRepeats, 'randmio_und');
 RichClubHuman_TOPO(GrFA,ComNormBIN,nodeDeg, true, whatDistribution, colorOut, colorIn);
-axisName = {'Mean normalised binary', 'connection communicability'};
+axisName = {'Mean edge','communicability (binary)'};
 ylabel(axisName, 'FontSize', 18)
 xlabel('Node degree, k','FontSize', 18);
 figureName = sprintf('makeFigures/COMMbin_%s_%d.png', parcellation, round(op.densThreshold*100));
@@ -75,7 +75,7 @@ print(gcf,figureName,'-dpng','-r300');
 % - null, is randomising weights while keeping the topology
 ComNormWEI = normCommunicability(GrFA, 'wei', numShuffle, numRepeats, 'shuffleWeights');
 RichClubHuman_TOPO(GrFA,ComNormWEI, nodeDeg, true, whatDistribution, colorOut, colorIn);
-axisName = {'Mean normalised weighted', 'connection communicability'};
+axisName = {'Mean edge', 'communicability (weighted)'};
 ylabel(axisName, 'FontSize', 18)
 xlabel('Node degree, k','FontSize', 18);
 figureName = sprintf('makeFigures/COMMwei_%s_%d.png', parcellation, round(op.densThreshold*100));
