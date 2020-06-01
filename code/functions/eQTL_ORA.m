@@ -36,7 +36,7 @@ for l=1:length(lists)
         K = length(selectedGenes);
         % N - number of genes selected (number of genes in eQTL list)
         N = length(eQTLgenes);
-        
+        if ~isempty(empOverlap)
         p = hygecdf(length(empOverlap),M,K,N, 'upper');
         pORA.(whatGeneSet).p = p;
         pORA.(whatGeneSet).Noverlap = length(empOverlap);
@@ -44,6 +44,7 @@ for l=1:length(lists)
         pORA.(whatGeneSet).Genes = empOverlap;
         if strcmp(whatAnnotation, 'PSYCHENCODE')
             pORA.(whatGeneSet).GeneNames = selectedGenesNames(IND);
+        end
         end
     end
     clearvars selectedGenes
