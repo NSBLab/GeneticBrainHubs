@@ -1,6 +1,6 @@
 % perform over-representation analysis for eQTL genes
 % load a list of genes from eQTL mapping
-function [pORA_eQTL_Monash, pORA_eQTL_HCP, pORA_eQTL_Consensus, uGenesHCP, uGenesMonash] = edgeGWAS_eQTL_ORA()
+function [pORA_eQTL_HCP, pORA_eQTL_Monash,pORA_eQTL_Consensus, uGenesHCP, uGenesMonash, uGenesConsensus] = edgeGWAS_eQTL_ORA()
 
 uGenesHCP = importGeneList('HCP_listGenes_onlyEntrezID.txt');
 uGenesHCP = uGenesHCP(~isnan(uGenesHCP));
@@ -24,7 +24,6 @@ writetable(Tconsensus, 'data/reeqtls/consensusHCPMonash.txt', 'WriteVariableName
 
 [~, indSEL] = intersect(HCPgeneID.converted_alias, uGenesConsensus);
 gNAMES = HCPgeneID.name(indSEL);
-
 
 % compare the overlap between lists
 % select only annotated genes
@@ -51,7 +50,6 @@ fprintf('The probability of overlap more than %d, is p=%d\n', x, p)
 
 pORA_eQTL_Monash = eQTL_ORA(uGenesMonash, N, whatAnnotation);
 
-% compare overlap with disorder and IQ GWAS lists of genes
 pORA_eQTL_HCP = eQTL_ORA(uGenesHCP, N, whatAnnotation); 
 
 pORA_eQTL_Consensus = eQTL_ORA(uGenesConsensus, N, whatAnnotation); 

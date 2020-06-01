@@ -18,13 +18,19 @@ end
 
 rowIND = find(contains(Parcname,parcellation));
 load('HCPparc20dens_4modelling.mat')
+for j = 1:length(individualCOORDs)
+    DD(:,:,j) = pdist2(individualCOORDs{j},individualCOORDs{j});
+end
+Dist = mean(DD,3);
 
 % get empirical network
 if strcmp(hemi, 'left')
     E = logical(GrFA(1:size(GrFA)/2, 1:size(GrFA)/2));
+    D = Dist(1:size(GrFA)/2, 1:size(GrFA)/2); 
     colIND = 1;
 else
     E = logical(GrFA);
+    D = Dist; 
     colIND = 2;
 end
 
@@ -153,6 +159,15 @@ set(gca,'fontsize', 20);
 
 figureName = sprintf('makeFigures/MODdegree_EMPvsMOD_%s_%s_%s.png', optimiseWhat,parcellation, hemi);
 print(gcf,figureName,'-dpng','-r600');
+
+% plot CDFs
+figure('color','w');
+set(gcf, 'Position', [500 500 500 750])
+BESTmodel_networks = BestParamNetworks{rowIND,colIND}{1,V};
+
+plot_modellingCDF(E, BESTmodel_networks, D, 100)
+
+
 
 
 plot_hubGroupsSurface('HCP',degEMP(1:180),tsEMP, 'inside', 'lh');
