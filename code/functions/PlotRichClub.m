@@ -106,7 +106,13 @@ for j=1
     yVals = [nanmin(PhiNormMean(isSig))-0.5*nanstd(PhiNormMean) nanmax(PhiNormMean(isSig))+0.5*nanstd(PhiNormMean)]; 
     axMain.YLim = yVals;
     xlabel('Node degree, k','fontsize',18);
-    ylabel('\Phi_{norm}','fontsize',18);
+    switch WhatTypeNetwork
+        case 'bu'
+            ylabel('\Phi_{norm}','fontsize',18);
+        case 'wu'
+            ylabel('\Phi_{w_norm}','fontsize',18);
+    end
+    
     get(gca, 'XTick');
     set(gca, 'FontSize', 18)
     box off;
