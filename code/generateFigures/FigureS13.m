@@ -93,7 +93,7 @@ for t=1:length(mtype)-1
 end
 
 % plot CDFs
-%figure('color','w');
+% figure('color','w');
 %set(gcf, 'Position', [500 500 500 750])
 BESTmodel_networks = BestParamNetworks{rowIND,colIND}{1,V};
 plot_modellingCDF(E, BESTmodel_networks, D, 100);
