@@ -37,7 +37,7 @@ for l=1:length(lists)
         % N - number of genes selected (number of genes in eQTL list)
         N = length(eQTLgenes);
         if ~isempty(empOverlap)
-        p = hygecdf(length(empOverlap),M,K,N, 'upper');
+        p = hygecdf(length(empOverlap),M,K,N,'upper');
         pORA.(whatGeneSet).p = p;
         pORA.(whatGeneSet).Noverlap = length(empOverlap);
         pORA.(whatGeneSet).Ndisorder = length(selectedGenes);

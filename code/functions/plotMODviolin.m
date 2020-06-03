@@ -73,6 +73,7 @@ fig = figure('color','white');
 set(gcf, 'Position', [10 10 1200 500]);
 
 set(gca,'FontSize',18)
+subplot(12,4,1:24);
 violins = violinplot(S);
 ylabel('Model fit (max KS)')
 

@@ -4,7 +4,7 @@
 function FigureS13()
 
 hemi = 'left'; %if using degCorr, select only 'left'
-parc = 'HCP';
+parcellation = 'HCP';
 optimiseWhat = 'degCorr';
 
 switch optimiseWhat
@@ -16,15 +16,21 @@ switch optimiseWhat
         
 end
 
-rowIND = find(contains(Parcname,parc));
+rowIND = find(contains(Parcname,parcellation));
 load('HCPparc20dens_4modelling.mat')
+for j = 1:length(individualCOORDs)
+    DD(:,:,j) = pdist2(individualCOORDs{j},individualCOORDs{j});
+end
+Dist = mean(DD,3);
 
 % get empirical network
 if strcmp(hemi, 'left')
     E = logical(GrFA(1:size(GrFA)/2, 1:size(GrFA)/2));
+    D = Dist(1:size(GrFA)/2, 1:size(GrFA)/2); 
     colIND = 1;
 else
     E = logical(GrFA);
+    D = Dist; 
     colIND = 2;
 end
 
@@ -48,8 +54,8 @@ switch optimiseWhat
         [S, INDselected] = plotMODviolin(SPTLCORR{rowIND,colIND}, 100, mtype, 'highest');
         set(gca,'FontSize',18)
         ylabel('Degree correlation')
-        figureName = sprintf('makeFigures/MODELfit_%s_%s_Highestcorrelation_optimise_%s.png',parc, hemi, optimiseWhat);
-        print(gcf,figureName,'-dpng','-r600');
+        figureName = sprintf('makeFigures/MODELfit_%s_%s_Highestcorrelation_optimise_%s.png',parcellation, hemi, optimiseWhat);
+        
         
         % get CORRELATION values for those selected networks
         CS = cell(1,length(mtype)-1);
@@ -63,10 +69,8 @@ switch optimiseWhat
         [S, INDselected] = plotMODviolin(ENERGY{rowIND,colIND}, 100, mtype, 'lowest');
         set(gca,'FontSize',18)
         ylabel('Model fit (KS)')
-        figureName = sprintf('makeFigures/MODELfit_%s_%s_Lowestenergy_optimise_%s.png',parc, hemi, optimiseWhat);
-        print(gcf,figureName,'-dpng','-r600');
-        
-        
+        figureName = sprintf('makeFigures/MODELfit_%s_%s_Lowestenergy_optimise_%s.png',parcellation, hemi, optimiseWhat);
+
         % get the correlations based on lowest energy
         CS = cell(1,length(mtype)-1);
         for p=1:length(mtype)-1
@@ -88,18 +92,21 @@ for t=1:length(mtype)-1
     end
 end
 
+% plot CDFs
+%figure('color','w');
+%set(gcf, 'Position', [500 500 500 750])
+BESTmodel_networks = BestParamNetworks{rowIND,colIND}{1,V};
+plot_modellingCDF(E, BESTmodel_networks, D, 100);
+% save the figure
+print(gcf,figureName,'-dpng','-r600');
+
 BESTmodel = BestNetwork{rowIND,colIND}{1,V};
 fprintf ('model %s has the "best" network\n', mtype{V})
 
 % get max KS value for main text
 mName = erase(mtype{V}, '-');
-maxV = max(S.(mName));
-switch optimiseWhat
-    case 'degCorr' % for degree correlations look for max values
-        fprintf ('Max corr for best model in box plot is %d\n', maxV)
-    case 'energy'
-        fprintf ('Max KS for best model in box plot is %d\n', maxV)
-end
+maxKS = max(S.(mName));
+fprintf ('Max KS for best model in box plot is %d\n', maxKS)
 
 degMOD = degrees_und(BESTmodel);
 
@@ -156,16 +163,16 @@ xlabel('Spearman correlation, \rho')
 xlim([-0.35 0.35]); box off
 set(gca,'fontsize', 20);
 
-figureName = sprintf('makeFigures/MODdegree_EMPvsMOD_%s_%s_%s.png', optimiseWhat,parc, hemi);
+figureName = sprintf('makeFigures/MODdegree_EMPvsMOD_%s_%s_%s.png', optimiseWhat,parcellation, hemi);
 print(gcf,figureName,'-dpng','-r600');
 
 
 plot_hubGroupsSurface('HCP',degEMP(1:180),tsEMP, 'inside', 'lh');
-figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s.png', optimiseWhat, parc, 'inside', 'lh');
+figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s.png', optimiseWhat, parcellation, 'inside', 'lh');
 print(gcf,figureName,'-dpng','-r1200');
 
 plot_hubGroupsSurface('HCP',degEMP(1:180),tsEMP, 'outside', 'lh');
-figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s.png', optimiseWhat, parc, 'outside', 'lh');
+figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s.png', optimiseWhat, parcellation, 'outside', 'lh');
 print(gcf,figureName,'-dpng','-r1200');
 
 
@@ -182,9 +189,11 @@ for s=1:2
         end
         
         plot_hubGroupsSurface('HCP',ds,tsMOD, side, 'lh');
-        figureName = sprintf('makeFigures/hubsSurface_bestMOD_%s_%s_%s_%s.png', optimiseWhat, parc, side, hem);
+        figureName = sprintf('makeFigures/hubsSurface_bestMOD_%s_%s_%s_%s.png', optimiseWhat, parcellation, side, hem);
         print(gcf,figureName,'-dpng','-r1200');
         
     end
 end
+end
+
 end

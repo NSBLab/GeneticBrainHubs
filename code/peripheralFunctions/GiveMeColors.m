@@ -103,6 +103,11 @@ switch colorSet
     case 'degreeGroups'
          rgb_colorMatrix = vertcat( [255,247,236]/255, [255,237,160]/255, [253,141,60]/255, [189,0,38]/255);
          labels = {'nonHubs'; 'minHubs'; 'medHubs'; 'maxHubs'};
+    case '4greenpurple'
+        rgb_colorMatrix = vertcat( [123,50,148]/255, [194,165,207]/255, [166,219,160]/255, [0,136,55]/255);
+    case '4orangepurple'
+        rgb_colorMatrix = vertcat( [230,97,1]/255, [253,184,99]/255, [178,171,210]/255, [94,60,153]/255);
+ 
         
 end
 

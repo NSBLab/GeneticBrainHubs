@@ -55,7 +55,7 @@ switch optimiseWhat
         set(gca,'FontSize',18)
         ylabel('Degree correlation')
         figureName = sprintf('makeFigures/MODELfit_%s_%s_Highestcorrelation_optimise_%s.png',parcellation, hemi, optimiseWhat);
-        print(gcf,figureName,'-dpng','-r600');
+        
         
         % get CORRELATION values for those selected networks
         CS = cell(1,length(mtype)-1);
@@ -70,9 +70,7 @@ switch optimiseWhat
         set(gca,'FontSize',18)
         ylabel('Model fit (KS)')
         figureName = sprintf('makeFigures/MODELfit_%s_%s_Lowestenergy_optimise_%s.png',parcellation, hemi, optimiseWhat);
-        print(gcf,figureName,'-dpng','-r600');
-        
-        
+
         % get the correlations based on lowest energy
         CS = cell(1,length(mtype)-1);
         for p=1:length(mtype)-1
@@ -93,6 +91,14 @@ for t=1:length(mtype)-1
             [~,V] = max(Menergy);
     end
 end
+
+% plot CDFs
+%figure('color','w');
+%set(gcf, 'Position', [500 500 500 750])
+BESTmodel_networks = BestParamNetworks{rowIND,colIND}{1,V};
+plot_modellingCDF(E, BESTmodel_networks, D, 100);
+% save the figure
+print(gcf,figureName,'-dpng','-r600');
 
 BESTmodel = BestNetwork{rowIND,colIND}{1,V};
 fprintf ('model %s has the "best" network\n', mtype{V})
@@ -159,15 +165,6 @@ set(gca,'fontsize', 20);
 
 figureName = sprintf('makeFigures/MODdegree_EMPvsMOD_%s_%s_%s.png', optimiseWhat,parcellation, hemi);
 print(gcf,figureName,'-dpng','-r600');
-
-% plot CDFs
-figure('color','w');
-set(gcf, 'Position', [500 500 500 750])
-BESTmodel_networks = BestParamNetworks{rowIND,colIND}{1,V};
-
-plot_modellingCDF(E, BESTmodel_networks, D, 100)
-
-
 
 
 plot_hubGroupsSurface('HCP',degEMP(1:180),tsEMP, 'inside', 'lh');
