@@ -1,7 +1,26 @@
+
 function [rgb_colorMatrix,labels] = GiveMeColors(colorSet)
 % Given a color set setting, gives a set of corresponding colors
 
 switch colorSet
+    case 'funcModules'
+        rgb_colorMatrix = vertcat( [251,106,74]/255, [253,174,97]/255, [254,217,118]/255, ...
+            [178,24,43]/255,[116,196,118]/255, [244,165,130]/255, ...
+            [66,146,198]/255,[158,202,225]/255, [8,48,107]/255, ...
+            [27,120,55]/255, [214,96,77]/255, [224,224,224]/255);
+        labels = {'VIS1';'VIS2';'SM';...
+            'CO';'DAN';'LAN';...
+            'FPN';'AUD';'DMN';...
+            'PM';'VM';'OA'};
+    case 'degreeGroups'
+        rgb_colorMatrix = vertcat( [255,247,236]/255, [255,237,160]/255, [253,141,60]/255, [189,0,38]/255);
+        labels = {'nonHubs'; 'minHubs'; 'medHubs'; 'maxHubs'};
+    case '4greenpurple'
+        rgb_colorMatrix = vertcat( [123,50,148]/255, [194,165,207]/255, [166,219,160]/255, [0,136,55]/255);
+        labels = []; 
+    case '4orangepurple'
+        rgb_colorMatrix = vertcat( [230,97,1]/255, [253,184,99]/255, [178,171,210]/255, [94,60,153]/255);
+        labels = []; 
     case 'anatomyType'
         rgb_colorMatrix = [70,114,114;... % Head
             254,43,39;... % Tail
@@ -87,27 +106,7 @@ switch colorSet
             90,49,0]/255; % TailBody
         labels = {'HeadHead','HeadTail','TailHead','TailTail','BodyHead',...
             'BodyBody','BodyTail','HeadBody','TailBody'};
-    case 'funcModules'
-        rgb_colorMatrix = vertcat( [251,106,74]/255,  [253,174,97]/255,[254,217,118]/255, ...
-            [178,24,43]/255,[116,196,118]/255, [244,165,130]/255, ...
-            [66,146,198]/255,[158,202,225]/255, [8,48,107]/255, ...
-            [27,120,55]/255, [214,96,77]/255, [224,224,224]/255);
-        % 171,221,164 - light green (cold)
-        % 166,217,106 - light green (warm)
-        % 255,247,188 - light yellow
-        % 254,227,145 - light darker yellow
-        labels = {'VIS1';'VIS2';'SM';...
-            'CO';'DAN';'LAN';...
-            'FPN';'AUD';'DMN';...
-            'PM';'VM';'OA'};
-    case 'degreeGroups'
-         rgb_colorMatrix = vertcat( [255,247,236]/255, [255,237,160]/255, [253,141,60]/255, [189,0,38]/255);
-         labels = {'nonHubs'; 'minHubs'; 'medHubs'; 'maxHubs'};
-    case '4greenpurple'
-        rgb_colorMatrix = vertcat( [123,50,148]/255, [194,165,207]/255, [166,219,160]/255, [0,136,55]/255);
-    case '4orangepurple'
-        rgb_colorMatrix = vertcat( [230,97,1]/255, [253,184,99]/255, [178,171,210]/255, [94,60,153]/255);
- 
+        
         
 end
 

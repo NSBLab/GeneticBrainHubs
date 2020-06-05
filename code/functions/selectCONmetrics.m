@@ -1,5 +1,18 @@
-function op = selectCONmetrics(parc, weight)
 
+function op = selectCONmetrics(parc, weight)
+% selectCONmetrics    Defines parameters for connectivity and gene 
+% expression data
+%
+%---INPUTS:
+% parc, tha name of the cortical parcellation used
+% weight, type of connection weights in the connectome - FA or SC
+%
+%---OUTPUT:
+% op, structure containing default parameters
+
+% ------------------------------------------------------------------------------
+
+% ------------------------------------------------------------------------------
 switch parc
         
     case 'HCP'
