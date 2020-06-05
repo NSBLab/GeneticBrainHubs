@@ -120,6 +120,7 @@ set(gcf, 'Position', [500 500 500 750])
 
 subplot(2,1,1);
 scatter(degEMP, degMOD, 150,'MarkerEdgeColor',[69,117,180]/255,'MarkerFaceColor',[1 1 1], 'LineWidth',3);
+set(gcf, 'renderer', 'painters')
 hold on;
 switch optimiseWhat
     case 'energy'
