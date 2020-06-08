@@ -1,20 +1,17 @@
-function getMaxVal = RichClubHuman(Adj,pairwiseMeasure,nodeData, whatTail, whatDistribution, colorOut, colorIn)
+function getMaxVal = RichClubMouse(Adj,pairwiseMeasure,nodeData, whatTail, whatDistribution, colorOut, colorIn)
 % ------------------------------------------------------------------------------
 % Function plots coexpression for rich/feeder/peripheral lins as a function
 % of degree using mean to summarise coexpression at each threshold
 %-------------------------------------------------------------------------------
 % INPUTS:
 % ------------------------------------------------------------------------------
+
 realLinkData = pairwiseMeasure;
 numBins = 'all'; % Range of k to plot the rich club curve across
 
 % ------------------------------------------------------------------------------
 % Assign data measured at each link in the network
 % ------------------------------------------------------------------------------
-% All undirected connections:
-if size(Adj,1)~=180 && size(Adj,1)~=100 && size(Adj,1)~=250
-     Adj = triu(Adj); % remove one triangle for non-CGE calculations; CGE input matrix already contains only one triangle
-end
 linkedAdj = Adj;
 % Add a mask to only include particular types of connections
 numNeurons = size(linkedAdj,1);
@@ -192,10 +189,10 @@ for j = 1:length(whatLinks)
     
     % NaNs can't be plotted, in that case make x and y variables shorter
     INDkeep = find(~isnan(nanmean(A,2))); 
-    %if ~isempty(INDkeep)
+    if ~isempty(INDkeep)
     plot_distribution(kr(INDkeep),A(INDkeep,:)', 'Color', myColors(j,:)); 
     hold on;
-    %end
+    end
 
     if any(isSig)
         plot(kr(isSig),realTrajectory(isSig),markerStyle,'MarkerEdgeColor',myColors(j,:),...
@@ -219,5 +216,5 @@ xlabel('Node degree, k','FontSize', 18);
 getMaxVal = cellfun(@nanmean,allHubHub{1}(:,1));
 getMinVal = cellfun(@nanmean,allHubHub{1}(:,3));
 ylim([min(getMinVal) max(getMaxVal)+nanstd(getMaxVal)])
-
+set(gca,'fontsize', 18);
 end

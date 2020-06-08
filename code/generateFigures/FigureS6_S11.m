@@ -1,5 +1,5 @@
 %--------------------------------------------------%
-% Figure S6-S9, S11-S12: CGE and MPC
+% Figure S6-S12: CGE and MPC
 %--------------------------------------------------%
 function FigureS6_S11()
 whatDWI = 'HCP';
@@ -160,6 +160,35 @@ set(gca,'fontsize', 18);
 ylim([-0.05 0.1])
 
 figureName = sprintf('makeFigures/CGEcurves_%s_%d_%s.png', parc, densThreshold, whatDWI);
+print(gcf,figureName,'-dpng','-r600');
+
+% Figure S10
+% make CGE plots for Celegans and mouse
+load('data/wormANDmouse/CElegansConnectivityData.mat')
+load('data/wormANDmouse/CelegansGeneDataWS256CertainEmptyEnrichedPartial.mat')
+plotOptions.whatDistribution = 'barCount'; %'histogram'; 
+
+Adj_worm = C.Adj_B{1,3}; 
+CGE_worm = G.Corr.Pearson_noLR; 
+[~,~,nodeData_worm] = degrees_dir(Adj_worm); 
+
+RichClubCelegans(Adj_worm,CGE_worm, nodeData_worm, 'right', plotOptions.whatDistribution, plotOptions.colorOut, plotOptions.colIn); 
+ylim([0 0.5])
+
+figureName = sprintf('makeFigures/CGEcurves_Celegans.png');
+print(gcf,figureName,'-dpng','-r600');
+
+% plot for mouse
+load('data/wormANDmouse/mouseData.mat')
+Adj_mouse = allAdj; 
+CGE_mouse = allLinkData; 
+
+[~,~,nodeData_mouse] = degrees_dir(Adj_mouse); 
+
+RichClubMouse(Adj_mouse,CGE_mouse, nodeData_mouse, 'right', plotOptions.whatDistribution, plotOptions.colorOut, plotOptions.colIn); 
+ylim([0 0.25])
+
+figureName = sprintf('makeFigures/CGEcurves_mouse.png');
 print(gcf,figureName,'-dpng','-r600');
 end
 

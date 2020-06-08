@@ -1,4 +1,4 @@
-function getMaxVal = RichClubHuman(Adj,pairwiseMeasure,nodeData, whatTail, whatDistribution, colorOut, colorIn)
+function getMaxVal = RichClubCelegans(Adj,pairwiseMeasure,nodeData, whatTail, whatDistribution, colorOut, colorIn)
 % ------------------------------------------------------------------------------
 % Function plots coexpression for rich/feeder/peripheral lins as a function
 % of degree using mean to summarise coexpression at each threshold
@@ -11,17 +11,14 @@ numBins = 'all'; % Range of k to plot the rich club curve across
 % ------------------------------------------------------------------------------
 % Assign data measured at each link in the network
 % ------------------------------------------------------------------------------
-% All undirected connections:
-if size(Adj,1)~=180 && size(Adj,1)~=100 && size(Adj,1)~=250
-     Adj = triu(Adj); % remove one triangle for non-CGE calculations; CGE input matrix already contains only one triangle
-end
+
 linkedAdj = Adj;
 % Add a mask to only include particular types of connections
 numNeurons = size(linkedAdj,1);
 nn = linspace(1,numNeurons,numNeurons);
 allLinkData = realLinkData;
 allLinkData(Adj==0) = NaN;
-%allLinkData(allLinkData<0.0001) = NaN; 
+
 
 numNodes = length(Adj);
 
@@ -80,9 +77,11 @@ for i = 1:length(kr)
         linkDataNotSpecial = allLinkData(notSpecial);
 
         % 2-sample t-test for special links greater than non-special links:
-
-        [~,p] = ttest2(linkDataSpecial,linkDataNotSpecial,'Vartype','unequal', 'Tail',whatTail);
-
+        p=1; 
+        if sum(~isnan(linkDataSpecial))>0 && ~isempty(linkDataSpecial) && sum(~isnan(linkDataNotSpecial)>0) && ~isempty(linkDataNotSpecial)
+        p = ranksum(linkDataSpecial,linkDataNotSpecial, 'tail', whatTail); 
+        %[~,p] = ttest2(linkDataSpecial,linkDataNotSpecial,'Vartype','unequal', 'Tail',whatTail);
+        end
         tStats(i,j) = p;
     end
 end
@@ -91,11 +90,6 @@ end
 % Plot as rich plots
 % ------------------------------------------------------------------------------
 myColors = GiveMeColors('RFPU'); 
-% % reorder colours for correct overlay, so rich are plotted at the top
-% % [BF_getcmap('spectral',4,1),BF_getcmap('set2',4,1)];
-% myColors(1,:) = myColorsOrig(3,:); 
-% myColors(2,:) = myColorsOrig(2,:); 
-% myColors(3,:) = myColorsOrig(1,:); 
 
 plotOnOne = true; % plot all on one figure
 includeHist = true;
@@ -135,9 +129,10 @@ for j = 1:length(whatLinks)
 
                 xlim([min(nodeData)-0.8,max(nodeData)+0.8]);
                 xticks([]); box off;
-                ylabel('Frequency', 'FontSize', 18)
+                ylabel('Frequency')
+   
                 get(gca, 'YTick');
-                set(gca, 'FontSize', 18)
+                set(gca, 'FontSize', 20)
                 sp=subplot(5,3,7:15);
                 hold on;
 
@@ -154,12 +149,12 @@ for j = 1:length(whatLinks)
     % rich are now labeled 3
     if j==1
 
-        plot([kr(1),krAll(end)],ones(2,1)*nanmean(allHubHub{1}{1,j}),':','color','k','LineWidth',3)
+        plot([kr(1),krAll(end)],ones(2,1)*nanmedian(allHubHub{1}{1,j}),':','color','k','LineWidth',3)
 
     end
 
     valsPlot = allHubHub{1}(:,j);
-    realTrajectory = cellfun(@nanmean,valsPlot);
+    realTrajectory = cellfun(@nanmedian,valsPlot);
     xlim([min(nodeData)-0.5,max(nodeData)+0.5]);
 
 
@@ -192,10 +187,10 @@ for j = 1:length(whatLinks)
     
     % NaNs can't be plotted, in that case make x and y variables shorter
     INDkeep = find(~isnan(nanmean(A,2))); 
-    %if ~isempty(INDkeep)
-    plot_distribution(kr(INDkeep),A(INDkeep,:)', 'Color', myColors(j,:)); 
+    
+    plot_distribution_median(kr(INDkeep),A(INDkeep,:)', 'Color', myColors(j,:)); 
     hold on;
-    %end
+
 
     if any(isSig)
         plot(kr(isSig),realTrajectory(isSig),markerStyle,'MarkerEdgeColor',myColors(j,:),...
@@ -204,20 +199,15 @@ for j = 1:length(whatLinks)
 
     xLimits = get(gca,'xlim'); yLimits = get(gca,'ylim');
 
-%     if ~plotJustRich
-%         text(xLimits(1)+0.1*diff(xLimits),yLimits(1)+0.9*diff(yLimits)-j/20,whatLinks{j},'color',myColors(j,:),'FontSize',18)
-%     end
-
-
 end
 
 set(gcf, 'Position', [500 500 750 500])
 
-axisName = {'Mean correlated', 'gene expression'};
-ylabel(axisName, 'FontSize', 18)
-xlabel('Node degree, k','FontSize', 18);
+axisName = {'Meadian correlated', 'gene expression'};
+ylabel(axisName); % 'FontSize', 16)
+xlabel('Node degree, k'); %'FontSize', 16);
 getMaxVal = cellfun(@nanmean,allHubHub{1}(:,1));
 getMinVal = cellfun(@nanmean,allHubHub{1}(:,3));
 ylim([min(getMinVal) max(getMaxVal)+nanstd(getMaxVal)])
-
+set(gca,'fontsize', 18);
 end

@@ -11,8 +11,9 @@ numBins = 'all'; % Range of k to plot the rich club curve across
 % ------------------------------------------------------------------------------
 % Assign data measured at each link in the network
 % ------------------------------------------------------------------------------
-% All directed connections:
-Adj = triu(Adj); 
+if size(Adj,1)~=180 && size(Adj,1)~=100 && size(Adj,1)~=250
+    Adj = triu(Adj); % remove one triangle for non-CGE calculations; CGE input matrix already contains only one triangle
+end
 linkedAdj = Adj;
 % Add a mask to only include particular types of connections
 numNeurons = size(linkedAdj,1);
@@ -118,7 +119,7 @@ for j = 1:length(whatLinks)
                     case 'barCount'
 
                         N = arrayfun(@(x)sum(nodeData==x),krAll);
-                        bar(krAll,N,'EdgeColor',colorOut,'FaceColor',colorInbarCo);
+                        bar(krAll,N,'EdgeColor',colorOut,'FaceColor',colorOut);
 
                     case 'histogram'
 
@@ -215,10 +216,10 @@ end
 set(gcf, 'Position', [500 500 750 500])
 
 axisName = {'Meadian correlated', 'gene expression'};
-ylabel(axisName, 'FontSize', 16)
-xlabel('Node degree, k','FontSize', 16);
+ylabel(axisName); % 'FontSize', 16)
+xlabel('Node degree, k'); %'FontSize', 16);
 getMaxVal = cellfun(@nanmean,allHubHub{1}(:,1));
 getMinVal = cellfun(@nanmean,allHubHub{1}(:,3));
 ylim([min(getMinVal) max(getMaxVal)+nanstd(getMaxVal)])
-
+set(gca,'fontsize', 18);
 end

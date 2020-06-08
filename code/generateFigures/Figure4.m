@@ -84,13 +84,15 @@ end
 for t=1:length(mtype)-1
     switch optimiseWhat
         case 'energy'
-            Menergy(t) = min(ENERGY{rowIND,colIND}{1,t}(:));
+            [Menergy(t), MenergyIND(t)] = min(ENERGY{rowIND,colIND}{1,t}(:));
             [~,V] = min(Menergy);
         case 'degCorr'
-            Menergy(t) = max(SPTLCORR{rowIND,colIND}{1,t}(:));
+            [Menergy(t), MenergyIND(t)] = max(SPTLCORR{rowIND,colIND}{1,t}(:));
             [~,V] = max(Menergy);
     end
 end
+% select best parameters based on MenergyIND values 
+bestPARAM = Params{rowIND,colIND}{V}(MenergyIND(V),:); 
 
 % plot CDFs
 %figure('color','w');
@@ -102,6 +104,7 @@ print(gcf,figureName,'-dpng','-r600');
 
 BESTmodel = BestNetwork{rowIND,colIND}{1,V};
 fprintf ('model %s has the "best" network\n', mtype{V})
+fprintf ('parameters are eta=%d, gamma=%d\n', bestPARAM(1), bestPARAM(2))
 
 % get max KS value for main text
 mName = erase(mtype{V}, '-');
