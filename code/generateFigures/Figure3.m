@@ -88,6 +88,27 @@ listGenes{find(l1),4}(i8) = [];
 listGenes{find(l1),5}(i8) = []; 
 listGenes{find(l2),4}(i9) = []; 
 listGenes{find(l2),5}(i9) = []; 
+% manually rename gene categories to make names more representative
+for gn=1:size(listGenes,1)
+    if strcmp(listGenes{gn,1}, 'Ex-Neuron')
+        listGenes{gn,1} = 'excitatory';
+    elseif strcmp(listGenes{gn,1}, 'In-Neuron')
+        listGenes{gn,1} = 'inhibitory';
+    elseif strcmp(listGenes{gn,1}, 'astro')
+        listGenes{gn,1} = 'astroglia';
+    elseif strcmp(listGenes{gn,1}, 'endo')
+        listGenes{gn,1} = 'endothelia';
+    elseif strcmp(listGenes{gn,1}, 'micro')
+        listGenes{gn,1} = 'microglia';
+    elseif strcmp(listGenes{gn,1}, 'oligo')
+        listGenes{gn,1} = 'oligodendrocyte';
+    elseif strcmp(listGenes{gn,1}, 'iq')
+        listGenes{gn,1} = 'IQ';
+    elseif strcmp(listGenes{gn,1}, 'scz')
+        listGenes{gn,1} = 'schizophrenia';
+    end
+end
+
 
 [T, geneList, fig] = GCCttest(coexpData, FitCurve, groupAdjlog, nodeData, op.khub, listGenes); 
 
