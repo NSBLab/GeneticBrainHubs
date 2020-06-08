@@ -23,7 +23,8 @@ for j=1:length(MU)
     %SIGMA(j) = nanstd(K)./sqrt(numVals);
     %SIGMA(j) = iqr(K)./sqrt(numVals);
     %SIGMA(j) = mad(K)./sqrt(numVals);
-    SIGMA(j) = mad(K)./4;
+    SIGMA(j) = mad(K)./2;
+    %SIGMA(j) = mad(K);
 end
 
 hold on
