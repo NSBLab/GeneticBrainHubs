@@ -4,7 +4,7 @@ function op = selectCONmetrics(parc, weight)
 % expression data
 %
 %---INPUTS:
-% parc, tha name of the cortical parcellation used
+% parc, the name of the cortical parcellation used
 % weight, type of connection weights in the connectome - FA or SC
 %
 %---OUTPUT:
