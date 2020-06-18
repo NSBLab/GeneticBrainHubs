@@ -10,14 +10,14 @@ for i=1:numTissues
     
     switch whatAnnotation
         case 'GTEx'
-    filename = sprintf('data/emagma_results/%s_emagma_results/emagma_Brain_%s.csv', disorder, brainParts{i});
-    emagmaBrain = importEMAGMA(filename);
+            filename = sprintf('data/emagma_results/%s_emagma_results/emagma_Brain_%s.csv', disorder, brainParts{i});
+            emagmaBrain = importEMAGMA(filename);
         case 'PSYCHENCODE'
-    filename = sprintf('data/emagma_results/emagma_pec/pec_%s.genes.out.annot.csv', disorder);
-    emagmaBrain = importEMAGMApec(filename); 
-    emagmaBrain.GENE = emagmaBrain.ENTREZID; 
-    % remove NaN entries
-    emagmaBrain(isnan(emagmaBrain.GENE),:) = []; 
+            filename = sprintf('data/emagma_results/emagma_pec/pec_%s.genes.out.annot.csv', disorder);
+            emagmaBrain = importEMAGMApec(filename);
+            emagmaBrain.GENE = emagmaBrain.ENTREZID;
+            % remove NaN entries
+            emagmaBrain(isnan(emagmaBrain.GENE),:) = [];
     end
     
     if correctMultiple

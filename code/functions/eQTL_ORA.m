@@ -12,18 +12,31 @@ numTissues = length(brainParts);
 for l=1:length(lists)
     whatGeneSet = lists{l};
     
-    if strcmp(whatAnnotation, 'PSYCHENCODE')
-        [results,resultsNames] = selectGWASgenes_eQTL(whatGeneSet, brainParts, numTissues, 'oneList', 1, whatAnnotation);
+    % when HAR genes are selected
+    if strcmp(whatGeneSet, 'har')
+        % list of HAR genes was meade using getHARgenes.m, these were converted to entrezIDs
+        % link to gene name-to ID conversion here: https://biit.cs.ut.ee/gplink/l/1t5sZyTNRF
+        listHAR = importHARgeneIDs('gProfiler_hsapiens_18-06-2020_11-22-26.csv');
+        listHAR(isnan(listHAR.converted_alias),:) = [];
+        results.(whatGeneSet) = listHAR.converted_alias;
+        resultsNames.(whatGeneSet) = listHAR.initial_alias;
     else
-        [results] = selectGWASgenes_eQTL(whatGeneSet, brainParts, numTissues, 'oneList', 1, whatAnnotation);
+        % for non-har genes import based on annotation
+        if strcmp(whatAnnotation, 'PSYCHENCODE')
+            [results,resultsNames] = selectGWASgenes_eQTL(whatGeneSet, brainParts, numTissues, 'oneList', 1, whatAnnotation);
+        else
+            [results] = selectGWASgenes_eQTL(whatGeneSet, brainParts, numTissues, 'oneList', 1, whatAnnotation);
+        end
     end
-    
+
     if sum(strcmp(fieldnames(results), whatGeneSet)) == 1
         selectedGenes = results.(whatGeneSet);
         if strcmp(whatAnnotation, 'PSYCHENCODE')
             selectedGenesNames = resultsNames.(whatGeneSet);
         end
     end
+        
+
     
     if ~isempty(results.(whatGeneSet))
         % X - number of genes that need to exceed
