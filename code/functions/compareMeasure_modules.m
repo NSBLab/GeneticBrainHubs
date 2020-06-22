@@ -52,7 +52,7 @@ pairwiseMeasure(groupAdjlog==0) = NaN;
 % Extract heritability values for each link type: rich/feeder/peripheral
 %---------------------------------------------------------------------------
 [rgb_colorMatrix] = GiveMeColors('RFPU');
-[measureRFP] = AA_HERIT_RFPU_median(pairwiseMeasure,groupAdjlog, nodeDeg, hubThr);
+[measureRFP] = AA_HERIT_RFPU(pairwiseMeasure,groupAdjlog, nodeDeg, hubThr);
 
 %---------------------------------------------------------------------------
 % Extract heritability values for each module
