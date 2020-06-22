@@ -48,4 +48,4 @@ FigureS13()
 %--------------------------------------------------%
 % edge-wise GWAS results
 %--------------------------------------------------%
-[pORA_eQTL_HCP, pORA_eQTL_Monash, pORA_eQTL_Consensus] = edgeGWAS_eQTL_ORA; 
+[pORA_eQTL_HCP, pORA_eQTL_Monash, pORA_eQTL_Consensus] = edgeGWAS_eQTL_ORA(); 
