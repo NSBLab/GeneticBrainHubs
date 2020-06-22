@@ -4,7 +4,7 @@ This repository provides Matlab code for reproducing figures from the paper enti
 Contact Aurina Arnatkeviciute by [email](mailto:aurina.arnatkeviciute@monash.edu).
 
 ### Data files
-Data files required for this project are hosted on [this cloudstor repository](https://cloudstor.aarnet.edu.au/plus/s/yZafVFjELsQ8SoB).
+Data files required for this project are hosted on [this figshare repository](https://figshare.com/s/9f59ce2db221accd1dfe).
 Please download and unzip the data in the root directory.
 
 ### Reproducing figures
