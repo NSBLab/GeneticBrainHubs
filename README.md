@@ -1,6 +1,8 @@
 # GeneticBrainHubs
 This repository provides Matlab code for reproducing figures from the paper entitled "Genetic influences on hub connectivity ofthe human connectome". The code was written using MATLAB_R2019b. Some functions are dependent on the version and should be accommodated by versions >R2017a. For earlier versions, please replace all `"` with `'` in `importHeritabilityResultwP.m` and `importGENEIDfile.m` functions. 
 
+Dependencies: [Brain Connectivity Toolbox](https://sites.google.com/site/bctnet/), Version 2017-15-01. Included in this repository.
+
 Contact Aurina Arnatkeviciute by [email](mailto:aurina.arnatkeviciute@monash.edu).
 
 ### Data files
