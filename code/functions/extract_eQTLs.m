@@ -48,7 +48,8 @@ genes_ENTREZ = str2double(genes_ENTREZ);
 
 % test ORA
 whatAnnotation = 'PSYCHENCODE'; 
-N = 25699; % total number of genes considered in eQTL mapping.
+N = length(genesONLY); % total number of genes considered in eQTL mapping.
+% in the original, N = 25699 is hard-coded; 
 pORA_eQTL = eQTL_ORA(genes_ENTREZ, N, whatAnnotation); 
 
 end
