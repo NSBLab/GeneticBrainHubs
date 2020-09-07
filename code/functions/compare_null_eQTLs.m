@@ -13,12 +13,12 @@ switch whatDATA
     case 'GenCog'
         pORA_real = GenCog_pORA_eQTL_POS;
 end
-D = fields(pORA_real);
+GWAS = fields(pORA_real);
 
 % get all file names in the permutation file
 fileList = dir(sprintf('data/reeqtls/permutations/%s*', whatDATA));
 
-Dall = nan(length(fileList), length(D));
+Dall = nan(length(fileList), length(GWAS));
 
 % for each GWAS list make a distribution
 for i = 1:length(fileList)
@@ -32,7 +32,7 @@ for i = 1:length(fileList)
     end
     
     % select nulls only for relevant cases
-    [Dt,Di] = intersect(D, fields(pORA_null), 'stable');
+    [Dt,Di] = intersect(GWAS, fields(pORA_null), 'stable');
     
     for j = 1:length(Dt)
         
@@ -42,11 +42,12 @@ for i = 1:length(fileList)
 end
 
 % calculate p-value for each individual disorder
-pVal = nan(length(D),1);
-pVal_FDR = nan(length(D),1);
+pVal = nan(length(GWAS),1);
+pVal_FDR = nan(length(GWAS),1);
+isSig_BF = nan(length(GWAS),1);
 
-for k = 1:length(D)
-    nR = pORA_real.(D{k}).Noverlap;
+for k = 1:length(GWAS)
+    nR = pORA_real.(GWAS{k}).Noverlap;
     
     % select only nulls with non-nan values
     Dsel = Dall(:,k);
@@ -54,6 +55,7 @@ for k = 1:length(D)
 
     if ~isempty(Dsel)
         pVal(k) = mean(Dsel>=nR);
+        isSig_BF(k) = pVal(k)<(0.05/6); % 6 - the number of GWASs tested
     end
     clearvars 'Dsel'
     
@@ -68,6 +70,6 @@ for k = 1:length(D)
     clearvars 'DFDR'
 end
 
-R = table(D, pVal, pVal_FDR);
+R = table(GWAS, pVal, pVal_FDR, isSig_BF);
 
 end
