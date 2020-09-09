@@ -36,6 +36,11 @@ elseif strcmp(parc, 'random500')
     LC = 1:250;
     RC = 261:510;
     nROIs = 520;
+elseif strcmp(parc, 'Schaefer400')
+    parcellation = 'Schaefer400_17net_acpc';
+    LC = 1:200;
+    RC = 201:400;
+    nROIs = 400; 
 end
 
 

@@ -17,11 +17,14 @@ switch parc
         
     case 'HCP'
         densThreshold = 0.2;
-        khub = 105; 
+        khub = 105;
+    case 'Schaefer400'
+        densThreshold = 0.2;
+        khub = 105;
         
     case 'random500'
-        densThreshold = 0.1;    
-        khub = 70; 
+        densThreshold = 0.1;
+        khub = 70;
 end
 
 switch weight
@@ -31,7 +34,7 @@ switch weight
         weight = 'FA';
 end
 
-op.densThreshold = densThreshold;
+op.densThreshold = densThreshold; 
 op.groupConn = 'CVmeasure'; 
 op.cvMeasure = 'strength'; 
 op.calcRC = false; 
