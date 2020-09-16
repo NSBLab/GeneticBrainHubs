@@ -2,7 +2,7 @@
 % 1. all genes
 % 2. genes from enriched categories;
 % 3. save BigBrain matrix - this one has NaNs
-function extractCGE()
+function extractCGEmodelling()
 
 weight = 'standard';
 parc = 'HCP';
@@ -12,7 +12,7 @@ op = selectCONmetrics(parc, weight);
 
 % 1. all genes: use exponential fit to correct for distance effect
 CGEmatrix_uncorrected = corr(coexpData.parcelExpression(:,2:end)');
-[CGEmatrixALL, FitCurve] = measure_correctDistance(CGEmatrix_uncorrected, coexpData.averageDistance, 'Correlated gene expression', 'exp', true);
+CGEmatrixALL = measure_correctDistance(CGEmatrix_uncorrected, coexpData.averageDistance, 'Correlated gene expression', 'exp', true);
 CGEmatrixALL = tril(CGEmatrixALL);
 CGEmatrixALL = CGEmatrixALL+CGEmatrixALL'; 
 
@@ -46,7 +46,7 @@ genesALL = unique(vertcat(genesSEL{:}));
 [~, INDexp] = intersect(coexpData.probeInformation.EntrezID, genesALL);
 
 CGEmatrix_unENRICH = corr(coexpData.parcelExpression(:,INDexp+1)');
-[CGEmatrixENRICH, FitCurve] = measure_correctDistance(CGEmatrix_unENRICH, coexpData.averageDistance, 'Correlated gene expression', 'exp', true);
+CGEmatrixENRICH = measure_correctDistance(CGEmatrix_unENRICH, coexpData.averageDistance, 'Correlated gene expression', 'exp', true);
 CGEmatrixENRICH = tril(CGEmatrixENRICH);
 CGEmatrixENRICH = CGEmatrixENRICH+CGEmatrixENRICH'; 
 
