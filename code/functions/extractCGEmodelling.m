@@ -1,8 +1,10 @@
+
+function extractCGEmodelling()
+
 % extract CGE data for :
 % 1. all genes
 % 2. genes from enriched categories;
 % 3. save BigBrain matrix - this one has NaNs
-function extractCGEmodelling()
 
 weight = 'standard';
 parc = 'HCP';
@@ -25,6 +27,7 @@ GEMMA = importGEMMAfile('Generic_human_ncbiIds_noParents.an.txt');
 genesSEL = cell(size(GOcat,1), 1);
 
 for g=1:size(GOcat,1)
+    
     GO = GOcat.GOcategory{g};
     GOf = [GO,'|'];
     GOe = ['|', GO];
@@ -55,5 +58,5 @@ yregress = true;
 [BBmean,microDist,distNorm, BBmpc, mp, BBskew] = getBBdata(parc, yregress);
 BBmpc = BBmpc(1:size(CGEmatrixALL,1), 1:size(CGEmatrixALL,1)); 
 
-save('data/modelling/CGEmatrices.mat', 'CGEmatrixALL', 'CGEmatrixENRICH', 'BBmpc')
+save('data/modelling/CGEmodelling.mat', 'CGEmatrixALL', 'CGEmatrixENRICH', 'BBmpc')
 end
