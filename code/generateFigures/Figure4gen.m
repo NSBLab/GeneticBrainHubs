@@ -203,6 +203,7 @@ switch whatLine
         h2.LineStyle = ':';
         h2.Color = [0.2, 0.2, 0.2];
 end
+
 axis square
 xlabel({'Node degree', 'empirical data'});
 ylabel({'Node degree', 'best-fitting model'})
