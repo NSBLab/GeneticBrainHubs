@@ -176,7 +176,7 @@ switch optimiseWhat
         % plot degree on brain for empirical and mode network
         d = 25;
         tsEMP = [145-d,125-d,105-d];
-        tsMOD = [85,80,75];
+        tsMOD = [80,75,70];
     case 'degCorr'
         xlim([0 150]);
         ylim([0 150]);
