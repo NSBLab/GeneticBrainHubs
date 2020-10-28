@@ -6,16 +6,16 @@ optimiseWhat = 'energy';
 
 % load all data data 
 DATA = cell(6,1); 
-DATA{1} = load('Group_HCPparc20dens_space1_matching1_gene1_voronoi_mult2_energy_sp.mat'); 
-DATA{2} = load('Group_HCPparc20dens_space1_matching1_gene0_voronoi_mult2_energy_sp.mat'); 
+DATA{1} = load('Group_HCPparc20dens_space1_deg-avg1_gene1_voronoi_mult2_energy_sp.mat'); 
+DATA{2} = load('Group_HCPparc20dens_space1_deg-avg1_gene0_voronoi_mult2_energy_sp.mat'); 
 DATA{3} = load('Group_HCPparc20dens_space1_matching0_gene1_voronoi_mult2_energy_sp.mat'); 
-DATA{4} = load('Group_HCPparc20dens_space0_matching1_gene1_voronoi_mult2_energy_sp.mat'); 
+DATA{4} = load('Group_HCPparc20dens_space0_deg-avg1_gene1_voronoi_mult2_energy_sp.mat'); 
 DATA{5} = load('Group_HCPparc20dens_space1_matching0_gene0_voronoi_mult2_energy_sp.mat'); 
 DATA{6} = load('Group_HCPparc20dens_space0_matching0_gene1_voronoi_mult2_energy_sp.mat'); 
 
 % label each model in the same order
-% S-stands for space; M - matching; G - gene; 
-mtype = {'SMG', 'SM', 'SG', 'MG', 'S', 'G'}; 
+% S-stands for space; T - topology; G - gene; 
+mtype = {'STG', 'ST', 'SG', 'TG', 'S', 'G'}; 
 paramMatrix = [1 1 1; 1 1 0; 1 0 1; 0 1 1; 1 0 0; 0 0 1]; 
 
 % load empirical data
@@ -28,13 +28,13 @@ INDdata = setdiff(1:size(averageCoexpression,1), INDnan);
 % put data into energy and correlation cells
 ENERGY = cell(1,length(mtype)); 
 SPTLCORR = cell(1,length(mtype)); 
-BestNET = cell(1,length(mtype)); 
+BestparamNET = cell(1,length(mtype)); 
 
 for m=1:length(mtype)
     
     ENERGY{1,m} = DATA{m}.E;
     SPTLCORR{1,m} = DATA{m}.Cs;
-    BestNET{1,m} = DATA{m}.Bbest; 
+    BestparamNET{1,m} = DATA{m}.Bbest; 
     
     %for p=1:length(DATA{m}.Bbest)
         
@@ -81,8 +81,7 @@ switch optimiseWhat
             for n=1:numNET
                 
                 % incert NaNs where gene data were missing
-                networkSEL = nan(size(E)); 
-                networkSEL(INDdata, INDdata) = DATA{m}.Bbest{n};
+                networkSEL = DATA{m}.Bbest{n};
 
                 degnetworkSEL = degrees_und(networkSEL);
                 degnetworkSEL(INDnan) = NaN; % for regions with missing data give NaN degree
@@ -121,25 +120,20 @@ end
 
 
 % select best model based on 10000 runs
-for t=1:length(mtype)
-    switch optimiseWhat
-        case 'energy'
-            [Menergy(t), MenergyIND(t)] = min(ENERGY{t}(:));
-            [~,V] = min(Menergy);
-        case 'degCorr'
-            [Menergy(t), MenergyIND(t)] = max(SPTLCORR{t}(:));
-            [~,V] = max(Menergy);
-    end
-end
+F = fields(S);
+Fbest = F{1}; % fields are ordered based on mean energy
+[~,V] = intersect(mtype, Fbest); 
+MenergyIND = INDselected{1}(1); 
+
 % select best parameters based on MenergyIND values 
-bestPARAM = DATA{V}.P(MenergyIND(V),:); 
-bestPARAM = bestPARAM.*paramMatrix(V); 
+bestPARAM = DATA{V}.P(MenergyIND,:); 
+bestPARAM = bestPARAM.*paramMatrix(V,:); 
 
 % plot CDFs
 %figure('color','w');
 %set(gcf, 'Position', [500 500 500 750])
 % CDFs on best parameters
-BESTmodel_networks = BestNET{1,V};
+BESTmodel_networks = BestparamNET{1,V};
 plot_modellingCDF(E, BESTmodel_networks, D, 100);
 % save the figure
 print(gcf,figureName,'-dpng','-r600');
@@ -147,7 +141,7 @@ print(gcf,figureName,'-dpng','-r600');
 % best model over 10000 runs
 %BESTmodel = nan(size(E)); 
 BESTmodel = zeros(length(INDdata)); 
-BESTmodel(DATA{V}.B{MenergyIND(V)}) = 1;
+BESTmodel(DATA{V}.B{MenergyIND}) = 1;
 BESTmodel = BESTmodel + BESTmodel';
 %BESTmodel(INDdata, INDdata) = A;
 
