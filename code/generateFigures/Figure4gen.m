@@ -208,6 +208,7 @@ axis square
 xlabel({'Node degree', 'empirical data'});
 ylabel({'Node degree', 'best-fitting model'})
 
+
 set(gca,'fontsize', 20);
 
 subplot(2,1,2);
