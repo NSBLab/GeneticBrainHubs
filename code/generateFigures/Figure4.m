@@ -35,20 +35,10 @@ else
 end
 
 degEMP = degrees_und(E);
-BestParamNetworksCORR = cell(3,2);
-numMOD = length(mtype)-1;
-numNET = length(BestParamNetworksENERGY{1, 1}{1,1});
 
 switch optimiseWhat
     case 'degCorr' % for degree correlations look for max values
-        
-        for m=1:numMOD
-            for n=1:numNET
-                networkSEL = BestParamNetworks{rowIND,colIND}{1,m}{n};
-                degnetworkSEL = degrees_und(networkSEL);
-                BestParamNetworksCORR{rowIND, colIND}{1,m}(n) = corr(degEMP', degnetworkSEL', 'type', 'Spearman');
-            end
-        end
+       
         
         % plot top 100 highest correlation values
         [S, INDselected] = plotMODviolin(SPTLCORR{rowIND,colIND}, 100, mtype, 'highest');

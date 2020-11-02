@@ -1,28 +1,39 @@
 % make violin plot for modelling results
 % make a violin plot
-function [S,INDselected] = plotMODviolin(ENERGY, num, mtype, selWhat, doPlot)
+function [S,I] = plotMODviolin(ENERGY, num, mtype, selWhat, doPlot)
 if nargin<5
     doPlot = true; 
 end
 
-S = struct; 
+S = struct;  
 % assign colours based on original order
+if length(ENERGY) == 13
+    ModelColors = zeros(length(mtype),3);
+    ModelColors(1,:) = [44,123,182]/255;
+    for i = 2:3
+        ModelColors(i,:) = [215,25,28]/255;
+    end
+    for i = 4:8
+        ModelColors(i,:) = [253,174,97]/255;
+    end
+    for i = 9:13
+        ModelColors(i,:) = [103,169,207]/255;
+    end
+    ModelColors(14,:) = [255 192 0]/255;
+    
+    % remove last, there are only 13 models
+    ModelColors(14,:) = [];
+elseif length(ENERGY) == 5
+    
+    ModelColors = zeros(length(mtype),3);
+    ModelColors(1,:) = [103,169,207]/255; % ST, same as degree average colour
+    ModelColors(2,:) = [90,174,97]/255; % models with genes - green
+    ModelColors(3,:) = [90,174,97]/255; % models with genes
+    ModelColors(4,:) = [44,123,182]/255; % spatial
+    ModelColors(5,:) = [90,174,97]/255; % models with genes
 
-ModelColors = zeros(length(mtype),3);
-ModelColors(1,:) = [44,123,182]/255;
-for i = 2:3
-ModelColors(i,:) = [215,25,28]/255;
 end
-for i = 4:8
-ModelColors(i,:) = [253,174,97]/255;
-end
-for i = 9:13
-ModelColors(i,:) = [103,169,207]/255;
-end
-ModelColors(14,:) = [255 192 0]/255;
 
-% remove last, there are only 13 models
-ModelColors(14,:) = []; 
 
 % order models based on mean fit values
 for j=1:size(ENERGY,2)
@@ -41,6 +52,8 @@ end
 % reorder colours based on new plotting order
 ModelColors = ModelColors(ind,:); 
 
+I = cell(size(ENERGY,2),1); 
+
 % select lowest values
 for j=1:size(ENERGY,2)
     selM = ind(j); 
@@ -57,13 +70,14 @@ for j=1:size(ENERGY,2)
     end
 
     lowIND2 = indM(1:num); 
-    INDselected{selM} = indM(1:num); 
     if contains(mtype{selM}, '-')
         mtypeNEW{j} = erase(mtype{selM},'-'); 
     else
         mtypeNEW{j} = mtype{selM}; 
     end
-    S.(mtypeNEW{j}) = ENERGY{selM}(lowIND2); 
+    S.(mtypeNEW{j}) = ENERGY{selM}(lowIND2);
+    I{selM} = lowIND2; 
+    % the order of I is the same as input - not ordered by energy
 end
 
 

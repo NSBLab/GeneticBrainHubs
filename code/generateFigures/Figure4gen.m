@@ -6,18 +6,17 @@ optimiseWhat = 'energy';
 
 % load all data data 
 % sptl doesn't have any topological iinformation
-DATA = cell(6,1); 
-DATA{1} = load('Group_HCPparc20dens_10k_space1_deg-avg1_gene1_voronoi_mult2_energy_sp.mat'); 
-DATA{2} = load('Group_HCPparc20dens_10k_space1_deg-avg1_gene0_voronoi_mult2_energy_sp.mat'); 
-DATA{3} = load('Group_HCPparc20dens_10k_space1_sptl1_gene1_voronoi_mult2_energy_sp.mat'); 
-DATA{4} = load('Group_HCPparc20dens_10k_space0_deg-avg1_gene1_voronoi_mult2_energy_sp.mat'); 
-DATA{5} = load('Group_HCPparc20dens_10k_space1_sptl1_gene0_voronoi_mult2_energy_sp.mat'); 
-DATA{6} = load('Group_HCPparc20dens_10k_space0_sptl1_gene1_voronoi_mult2_energy_sp.mat'); 
+DATA = cell(5,1); 
+DATA{1} = load('Group_HCPparc20dens_10k_space1_deg-avg1_gene0_voronoi_mult2_energy_sp.mat'); 
+DATA{2} = load('Group_HCPparc20dens_10k_space1_sptl1_gene1_voronoi_mult2_energy_sp.mat'); 
+DATA{3} = load('Group_HCPparc20dens_10k_space0_deg-avg1_gene1_voronoi_mult2_energy_sp.mat'); 
+DATA{4} = load('Group_HCPparc20dens_10k_space1_sptl1_gene0_voronoi_mult2_energy_sp.mat'); 
+DATA{5} = load('Group_HCPparc20dens_10k_space0_sptl1_gene1_voronoi_mult2_energy_sp.mat'); 
 
 % label each model in the same order
 % S-stands for space; T - topology; G - gene; 
-mtype = {'STG', 'ST', 'SG', 'TG', 'S', 'G'}; 
-paramMatrix = [1 1 1; 1 1 0; 1 0 1; 0 1 1; 1 0 0; 0 0 1]; 
+mtype = {'ST', 'SG', 'TG', 'S', 'G'}; 
+paramMatrix = [1 1 0; 1 0 1; 0 1 1; 1 0 0; 0 0 1]; 
 
 % load empirical data
 load('HCPparc20dens_4modelling.mat')
@@ -29,22 +28,21 @@ INDdata = setdiff(1:size(averageCoexpression,1), INDnan);
 % put data into energy and correlation cells
 ENERGY = cell(1,length(mtype)); 
 SPTLCORR = cell(1,length(mtype)); 
-BestparamNET = cell(1,length(mtype)); 
+BestparamNET = cell(1,length(mtype));
+allNET = cell(1,length(mtype));
 
 for m=1:length(mtype)
     
-    ENERGY{1,m} = DATA{m}.E;
-    SPTLCORR{1,m} = DATA{m}.Cs;
-    BestparamNET{1,m} = DATA{m}.Bbest; 
-    
-    %for p=1:length(DATA{m}.Bbest)
-        
-        
-%         T = nan(size(E));
-%         T(INDdata, INDdata) = DATA{m}.Bbest{p};
-%         BestNET{1,m}{p} = T; 
-        
-    %end
+    ENERGY{m} = DATA{m}.E;
+    SPTLCORR{m} = DATA{m}.Cs;
+    BestparamNET{m} = DATA{m}.Bbest; 
+    for p=1:length(DATA{m}.E)
+        N = zeros(length(INDdata));
+        N(DATA{m}.B{p}) = 1;
+        N = N+N';
+        allNET{m}{p} = N; 
+    end
+
 end
 
 
@@ -124,28 +122,26 @@ end
 F = fields(S);
 Fbest = F{1}; % fields are ordered based on mean energy
 [~,V] = intersect(mtype, Fbest); 
-MenergyIND = INDselected{1}(1); 
+MenergyIND = INDselected{V}(1); 
+
 
 % select best parameters based on MenergyIND values 
 bestPARAM = DATA{V}.P(MenergyIND,:); 
 bestPARAM = bestPARAM.*paramMatrix(V,:); 
 
 % plot CDFs
-%figure('color','w');
-%set(gcf, 'Position', [500 500 500 750])
+% figure('color','w');
+% set(gcf, 'Position', [500 500 500 750])
 % CDFs on best parameters
-BESTmodel_networks = BestparamNET{1,V};
+BESTmodel_networks = BestparamNET{V};
+%INDselected is ordered by mean energy
+%BESTmodel_networks = allNET{V}(INDselected{1}); 
 plot_modellingCDF(E, BESTmodel_networks, D, 100);
 % save the figure
 print(gcf,figureName,'-dpng','-r600');
 
 % best model over 10000 runs
-%BESTmodel = nan(size(E)); 
-BESTmodel = zeros(length(INDdata)); 
-BESTmodel(DATA{V}.B{MenergyIND}) = 1;
-BESTmodel = BESTmodel + BESTmodel';
-%BESTmodel(INDdata, INDdata) = A;
-
+BESTmodel = allNET{V}{MenergyIND}; 
 
 fprintf ('model %s has the "best" network\n', mtype{V})
 fprintf ('parameters are eta=%d, gamma=%d, lambda=%d\n', bestPARAM(1), bestPARAM(2), bestPARAM(3))
@@ -167,7 +163,7 @@ figure('color','w');
 set(gcf, 'Position', [500 500 500 750])
 
 subplot(2,1,1);
-scatter(degEMP, degMOD, 150,'MarkerEdgeColor',[69,117,180]/255,'MarkerFaceColor',[1 1 1], 'LineWidth',3);
+scatter(degEMP, degMOD, 150,'MarkerEdgeColor',[90,174,97]/255,'MarkerFaceColor',[1 1 1], 'LineWidth',3);
 set(gcf, 'renderer', 'painters')
 hold on;
 switch optimiseWhat
@@ -207,7 +203,7 @@ ylabel({'Node degree', 'best-fitting model'})
 set(gca,'fontsize', 20);
 
 subplot(2,1,2);
-histogram(CorrLE_ALL, 20, 'EdgeColor',[69,117,180]/255,'FaceColor',[1 1 1], 'LineWidth',3);
+histogram(CorrLE_ALL, 20, 'EdgeColor',[90,174,97]/255,'FaceColor',[1 1 1], 'LineWidth',3);
 axis square
 ylabel('Frequency')
 xlabel('Spearman correlation, \rho')
@@ -220,28 +216,28 @@ print(gcf,figureName,'-dpng','-r600');
 degEMP_plot = nan(180,1); 
 degEMP_plot(INDdata) = degEMP; 
 
-plot_hubGroupsSurface('HCP',degEMP_plot,tsEMP, 'inside', 'lh');
-figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s_gene.png', optimiseWhat, parcellation, 'inside', 'lh');
-print(gcf,figureName,'-dpng','-r1200');
-
-plot_hubGroupsSurface('HCP',degEMP_plot,tsEMP, 'outside', 'lh');
-figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s_gene.png', optimiseWhat, parcellation, 'outside', 'lh');
-print(gcf,figureName,'-dpng','-r1200');
-
-
-sides = {'inside'; 'outside'};
-hems = {'lh'};
-for s=1:2
-    side = sides{s};
-    for h=1:length(hems)
-        hem = hems{h};
-        ds_all = nan(1, 180);
-        ds_all(INDdata) = degMOD;
-        
-        plot_hubGroupsSurface('HCP',ds_all,tsMOD, side, 'lh');
-        figureName = sprintf('makeFigures/hubsSurface_bestMOD_%s_%s_%s_%s_gene.png', optimiseWhat, parcellation, side, hem);
-        print(gcf,figureName,'-dpng','-r1200');
-        
-    end
-end
+% plot_hubGroupsSurface('HCP',degEMP_plot,tsEMP, 'inside', 'lh');
+% figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s_gene.png', optimiseWhat, parcellation, 'inside', 'lh');
+% print(gcf,figureName,'-dpng','-r1200');
+% 
+% plot_hubGroupsSurface('HCP',degEMP_plot,tsEMP, 'outside', 'lh');
+% figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s_gene.png', optimiseWhat, parcellation, 'outside', 'lh');
+% print(gcf,figureName,'-dpng','-r1200');
+% 
+% 
+% sides = {'inside'; 'outside'};
+% hems = {'lh'};
+% for s=1:2
+%     side = sides{s};
+%     for h=1:length(hems)
+%         hem = hems{h};
+%         ds_all = nan(1, 180);
+%         ds_all(INDdata) = degMOD;
+%         
+%         plot_hubGroupsSurface('HCP',ds_all,tsMOD, side, 'lh');
+%         figureName = sprintf('makeFigures/hubsSurface_bestMOD_%s_%s_%s_%s_gene.png', optimiseWhat, parcellation, side, hem);
+%         print(gcf,figureName,'-dpng','-r1200');
+%         
+%     end
+% end
 end
