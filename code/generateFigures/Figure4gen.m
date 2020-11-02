@@ -5,13 +5,14 @@ parcellation = 'HCP';
 optimiseWhat = 'energy';
 
 % load all data data 
+% sptl doesn't have any topological iinformation
 DATA = cell(6,1); 
-DATA{1} = load('Group_HCPparc20dens_space1_deg-avg1_gene1_voronoi_mult2_energy_sp.mat'); 
-DATA{2} = load('Group_HCPparc20dens_space1_deg-avg1_gene0_voronoi_mult2_energy_sp.mat'); 
-DATA{3} = load('Group_HCPparc20dens_space1_matching0_gene1_voronoi_mult2_energy_sp.mat'); 
-DATA{4} = load('Group_HCPparc20dens_space0_deg-avg1_gene1_voronoi_mult2_energy_sp.mat'); 
-DATA{5} = load('Group_HCPparc20dens_space1_matching0_gene0_voronoi_mult2_energy_sp.mat'); 
-DATA{6} = load('Group_HCPparc20dens_space0_matching0_gene1_voronoi_mult2_energy_sp.mat'); 
+DATA{1} = load('Group_HCPparc20dens_10k_space1_deg-avg1_gene1_voronoi_mult2_energy_sp.mat'); 
+DATA{2} = load('Group_HCPparc20dens_10k_space1_deg-avg1_gene0_voronoi_mult2_energy_sp.mat'); 
+DATA{3} = load('Group_HCPparc20dens_10k_space1_sptl1_gene1_voronoi_mult2_energy_sp.mat'); 
+DATA{4} = load('Group_HCPparc20dens_10k_space0_deg-avg1_gene1_voronoi_mult2_energy_sp.mat'); 
+DATA{5} = load('Group_HCPparc20dens_10k_space1_sptl1_gene0_voronoi_mult2_energy_sp.mat'); 
+DATA{6} = load('Group_HCPparc20dens_10k_space0_sptl1_gene1_voronoi_mult2_energy_sp.mat'); 
 
 % label each model in the same order
 % S-stands for space; T - topology; G - gene; 
