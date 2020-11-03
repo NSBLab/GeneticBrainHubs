@@ -160,12 +160,11 @@ set(gca,'fontsize', 20);
 figureName = sprintf('makeFigures/MODdegree_EMPvsMOD_%s_%s_%s.png', optimiseWhat,parcellation, hemi);
 print(gcf,figureName,'-dpng','-r600');
 
-
-plot_hubGroupsSurface('HCP',degEMP(1:180),tsEMP, 'inside', 'lh');
+plot_hubsSurface_SO('HCP',degEMP(1:180),tsEMP, 'inside', 'lh');
 figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s.png', optimiseWhat, parcellation, 'inside', 'lh');
 print(gcf,figureName,'-dpng','-r1200');
 
-plot_hubGroupsSurface('HCP',degEMP(1:180),tsEMP, 'outside', 'lh');
+plot_hubsSurface_SO('HCP',degEMP(1:180),tsEMP, 'outside', 'lh');
 figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s.png', optimiseWhat, parcellation, 'outside', 'lh');
 print(gcf,figureName,'-dpng','-r1200');
 
@@ -181,8 +180,9 @@ for s=1:2
         elseif strcmp(hem, 'rh')
             ds = degMOD(181:360);
         end
-        
-        plot_hubGroupsSurface('HCP',ds,tsMOD, side, 'lh');
+        plot_hubsSurface_SO('HCP',ds,tsMOD, side, hem)
+
+        %plot_hubGroupsSurface('HCP',ds,tsMOD, side, 'lh');
         figureName = sprintf('makeFigures/hubsSurface_bestMOD_%s_%s_%s_%s.png', optimiseWhat, parcellation, side, hem);
         print(gcf,figureName,'-dpng','-r1200');
         

@@ -18,34 +18,5 @@ for i=1:length(F)
     plot3(F{i}(:,1), F{i}(:,2), F{i}(:,3), 'Color', boundColour, 'LineWidth',1.5)
 end
 
-% [f1, in] = plot_measureONsurface(parc, nodeLab, side, modulesColor, hemi);
-% hold on;
-% % make boundaries on the surface
-% cdata_continuous = makeROIcont(in);
-% F = makeROIbound(cdata_continuous, in);
-% for i=1:length(F)
-%     plot3(F{i}(:,1), F{i}(:,2), F{i}(:,3), 'Color', boundColour, 'LineWidth',1.5)
-% end
-
-
-% [f2, in] = plot_measureONsurface(parc, nodeLab, side, modulesColor, hemi);
-% cdata_continuous = makeROIcont(in);
-% F = makeROIbound(cdata_continuous, in);
-% hold on;
-% 
-% for i=1:length(F)
-%     plot3(F{i}(:,1), F{i}(:,2), F{i}(:,3), 'Color', boundColour, 'LineWidth',1.5)
-% end
-% 
-% 
-% [f2, in] = plot_measureONsurface(parc, nodeLab, side, modulesColor, hemi);
-% cdata_continuous = makeROIcont(in);
-% F = makeROIbound(cdata_continuous, in);
-% hold on;
-% 
-% for i=1:length(F)
-%     plot3(F{i}(:,1), F{i}(:,2), F{i}(:,3), 'Color', boundColour, 'LineWidth',1.5)
-% end
-
 
 end

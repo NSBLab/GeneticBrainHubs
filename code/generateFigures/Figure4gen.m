@@ -216,11 +216,11 @@ print(gcf,figureName,'-dpng','-r600');
 degEMP_plot = nan(180,1); 
 degEMP_plot(INDdata) = degEMP; 
 
-% plot_hubGroupsSurface('HCP',degEMP_plot,tsEMP, 'inside', 'lh');
+% plot_hubsSurface_SO('HCP',degEMP_plot,tsEMP, 'inside', 'lh');
 % figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s_gene.png', optimiseWhat, parcellation, 'inside', 'lh');
 % print(gcf,figureName,'-dpng','-r1200');
 % 
-% plot_hubGroupsSurface('HCP',degEMP_plot,tsEMP, 'outside', 'lh');
+% plot_hubsSurface_SO('HCP',degEMP_plot,tsEMP, 'outside', 'lh');
 % figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s_gene.png', optimiseWhat, parcellation, 'outside', 'lh');
 % print(gcf,figureName,'-dpng','-r1200');
 % 
@@ -234,7 +234,7 @@ degEMP_plot(INDdata) = degEMP;
 %         ds_all = nan(1, 180);
 %         ds_all(INDdata) = degMOD;
 %         
-%         plot_hubGroupsSurface('HCP',ds_all,tsMOD, side, 'lh');
+%         plot_hubsSurface_SO('HCP',ds_all,tsMOD, side, 'lh');
 %         figureName = sprintf('makeFigures/hubsSurface_bestMOD_%s_%s_%s_%s_gene.png', optimiseWhat, parcellation, side, hem);
 %         print(gcf,figureName,'-dpng','-r1200');
 %         
