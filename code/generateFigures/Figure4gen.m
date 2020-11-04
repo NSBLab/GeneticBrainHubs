@@ -133,9 +133,8 @@ bestPARAM = bestPARAM.*paramMatrix(V,:);
 % figure('color','w');
 % set(gcf, 'Position', [500 500 500 750])
 % CDFs on best parameters
-BESTmodel_networks = BestparamNET{V};
-%INDselected is ordered by mean energy
-%BESTmodel_networks = allNET{V}(INDselected{1}); 
+BESTmodel_networks = allNET{V}(INDselected{V}); 
+%BESTmodel_networks = BestparamNET{V};
 plot_modellingCDF(E, BESTmodel_networks, D, 100);
 % save the figure
 print(gcf,figureName,'-dpng','-r600');
@@ -173,7 +172,7 @@ switch optimiseWhat
         % plot degree on brain for empirical and mode network
         d = 25;
         tsEMP = [145-d,125-d,105-d];
-        tsMOD = [80,75,70];
+        tsMOD = [145-d,125-d,105-d];%[80,75,70];
     case 'degCorr'
         xlim([0 150]);
         ylim([0 150]);
@@ -216,28 +215,28 @@ print(gcf,figureName,'-dpng','-r600');
 degEMP_plot = nan(180,1); 
 degEMP_plot(INDdata) = degEMP; 
 
-% plot_hubsSurface_SO('HCP',degEMP_plot,tsEMP, 'inside', 'lh');
-% figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s_gene.png', optimiseWhat, parcellation, 'inside', 'lh');
-% print(gcf,figureName,'-dpng','-r1200');
-% 
-% plot_hubsSurface_SO('HCP',degEMP_plot,tsEMP, 'outside', 'lh');
-% figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s_gene.png', optimiseWhat, parcellation, 'outside', 'lh');
-% print(gcf,figureName,'-dpng','-r1200');
-% 
-% 
-% sides = {'inside'; 'outside'};
-% hems = {'lh'};
-% for s=1:2
-%     side = sides{s};
-%     for h=1:length(hems)
-%         hem = hems{h};
-%         ds_all = nan(1, 180);
-%         ds_all(INDdata) = degMOD;
-%         
-%         plot_hubsSurface_SO('HCP',ds_all,tsMOD, side, 'lh');
-%         figureName = sprintf('makeFigures/hubsSurface_bestMOD_%s_%s_%s_%s_gene.png', optimiseWhat, parcellation, side, hem);
-%         print(gcf,figureName,'-dpng','-r1200');
-%         
-%     end
-% end
+plot_hubsSurface_SO('HCP',degEMP_plot,tsEMP, 'inside', 'lh');
+figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s_genes.png', optimiseWhat, parcellation, 'inside', 'lh');
+print(gcf,figureName,'-dpng','-r300');
+
+plot_hubsSurface_SO('HCP',degEMP_plot,tsEMP, 'outside', 'lh');
+figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s_genes.png', optimiseWhat, parcellation, 'outside', 'lh');
+print(gcf,figureName,'-dpng','-r300');
+
+
+sides = {'inside'; 'outside'};
+hems = {'lh'};
+for s=1:2
+    side = sides{s};
+    for h=1:length(hems)
+        hem = hems{h};
+        ds_all = nan(1, 180);
+        ds_all(INDdata) = degMOD;
+        
+        plot_hubsSurface_SO('HCP',ds_all,tsMOD, side, 'lh');
+        figureName = sprintf('makeFigures/hubsSurface_bestMOD_%s_%s_%s_%s_genes.png', optimiseWhat, parcellation, side, hem);
+        print(gcf,figureName,'-dpng','-r300');
+        
+    end
+end
 end
