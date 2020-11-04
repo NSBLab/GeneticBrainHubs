@@ -38,8 +38,7 @@ degEMP = degrees_und(E);
 
 switch optimiseWhat
     case 'degCorr' % for degree correlations look for max values
-       
-        
+
         % plot top 100 highest correlation values
         [S, INDselected] = plotMODviolin(SPTLCORR{rowIND,colIND}, 100, mtype, 'highest');
         set(gca,'FontSize',18)
@@ -69,7 +68,6 @@ switch optimiseWhat
         
 end
 
-
 % select best model based on 10000 runs
 for t=1:length(mtype)-1
     switch optimiseWhat
@@ -84,9 +82,7 @@ end
 % select best parameters based on MenergyIND values 
 bestPARAM = Params{rowIND,colIND}{V}(MenergyIND(V),:); 
 
-% plot CDFs
-%figure('color','w');
-%set(gcf, 'Position', [500 500 500 750])
+% CHANGE THIS TO networks from violins!!!
 BESTmodel_networks = BestParamNetworks{rowIND,colIND}{1,V};
 plot_modellingCDF(E, BESTmodel_networks, D, 100);
 % save the figure
@@ -109,9 +105,9 @@ CorrLE_ALL = cat(1, CS{:});
 
 whatLine = 'fit';
 figure('color','w');
-set(gcf, 'Position', [500 500 500 750])
+set(gcf, 'Position', [500 500 750 500])
 
-subplot(2,1,1);
+subplot(1,2,1);
 scatter(degEMP, degMOD, 150,'MarkerEdgeColor',[69,117,180]/255,'MarkerFaceColor',[1 1 1], 'LineWidth',3);
 set(gcf, 'renderer', 'painters')
 hold on;
@@ -149,7 +145,7 @@ ylabel({'Node degree', 'best-fitting model'})
 
 set(gca,'fontsize', 20);
 
-subplot(2,1,2);
+subplot(1,2,2);
 histogram(CorrLE_ALL, 20, 'EdgeColor',[69,117,180]/255,'FaceColor',[1 1 1], 'LineWidth',3);
 axis square
 ylabel('Frequency')
