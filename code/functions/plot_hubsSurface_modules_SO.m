@@ -1,12 +1,5 @@
-function [f] = plot_hubsSurface_SO(parcellation,nodeData,ts, side, whatHemisphere)
-
-nodeLab = zeros(length(nodeData),1);
-
-nodeLab(nodeData>ts(3)) = 1; 
-nodeLab(nodeData>ts(2)) = 2; 
-nodeLab(nodeData>ts(1)) = 3; 
-modulesColor = GiveMeColors('degreeGroups'); 
-
+function [f] = plot_hubsSurface_modules_SO(parcellation,nodeData, modulesColor, side, whatHemisphere)
+ 
 load('data/modules/FSAVERAGE_DATA_inflated.mat')
 load('data/modules/fsaverage_surface_data.mat')
 
@@ -63,7 +56,7 @@ set(gcf,'color','w');
 set(gcf, 'Position', [500 500 950 750])
 
        
-plotSurfaceROIBoundary(surface,parcdata,nodeLab,'midpoint',modulesColor,1,2);
+plotSurfaceROIBoundary(surface,parcdata,nodeData,'midpoint',modulesColor,1,2);
 
 
 if strcmp(side, 'inside') && strcmp(whatHemisphere, 'rh')

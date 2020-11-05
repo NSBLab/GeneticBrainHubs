@@ -94,7 +94,7 @@ for s=1:2
             ds = nodeData(length(nodeData)/2+1:length(nodeData));
         end
         
-        plot_hubGroupsSurface(parcellation,ds,ts, side, hemi);
+        plot_hubsSurface_SO(parcellation,ds,ts, side, hemi);
         
         figureName = sprintf('makeFigures/hubsSurface_%s_%d_%s_%s.png', parcellation, round(op.densThreshold*100), side, hemi);
         print(gcf,figureName,'-dpng','-r300');
