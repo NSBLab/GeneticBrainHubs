@@ -161,7 +161,7 @@ whatLine = 'fit';
 figure('color','w');
 set(gcf, 'Position', [500 500 500 750])
 
-subplot(2,1,1);
+subplot(9,1,1:3);
 scatter(degEMP, degMOD, 150,'MarkerEdgeColor',[90,174,97]/255,'MarkerFaceColor',[1 1 1], 'LineWidth',3);
 set(gcf, 'renderer', 'painters')
 hold on;
@@ -198,16 +198,40 @@ axis square
 xlabel({'Node degree', 'empirical data'});
 ylabel({'Node degree', 'best-fitting model'})
 
-
 set(gca,'fontsize', 20);
 
-subplot(2,1,2);
-histogram(CorrLE_ALL, 20, 'EdgeColor',[90,174,97]/255,'FaceColor',[1 1 1], 'LineWidth',3);
-axis square
-ylabel('Frequency')
-xlabel('Spearman correlation, \rho')
-xlim([-0.35 0.35]); box off
-set(gca,'fontsize', 20);
+% make separate fistograms for G and other models
+has_genes = contains(mtype, 'G'); 
+%Corr_G = vertcat(CS{Gmod});
+%Corr_notG = vertcat(CS{Gmod==0});
+for gg=1:length(mtype)
+    
+    if has_genes(gg)
+        bar_col = [90,174,97]/255;
+    else
+        bar_col = [69,117,180]/255;
+    end
+    
+    subplot(9,1,gg+4);
+    histogram(CS{gg}, 20, 'EdgeColor',bar_col,'FaceColor',[1 1 1], 'LineWidth',3);
+    xlim([-0.35 0.35]); ylim([0 15]); box off
+    set(gca,'fontsize', 14);
+    
+    if gg~=5
+        set(gca,'xticklabel',[])
+    end
+    
+    if gg==3
+        ylabel('Frequency', 'FontSize', 20)
+    elseif gg==5
+        xlabel('Spearman correlation, \rho', 'FontSize', 20)
+    end
+    
+    set(gca,'ytick',[0 15])
+    set(gca,'xtick',[-.2 0 .2])
+    
+    hold on;
+end
 
 figureName = sprintf('makeFigures/MODdegree_EMPvsMOD_%s_%s_%s_genes.png', optimiseWhat,parcellation, hemi);
 print(gcf,figureName,'-dpng','-r600');
