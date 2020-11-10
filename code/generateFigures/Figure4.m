@@ -76,7 +76,7 @@ for t=1:length(mtype)-1
             [Menergy(t), MenergyIND(t)] = min(ENERGY{rowIND,colIND}{1,t}(:));
             [~,V] = min(Menergy);
         case 'degCorr'
-            [Menergy(t), MenergyIND(t)] = max(PEAR{rowIND,colIND}{1,t}(:));
+            [Menergy(t), MenergyIND(t)] = max(SPEAR{rowIND,colIND}{1,t}(:));
             [~,V] = max(Menergy);
     end
 end
