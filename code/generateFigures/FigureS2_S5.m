@@ -36,6 +36,15 @@ distMatr = maskuHalf(distMatr);
 figureName = sprintf('makeFigures/heritability_distributions_distance_%s.png', parcellation);
 print(f0,figureName,'-dpng','-r600');
 
+[RvsF_subj, FvsP_subj] = compare_numberExcludedSubjects('BOTH'); 
+figureName = sprintf('makeFigures/Heritability_NRexcluded_subjects_%s.png', parcellation);
+print(gcf,figureName,'-dpng','-r300');
+
+
+[RvsF_variance, FvsP_variance] = compare_numberExcludedSubjects('VARrem'); 
+figureName = sprintf('makeFigures/Heritability_Variance_%s.png', parcellation);
+print(gcf,figureName,'-dpng','-r300');
+
 % S4 - heritability for SC weight
 whatFactors = {'Afactor', 'Efactor'};
 weightSC = 'standard';
@@ -87,7 +96,9 @@ for pa=1:length(parcs)
         print(gcf,figureName,'-dpng','-r600');
         
     end
-end
+
+
+
 end
 
 
