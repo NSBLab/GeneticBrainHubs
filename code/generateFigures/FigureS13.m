@@ -9,14 +9,14 @@ optimiseWhat = 'degCorr';
 
 switch optimiseWhat
     case 'energy'
-        load('GenerativeModelling_EnergyOptim.mat')
+        load('REDONE_EnergyOptim.mat')
         
     case 'degCorr'
-        load('GenerativeModelling_CorrOptim.mat')
+        load('REDONE_CorrOptim.mat')
         
 end
 
-rowIND = find(contains(Parcname,parcellation));
+rowIND = 1; 
 load('HCPparc20dens_4modelling.mat')
 for j = 1:length(individualCOORDs)
     DD(:,:,j) = pdist2(individualCOORDs{j},individualCOORDs{j});
@@ -35,23 +35,12 @@ else
 end
 
 degEMP = degrees_und(E);
-BestParamNetworksCORR = cell(3,2);
-numMOD = length(mtype)-1;
-numNET = length(BestParamNetworksENERGY{1, 1}{1,1});
 
 switch optimiseWhat
     case 'degCorr' % for degree correlations look for max values
-        
-        for m=1:numMOD
-            for n=1:numNET
-                networkSEL = BestParamNetworks{rowIND,colIND}{1,m}{n};
-                degnetworkSEL = degrees_und(networkSEL);
-                BestParamNetworksCORR{rowIND, colIND}{1,m}(n) = corr(degEMP', degnetworkSEL', 'type', 'Spearman');
-            end
-        end
-        
+
         % plot top 100 highest correlation values
-        [S, INDselected] = plotMODviolin(SPTLCORR{rowIND,colIND}, 100, mtype, 'highest');
+        [S, INDselected] = plotMODviolin(SPEAR{rowIND,colIND}, 100, mtype, 'highest');
         set(gca,'FontSize',18)
         ylabel('Degree correlation')
         figureName = sprintf('makeFigures/MODELfit_%s_%s_Highestcorrelation_optimise_%s.png',parcellation, hemi, optimiseWhat);
@@ -60,7 +49,7 @@ switch optimiseWhat
         % get CORRELATION values for those selected networks
         CS = cell(1,length(mtype)-1);
         for p=1:length(mtype)-1
-            CS{p} = SPTLCORR{rowIND,colIND}{p}(INDselected{p});
+            CS{p} = SPEAR{rowIND,colIND}{p}(INDselected{p});
         end
         
         
@@ -74,39 +63,54 @@ switch optimiseWhat
         % get the correlations based on lowest energy
         CS = cell(1,length(mtype)-1);
         for p=1:length(mtype)-1
-            CS{p} = SPTLCORR{rowIND,colIND}{p}(INDselected{p});
+            CS{p} = SPEAR{rowIND,colIND}{p}(INDselected{p});
         end
         
 end
-
 
 % select best model based on 10000 runs
 for t=1:length(mtype)-1
     switch optimiseWhat
         case 'energy'
-            Menergy(t) = min(ENERGY{rowIND,colIND}{1,t}(:));
+            [Menergy(t), MenergyIND(t)] = min(ENERGY{rowIND,colIND}{1,t}(:));
             [~,V] = min(Menergy);
         case 'degCorr'
-            Menergy(t) = max(SPTLCORR{rowIND,colIND}{1,t}(:));
+            [Menergy(t), MenergyIND(t)] = max(SPEAR{rowIND,colIND}{1,t}(:));
             [~,V] = max(Menergy);
     end
 end
+% select best parameters based on MenergyIND values 
+bestPARAM = Params{rowIND,colIND}{V}(MenergyIND(V),:); 
 
-% plot CDFs
-% figure('color','w');
-%set(gcf, 'Position', [500 500 500 750])
-BESTmodel_networks = BestParamNetworks{rowIND,colIND}{1,V};
+% CHANGE THIS TO networks from violins!!!
+% get networks corresponding to violin points for the best model
+allNET = cell(length(Networks{1,1}{1,1}),1); 
+for nn=1:length(Networks{1,1}{1,1})
+     N = zeros(size(E,1));
+     N(Networks{1}{V}{nn}) = 1;
+     N = N+N';
+     allNET{nn} = N; 
+end
+% CDFs plotted using networks from violin
+BESTmodel_networks = allNET(INDselected{V}); 
 plot_modellingCDF(E, BESTmodel_networks, D, 100);
 % save the figure
-print(gcf,figureName,'-dpng','-r600');
+print(gcf,figureName,'-dpng','-r300');
 
-BESTmodel = BestNetwork{rowIND,colIND}{1,V};
+BESTmodel = allNET{MenergyIND(V)}; 
+
 fprintf ('model %s has the "best" network\n', mtype{V})
+fprintf ('parameters are eta=%d, gamma=%d\n', bestPARAM(1), bestPARAM(2))
 
 % get max KS value for main text
 mName = erase(mtype{V}, '-');
 maxKS = max(S.(mName));
-fprintf ('Max KS for best model in box plot is %d\n', maxKS)
+switch optimiseWhat
+    case 'energy'
+        fprintf ('Max KS for best model in box plot is %d\n', maxKS)
+    case 'degCorr'
+        fprintf ('Max Spearman correlation for best model in box plot is %d\n', maxKS)
+end
 
 degMOD = degrees_und(BESTmodel);
 
@@ -116,7 +120,7 @@ CorrLE_ALL = cat(1, CS{:});
 
 whatLine = 'fit';
 figure('color','w');
-set(gcf, 'Position', [500 500 500 750])
+set(gcf, 'Position', [500 500 750 500])
 
 subplot(2,1,1);
 scatter(degEMP, degMOD, 150,'MarkerEdgeColor',[69,117,180]/255,'MarkerFaceColor',[1 1 1], 'LineWidth',3);
@@ -137,7 +141,7 @@ switch optimiseWhat
         demp = 25;
         % use different thresholds for degre-optimised modelling - the distribution is very narrow
         tsEMP = [145-demp,125-demp,105-demp];
-        tsMOD = [65,60,55];
+        tsMOD = [80,75,70];
 end
 
 switch whatLine
@@ -165,8 +169,7 @@ xlim([-0.35 0.35]); box off
 set(gca,'fontsize', 20);
 
 figureName = sprintf('makeFigures/MODdegree_EMPvsMOD_%s_%s_%s.png', optimiseWhat,parcellation, hemi);
-print(gcf,figureName,'-dpng','-r600');
-
+print(gcf,figureName,'-dpng','-r300');
 
 plot_hubsSurface_SO('HCP',degEMP(1:180),tsEMP, 'inside', 'lh');
 figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s.png', optimiseWhat, parcellation, 'inside', 'lh');
@@ -188,8 +191,9 @@ for s=1:2
         elseif strcmp(hem, 'rh')
             ds = degMOD(181:360);
         end
-        
-        plot_hubsSurface_SO('HCP',ds,tsMOD, side, 'lh');
+        plot_hubsSurface_SO('HCP',ds,tsMOD, side, hem)
+
+        %plot_hubGroupsSurface('HCP',ds,tsMOD, side, 'lh');
         figureName = sprintf('makeFigures/hubsSurface_bestMOD_%s_%s_%s_%s.png', optimiseWhat, parcellation, side, hem);
         print(gcf,figureName,'-dpng','-r300');
         

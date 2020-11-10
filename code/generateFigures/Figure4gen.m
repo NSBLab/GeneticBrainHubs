@@ -137,7 +137,7 @@ BESTmodel_networks = allNET{V}(INDselected{V});
 %BESTmodel_networks = BestparamNET{V};
 plot_modellingCDF(E, BESTmodel_networks, D, 100);
 % save the figure
-print(gcf,figureName,'-dpng','-r600');
+print(gcf,figureName,'-dpng','-r300');
 
 % best model over 10000 runs
 BESTmodel = allNET{V}{MenergyIND}; 
@@ -234,7 +234,7 @@ for gg=1:length(mtype)
 end
 
 figureName = sprintf('makeFigures/MODdegree_EMPvsMOD_%s_%s_%s_genes.png', optimiseWhat,parcellation, hemi);
-print(gcf,figureName,'-dpng','-r600');
+print(gcf,figureName,'-dpng','-r300');
 
 degEMP_plot = nan(180,1); 
 degEMP_plot(INDdata) = degEMP; 
