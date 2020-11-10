@@ -1,11 +1,10 @@
 %--------------------------------------------------%
 % Figure 4
 %--------------------------------------------------%
-function Figure4()
+function Figure4(optimiseWhat)
 
 hemi = 'left'; %if using degCorr, select only 'left'
 parcellation = 'HCP';
-optimiseWhat = 'energy';
 
 switch optimiseWhat
     case 'energy'
@@ -40,7 +39,8 @@ switch optimiseWhat
     case 'degCorr' % for degree correlations look for max values
 
         % plot top 100 highest correlation values
-        [S, INDselected] = plotMODviolin(SPTLCORR{rowIND,colIND}, 100, mtype, 'highest');
+        [S, INDselected] = plotMODviolin(SPEAR{rowIND,colIND}, 100, mtype, 'highest');
+        ylim([0 0.35])
         set(gca,'FontSize',18)
         ylabel('Degree correlation')
         figureName = sprintf('makeFigures/MODELfit_%s_%s_Highestcorrelation_optimise_%s.png',parcellation, hemi, optimiseWhat);
@@ -49,13 +49,14 @@ switch optimiseWhat
         % get CORRELATION values for those selected networks
         CS = cell(1,length(mtype)-1);
         for p=1:length(mtype)-1
-            CS{p} = PEAR{rowIND,colIND}{p}(INDselected{p});
+            CS{p} = SPEAR{rowIND,colIND}{p}(INDselected{p});
         end
         
         
     case 'energy' % for KS look for minimal values
         
         [S, INDselected] = plotMODviolin(ENERGY{rowIND,colIND}, 100, mtype, 'lowest');
+        ylim([0.1 0.4])
         set(gca,'FontSize',18)
         ylabel('Model fit (KS)')
         figureName = sprintf('makeFigures/MODELfit_%s_%s_Lowestenergy_optimise_%s.png',parcellation, hemi, optimiseWhat);
@@ -120,7 +121,7 @@ CorrLE_ALL = cat(1, CS{:});
 
 whatLine = 'fit';
 figure('color','w');
-set(gcf, 'Position', [500 500 750 500])
+set(gcf, 'Position', [500 500 500 750])
 
 subplot(2,1,1);
 scatter(degEMP, degMOD, 150,'MarkerEdgeColor',[69,117,180]/255,'MarkerFaceColor',[1 1 1], 'LineWidth',3);

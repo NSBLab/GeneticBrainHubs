@@ -16,7 +16,7 @@ Figure3()
 %--------------------------------------------------%
 % Figure 4 - main text: generative modelling
 %--------------------------------------------------%
-Figure4()
+Figure4('energy')
 
 %--------------------------------------------------%
 % Figure S1 - supplementary: topological properties 
@@ -43,7 +43,7 @@ FigureS12()
 %--------------------------------------------------%
 % Figure S13 - supplementary: generative modelling 
 %--------------------------------------------------%
-FigureS13()
+Figure4('degCorr')
 
 %--------------------------------------------------%
 % edge-wise GWAS results
