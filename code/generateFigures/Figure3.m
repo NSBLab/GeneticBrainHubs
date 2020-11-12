@@ -51,7 +51,7 @@ set(gca,'fontsize', 18);
 ylim([-0.05 0.18])
 
 figureName = sprintf('makeFigures/CGEcurves_%s_%d.png', parc,round(op.densThreshold*100));
-print(gcf,figureName,'-dpng','-r600');
+print(gcf,figureName,'-dpng','-r300');
 
 % plot CGE for each functional module
 load('data/modules/cortex_parcel_network_assignments.mat')
@@ -60,34 +60,16 @@ load('data/modules/cortex_parcel_network_assignments.mat')
 resINTERINTRA = plot_moduleViolin(allData, measureModRICH, netNamesAll, netassignments, CGEmatrix, nodeData, groupAdjlog, 'CGE', op.khub); 
 
 figureName = sprintf('makeFigures/CGEmodules_%s_%d.png', parc, round(op.densThreshold*100));
-print(gcf,figureName,'-dpng','-r600');
+print(gcf,figureName,'-dpng','-r300');
 
 % get cell-specific gene lists
 [cellGenesUNIQUE,cellGroups] = getCellSpecificGenes('all_gene_data.csv');
 nG = length(cellGroups); 
-% add disorder-specific genes to cellGenesUNIQUE and cellGroups variables
-lists = {'iq', 'scz'}; 
-N = getGWASgenes(coexpData, lists); 
-for gg=1:length(N)
-    cellGenesUNIQUE{nG+gg} = string(N{gg}'); 
-    cellGroups(nG+gg) = lists{gg}; 
-end
 
 % for each cell-specific list of genes find ones in the expression data
 listGenes = getCellExpression(cellGenesUNIQUE,cellGroups,coexpData); 
 % make iq and scz lists mutually exclusive
-for o=1:size(listGenes,1)
-    
-    l1(o) = listGenes{o,1}==lists{1}; 
-    l2(o) = listGenes{o,1}==lists{2}; 
-    
-end
 
-[~,i8, i9] = intersect(listGenes{find(l1),2}, listGenes{find(l2),2}); 
-listGenes{find(l1),4}(i8) = []; 
-listGenes{find(l1),5}(i8) = []; 
-listGenes{find(l2),4}(i9) = []; 
-listGenes{find(l2),5}(i9) = []; 
 % manually rename gene categories to make names more representative
 for gn=1:size(listGenes,1)
     if strcmp(listGenes{gn,1}, 'Ex-Neuron')
@@ -102,10 +84,6 @@ for gn=1:size(listGenes,1)
         listGenes{gn,1} = 'microglia';
     elseif strcmp(listGenes{gn,1}, 'oligo')
         listGenes{gn,1} = 'oligodendrocyte';
-    elseif strcmp(listGenes{gn,1}, 'iq')
-        listGenes{gn,1} = 'IQ';
-    elseif strcmp(listGenes{gn,1}, 'scz')
-        listGenes{gn,1} = 'schizophrenia';
     end
 end
 
@@ -113,7 +91,7 @@ end
 [T, geneList, fig] = GCCttest(coexpData, FitCurve, groupAdjlog, nodeData, op.khub, listGenes); 
 
 figureName = sprintf('makeFigures/GCCdistributions_%s_%d.png',  parc, round(op.densThreshold*100));
-print(gcf,figureName,'-dpng','-r600');
+print(gcf,figureName,'-dpng','-r300');
 
 % Load BigBrain data
 yregress = true; 
@@ -128,7 +106,7 @@ set(gca,'fontsize', 18);
 ylim([0.6 1.1])
 
 figureName = sprintf('makeFigures/MPCmean_%s_%d.png', parc, round(op.densThreshold*100));
-print(gcf,figureName,'-dpng','-r600');
+print(gcf,figureName,'-dpng','-r300');
 end
 
 
