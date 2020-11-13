@@ -43,6 +43,7 @@ end
 subjectsOK = importSubjects('freesurfer_allSubjects.txt'); 
 subjects = intersect(subjectsOK,CON.subs); 
 
+fprintf('issues with freesurfer: n=%d\n', length(setdiff(CON.subs, subjectsOK))); 
 numNodes = length(keepNodes);
 numSubjects = length(subjects);
 matrices = cell(1,numSubjects);
@@ -72,6 +73,7 @@ for s=1:numSubjects
 end
 
 subRem = find(den <= mean(den)-3*std(den)); 
+fprintf('issues with density: n=%d\n', length(subRem)); 
 
 A(:,:,subRem) = []; 
 matrices(subRem) = []; 

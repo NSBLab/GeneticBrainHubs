@@ -137,7 +137,7 @@ end
 
 % Figure S9
 % make RFP plot using Monash dataset connectome
-[coexpData, A, matrices, coordinates, avWeight] = giveConnExp_GenCog('HCP',op.tract,op.probe,op.conW,op.brainPart,op.nRem);
+[coexpData, A, matrices, coordinates, avWeight, sub_monash] = giveConnExp_GenCog('HCP',op.tract,op.probe,op.conW,op.brainPart,op.nRem);
 GrSC_GC = giveMeRichClub(matrices, coordinates, op.groupConn, op.densThreshold, false, op.cvMeasure, op.consThr);
 
 CGEmatrix_uncorrected = corr(coexpData.parcelExpression(:,2:end)');
