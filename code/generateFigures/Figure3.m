@@ -8,6 +8,7 @@ whatDWI = 'HCP';
 weight = 'standard'; %for GenCog'standard'; 
 parc = 'HCP';
 op = selectCONmetrics(parc, weight); 
+plotMPCcorr = false; 
 
 plotOptions.colIn = [1 1 1];
 plotOptions.colorOut = [82 82 82]/255; %[0,69,41]/255; %[.35 .35 .35]; %[4 90 141]/255; %[.45 .45 .45]; %[5 113 176]/255; 
@@ -22,12 +23,11 @@ elseif strcmp(whatDWI, 'GenCog')
 
     [coexpData, A, matrices, coordinates, avWeight] = giveConnExp_GenCog(parc,op.tract,op.probe,weight,op.brainPart,op.nRem);
    
-    
 end
 
 numLC = size(coexpData.averageCoexpression,1); 
 
-[GrSC] = giveMeRichClub(matrices, coordinates, op.groupConn ,op.densThreshold, false, op.cvMeasure, op.consThr);
+[GrSC, mdist] = giveMeRichClub(matrices, coordinates, op.groupConn ,op.densThreshold, false, op.cvMeasure, op.consThr);
 groupAdjlog = logical(GrSC); 
 nodeData = degrees_und(groupAdjlog);
 
@@ -40,6 +40,18 @@ nodeData = nodeData(1:numLC);
 
 CGEmatrix_uncorrected = corr(coexpData.parcelExpression(:,2:end)');
 [CGEmatrix, FitCurve] = measure_correctDistance(CGEmatrix_uncorrected, coexpData.averageDistance, 'Correlated gene expression', 'exp', false);
+
+CON = CGEmatrix(groupAdjlog==1); 
+UNCON = CGEmatrix(groupAdjlog==0);
+CON(isnan(CON)) = []; 
+UNCON(isnan(UNCON)) = [];
+[h,p,ci,stats] = ttest2(CON, UNCON, 'Vartype', 'unequal'); 
+
+[dataCell,pRF,statsRF,pFP,statsFP, pRU,statsRU] = compare_CGE_RFPU(CGEmatrix,groupAdjlog, nodeData, op.khub, true); 
+figureName = sprintf('makeFigures/CGEdistributions_corrected_%s_%d.png', parc,round(op.densThreshold*100));
+print(gcf,figureName,'-dpng','-r300');
+
+
 CGEmatrix(groupAdjlog==0) = NaN; 
 
 % plot R/F/P lines for CGE
@@ -97,6 +109,22 @@ print(gcf,figureName,'-dpng','-r300');
 yregress = true; 
 [BBmean,microDist,distNorm, BBmpc, mp, BBskew] = getBBdata(parc, yregress);
 
+
+if plotMPCcorr
+    f=figure('color','white');
+    D = mdist; B = BBmpc;
+    D(isnan(BBmpc)) = [];
+    B(isnan(BBmpc)) = [];
+    scatter(D, B, 40, 'MarkerEdgeColor',[254,153,41]/255,...
+        'MarkerFaceColor',[1 1 1],...
+        'LineWidth',1.5);
+    xlabel('Euclidean Distance'); ylabel('Microstructural covariance')
+    set(gca,'fontsize', 18);
+    
+    figureName = sprintf('makeFigures/MPCdist_%s_%d.png', parc, round(op.densThreshold*100));
+    print(gcf,figureName,'-dpng','-r300');
+end
+
 whatTail = 'right';
 nodeDeg = degrees_und(GrSC); 
 RichClubHuman(logical(GrSC),BBmpc,nodeDeg, whatTail, plotOptions.whatDistribution, plotOptions.colorOut, plotOptions.colIn);
@@ -104,6 +132,9 @@ ylabel('Mean microstructural covariance')
 set(gcf, 'Position', [500 500 750 550])
 set(gca,'fontsize', 18);
 ylim([0.6 1.1])
+
+% plot MPC vs distance
+
 
 figureName = sprintf('makeFigures/MPCmean_%s_%d.png', parc, round(op.densThreshold*100));
 print(gcf,figureName,'-dpng','-r300');
