@@ -111,15 +111,15 @@ yregress = true;
 
 
 if plotMPCcorr
-    f=figure('color','white');
+    %D = mdist(1:180,1:180) ; B = BBmpc(1:180,1:180);
     D = mdist; B = BBmpc;
-    D(isnan(BBmpc)) = [];
-    B(isnan(BBmpc)) = [];
-    scatter(D, B, 40, 'MarkerEdgeColor',[254,153,41]/255,...
-        'MarkerFaceColor',[1 1 1],...
-        'LineWidth',1.5);
-    xlabel('Euclidean Distance'); ylabel('Microstructural covariance')
-    set(gca,'fontsize', 18);
+    D(isnan(B)) = [];
+    B(isnan(B)) = [];
+    
+    BF_PlotQuantiles(D(:),B(:),6,1,1,'r', 1);...
+        xlabel('Distance between regions (mm)'); ...
+        ylabel('Microstructural covariance'); ...
+        set(gca,'fontsize',18);
     
     figureName = sprintf('makeFigures/MPCdist_%s_%d.png', parc, round(op.densThreshold*100));
     print(gcf,figureName,'-dpng','-r300');
