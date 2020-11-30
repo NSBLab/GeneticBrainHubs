@@ -131,6 +131,13 @@ for pa=1:length(parcs)
         
         figureName = sprintf('makeFigures/CGEcurves_%s_%d.png', parc, densThreshold);
         print(gcf,figureName,'-dpng','-r600');
+        
+        
+        % plot for different distance bins as violin plots
+        [RvsF, FvsP, dataCell,~,f0] = plot_distanceViolin(CGEmatrix, coexpData.averageDistance, groupAdjlog, nodeData, khubs(pa,de), numThr, 'CGE');
+        figureName = sprintf('makeFigures/CGE_distributions_distance_%s_%d.png', parc, densThreshold);
+        print(f0,figureName,'-dpng','-r600');
+        
     end
 end
 

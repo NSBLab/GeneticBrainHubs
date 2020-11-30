@@ -95,6 +95,7 @@ for pa=1:length(parcs)
         
         print(gcf,figureName,'-dpng','-r600');
         
+
     end
 
 
