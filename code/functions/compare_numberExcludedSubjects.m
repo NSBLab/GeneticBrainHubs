@@ -14,6 +14,7 @@ load('twinEdges_HCP_iFOD2_FA_strength20.mat')
 V = readtable('subjectsRemoved_allEdges_twinEdges_HCP_iFOD2_FA_strength20.mat.txt');
 H = readtable('heritabilityACTEnoOUTLIERSnew_wSATpVals_allEdges_twinEdges_HCP_iFOD2_FA_strength20.mat-1.txt'); 
 
+
 nodeData = degrees_und(groupAdjlog);
 numNodes = size(groupAdjlog,1);
 % reshape heritability vector into the matrix for connected edges get indexes on diagonal
@@ -40,6 +41,19 @@ switch plotWhat
         selMeasure = V.edgeVarORIG;
 end
 
+if strcmp(plotWhat, 'BOTH')
+    % mean number of sujects excluded
+    num_median = median(selMeasure);
+    num_max = max(selMeasure);
+    
+    %total number of subjcts
+    num_tot = sum(sum(~isnan(Output_MZ(:,1:3,1))) + sum(~isnan(Output_DZ(:,1:3,1))));
+    
+    % proc of excluded subjects
+    perc_median = num_median*100/num_tot;
+    perc_max = num_max*100/num_tot;
+end
+
 valMatrix = valMatrix+valMatrix';
 
 plotOptions.colIn = [1 1 1];
@@ -48,10 +62,13 @@ plotOptions.whatDistribution = 'histogram';
 
 heritMatrixHalf = zeros(numNodes, numNodes);
 heritMatrixHalf(C==1) = H.heritabilityA; 
-heritMatrixHalf = heritMatrixHalf+heritMatrixHalf';
-heritMatrixHalf = maskuHalf(heritMatrixHalf);
+heritMatrix = heritMatrixHalf+heritMatrixHalf';
+heritMatrixHalf = maskuHalf(heritMatrix);
 
 [RvsF, FvsP, dataCell,xThresholds,f0] = plot_distanceViolin(heritMatrixHalf, valMatrix, groupAdjlog, nodeData, op.khub, numThr, 'Heritability');
-
-
+getMaxVal = RichClubHuman(groupAdjlog,valMatrix,nodeData, 'right', plotOptions.whatDistribution, plotOptions.colorOut, plotOptions.colIn)
+ylabel('Number of excluded subjects')
+xlabel('Node degree, k');
+ylim([0 30])
+set(gca,'fontsize', 18);
 end

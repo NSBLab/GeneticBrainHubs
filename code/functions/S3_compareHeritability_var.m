@@ -1,4 +1,4 @@
-function [heritMatrix, nodeData, groupAdjlog, mask] = S3_compareHeritability(parcellation,tractography,plotWhat,weight2,densThreshold,cvMeasure, plotOptions, onlyACTE,n)
+function [heritMatrix, nodeData, groupAdjlog, mask] = S3_compareHeritability_var(parcellation,tractography,plotWhat,weight2,densThreshold,cvMeasure, plotOptions, onlyACTE,n)
  % indTOP, mask
 if nargin < 8
     n = 100;
@@ -13,17 +13,16 @@ whatDistribution = plotOptions.whatDistribution;
 colorOut = plotOptions.colorOut; 
 colorIn = plotOptions.colIn; 
 
-
+% change name when file updated!!!!
 if ~onlyACTE
 
-heritFile = sprintf('heritabilityACTEnoOUTLIERSnew_wSATpVals_allEdges_twinEdges_%s_%s_%s_%s%d.mat-1.txt', parcellation, tractography, weight2, cvMeasure, round(densThreshold*100)); 
-%heritFile = sprintf('heritabilityACTEwithOUTLIERS_wSAT_allEdges_twinEdges_%s_%s_%s_%s%d.mat.txt', parcellation, tractography, weight2, cvMeasure, round(densThreshold*100)); 
-heritabilityACE = importHeritabilityResultwP(heritFile); 
+heritFile = sprintf('heritabilityACTEnoOUTLIERSnew_wSATpVals_allEdges_variance_twinEdges_%s_%s_%s_%s%d.mat-1.txt', parcellation, tractography, weight2, cvMeasure, round(densThreshold*100)); 
+heritabilityACE = importHeritabilityResultwVAR(heritFile); 
 
 else 
     
 heritFile = sprintf('heritability_onlyACTEnoOUTLIERSnew_wSATpVals_allEdges_twinEdges_%s_%s_%s_%s%d.mat-1.txt', parcellation, tractography, weight2, cvMeasure, round(densThreshold*100)); 
-heritabilityACE = importHeritabilityResultwP(heritFile); 
+heritabilityACE = importHeritabilityResultwVAR(heritFile); 
 end
     
 load(sprintf('twinEdges_%s_%s_%s_%s%d.mat', parcellation, tractography, weight2, cvMeasure, round(densThreshold*100))); 
@@ -66,15 +65,18 @@ C = maskuHalf(groupAdjlog);
 % in heritability variable 1st column A, 2nd column C, 3rd column E
 switch plotWhat
     case 'Afactor'
-heritMatrix(C==1) = heritabilityACE.heritabilityA; % assign heritability values to those edges
+        heritMatrix(C==1) = heritabilityACE.heritabilityA; % assign heritability values to those edges
     case 'Cfactor'
-heritMatrix(C==1) = heritabilityACE.heritabilityC; % assign common environmental values
+        heritMatrix(C==1) = heritabilityACE.heritabilityC; % assign common environmental values
     case 'Efactor'
-heritMatrix(C==1) = heritabilityACE.heritabilityE; % assign unique environmental values
+        heritMatrix(C==1) = heritabilityACE.heritabilityE; % assign unique environmental values
     case 'Tfactor'
-heritMatrix(C==1) = heritabilityACE.heritabilityT; % assign twin-specific environmental values
+        heritMatrix(C==1) = heritabilityACE.heritabilityT; % assign twin-specific environmental values
     case 'Avariance'
-        
+        % remove outliers > 3SD +mean
+        Irem = heritabilityACE.heritabilityVARA> mean(heritabilityACE.heritabilityVARA) + 3*std(heritabilityACE.heritabilityVARA);
+        heritabilityACE.heritabilityVARA(Irem) = NaN;
+        heritMatrix(C==1) = heritabilityACE.heritabilityVARA; % assign twin-specific environmental values
 end
 % make a full matrix
 heritMatrixHalf = maskuHalf(heritMatrix); 
@@ -84,10 +86,11 @@ nodeData = degrees_und(groupAdjlog);
 % make a curve plot for the whole brain 
 getMaxVal = RichClubHuman(groupAdjlog,heritMatrix, nodeData,'right', whatDistribution, colorOut, colorIn);
 %getMaxVal = RichClubHuman_median(groupAdjlog,heritMatrix, nodeData,'right', whatDistribution, colorOut, colorIn);
-ylabel('Mean edge heritability')
+ylabel('Mean edge genetic variance')
 set(gcf, 'Position', [500 500 750 550])
 set(gca,'fontsize', 20);
-ylim([0 max(getMaxVal)+0.5*nanstd(getMaxVal)])
+ylim([0.0002 0.0005]); 
+    %max(getMaxVal)+0.5*nanstd(getMaxVal)])
 
 % get top 500 links for the spatial plot if Afactor is selected
 if strcmp(plotWhat, 'Afactor')

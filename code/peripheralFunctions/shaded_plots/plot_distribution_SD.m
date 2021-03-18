@@ -1,4 +1,4 @@
-function plot_distribution_median(varargin)
+function plot_distribution_SD(varargin)
 % PLOT_DISTRIBUTION(X,Y) - Plots the mean with standard deviation errors as a shaded region in the open 
 % figure window.
 % Inputs:
@@ -16,15 +16,11 @@ function plot_distribution_median(varargin)
 [X,Y,color_value,alpha_value,line_width] = parseinputs(varargin{:});
 
 
-MU = nanmedian(Y);
+MU = nanmean(Y);
 for j=1:length(MU)
     K = Y(:,j); 
     numVals = length(find(~isnan(K))); 
-    %SIGMA(j) = nanstd(K)./sqrt(numVals);
-    %SIGMA(j) = iqr(K)./sqrt(numVals);
-    %SIGMA(j) = mad(K)./sqrt(numVals);
-    SIGMA(j) = mad(K)./4;
-    %SIGMA(j) = mad(K);
+    SIGMA(j) = nanstd(K);
 end
 
 hold on

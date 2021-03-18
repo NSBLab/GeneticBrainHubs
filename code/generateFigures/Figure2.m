@@ -15,7 +15,7 @@ plotOptions.whatDistribution = 'histogram';
 
 for k=1:length(whatFactors)
     
-    [heritMatrix, nodeData, groupAdjlog, mask] = S3_compareHeritability(parcellation,op.tract,whatFactors{k},op.weight,op.densThreshold,op.cvMeasure, plotOptions, false);
+    [heritMatrix, nodeData, groupAdjlog, mask] = S3_compareHeritability(parcellation,op.tract,whatFactors{k},op.weight,op.densThreshold,op.cvMeasure, plotOptions, false, 1000);
     
     switch whatFactors{k}
         case 'Efactor'
@@ -49,6 +49,80 @@ end
 
 heritMatrixHalf = maskuHalf(heritMatrix);
 heritMatrixHalf(groupAdjlog==0) = NaN;
+
+% instead of ploting all connections - plot TOP 1000 heritability values
+% and LOWEST 1000 heritability values; 
+% highest heritability
+f=figure('color','white');
+set(gcf, 'Position', [10 10 700 1000]);
+maskFULL = mask+mask';
+HIher = double(maskFULL==2); 
+HImap = [[215,48,31]/255; [215,48,31]/255]; 
+plot_edges_brain(HIher,nodeData,HImap); 
+figureName = 'makeFigures/heritability_highest_brain_top.png';
+print(f,figureName,'-dpng','-r300');
+
+view([90 0]); camlight('right')
+figureName = 'makeFigures/heritability_highest_brain_side.png';
+print(f,figureName,'-dpng','-r300');
+
+f=figure('color','white');
+set(gcf, 'Position', [10 10 700 1000]);
+LOher = double(maskFULL==1); 
+LOmap = [[33,113,181]/255; [33,113,181]/255]; 
+plot_edges_brain(LOher,nodeData,LOmap); 
+figureName = 'makeFigures/heritability_lowest_brain_top.png';
+print(f,figureName,'-dpng','-r300');
+
+view([90 0]); camlight('right')
+figureName = 'makeFigures/heritability_lowest_brain_side.png';
+print(f,figureName,'-dpng','-r300');
+
+% make separate matrices for rich/feeder/peripheral links that will be used
+% to plot values on the brain
+% numNodes = length(nodeData); 
+% 
+% isHub = nodeData>op.khub; 
+% rich_mask = zeros(numNodes,numNodes);
+% rich_mask(isHub,isHub) = 1; 
+% 
+% feeder_mask = false(numNodes,numNodes);
+% feeder_mask(isHub,~isHub) = 1;
+% feeder_mask(~isHub,isHub) = 1;
+% 
+% peripheral_mask = false(numNodes,numNodes);
+% peripheral_mask(~isHub,~isHub) = 1;
+% 
+% % RICH LINKS
+% rich_links = heritMatrix.*rich_mask.*groupAdjlog;
+% rich_links(isnan(rich_links)) = 0; 
+% % make a figure
+% f=figure('color','white');
+% set(gcf, 'Position', [10 10 700 1000]);
+% plot_edges_brain(rich_links, [0 1]); 
+% figureName = 'makeFigures/heritability_rich_brain.png';
+% print(f,figureName,'-dpng','-r600');
+% 
+% % FEEDER LINKS
+% feeder_links = heritMatrix.*feeder_mask.*groupAdjlog; 
+% feeder_links(isnan(feeder_links)) = 0; 
+% 
+% f=figure('color','white');
+% set(gcf, 'Position', [10 10 700 1000]);
+% plot_edges_brain(feeder_links, [0 1]); 
+% figureName = 'makeFigures/heritability_feeder_brain.png';
+% print(f,figureName,'-dpng','-r600');
+% 
+% % PERIPHERAL LINKS
+% peripheral_links = heritMatrix.*peripheral_mask.*groupAdjlog; 
+% peripheral_links(isnan(peripheral_links)) = 0; 
+% 
+% f=figure('color','white');
+% set(gcf, 'Position', [10 10 700 1000]);
+% plot_edges_brain(peripheral_links, [0 1]); 
+% figureName = 'makeFigures/heritability_peripheral_brain.png';
+% print(f,figureName,'-dpng','-r600');
+
 
 % plot violin distributions for modules add brain representation
 load('data/modules/cortex_parcel_network_assignments.mat')
