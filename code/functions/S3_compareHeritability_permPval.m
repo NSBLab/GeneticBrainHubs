@@ -66,6 +66,11 @@ RichClubHuman_permutationPval(groupAdjlog,heritMatrix, nodeData,'right', whatDis
 set(gcf, 'Position', [500 500 750 550])
 set(gca,'fontsize', 20);
 
+ylabel('Mean h^2')
+set(gcf, 'Position', [500 500 750 550])
+set(gca,'fontsize', 20);
+ylim([0.3 0.7])
+
 
 end
 

@@ -113,7 +113,7 @@ for i = 1:length(kr)
         end
         %
         % get the p-value comparing the tests
-        tStats(i,j) = mean(tStats_real(i)<tStats_rand(i,j,:)); 
+        tStats(i,j) = mean(tStats_real(i,j)<tStats_rand(i,j,:)); 
 
 
     end
