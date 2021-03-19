@@ -1,4 +1,4 @@
-function [heritMatrix, nodeData, groupAdjlog, realTrajectory_save] = S3_compareHeritability_perm(plotOptions, plotWhat, numPerm)
+function [heritMatrix, nodeData, groupAdjlog] = S3_compareHeritability_permPval(plotOptions, plotWhat, numPerm)
  % indTOP, mask
  if nargin <2
      plotWhat = 'Afactor';
@@ -62,7 +62,7 @@ heritMatrix = heritMatrix+heritMatrix';
 %
 nodeData = degrees_und(groupAdjlog); 
 % make a curve plot for the whole brain 
-RichClubHuman_permutation(groupAdjlog,heritMatrix, nodeData,'right', whatDistribution, colorOut, colorIn, numPerm);
+RichClubHuman_permutationPval(groupAdjlog,heritMatrix, nodeData,'right', whatDistribution, colorOut, colorIn, numPerm);
 set(gcf, 'Position', [500 500 750 550])
 set(gca,'fontsize', 20);
 

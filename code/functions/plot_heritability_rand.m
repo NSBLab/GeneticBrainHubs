@@ -10,11 +10,14 @@ plotOptions.colIn = [1 1 1];
 plotOptions.colorOut = [82 82 82]/255; %[0,69,41]/255; %[.35 .35 .35]; %[4 90 141]/255; %[.45 .45 .45]; %[5 113 176]/255;
 plotOptions.whatDistribution = 'histogram';
 
+
+realTrajectory_save = cell(n,1); 
+
 for k=1:length(whatFactors)
     figure('color','w');
-    for n=1:n
+    for jj=1:n
         
-        [heritMatrix, nodeData, groupAdjlog] = S3_compareHeritability_rand(n, plotOptions);
+        [heritMatrix, nodeData, groupAdjlog, realTrajectory_save{jj}] = S3_compareHeritability_rand(jj, plotOptions);
         
         switch whatFactors{k}
             case 'Efactor'
@@ -42,9 +45,38 @@ for k=1:length(whatFactors)
                 ylabel({'Mean phenotypic variance explained','by twin specific environmental factors'})
         end
         
-        figureName = sprintf('makeFigures/rand/%s_curves_rand%d.png', whatFactors{k}, n);
+        figureName = sprintf('makeFigures/rand/%s_curves_rand%d.png', whatFactors{k}, jj);
         print(gcf,figureName,'-dpng','-r600');
     end
     
+% make a plot with empty bottom
+plot_onlyHist(nodeData, plotOptions)
+
+A = vertcat(realTrajectory_save{:}); 
+myColors = GiveMeColors('RFPU'); 
+sortK = sort(nodeData,'descend');
+maxK = sortK(2); % Up to the second-highest k
+kr = min(nodeData):maxK;
+krAll = min(nodeData):max(nodeData);
+
+for kk=1:3
+    
+    B = horzcat(A{:,kk});
+    % plot R/F/P curves from all
+    plot_distribution(kr,B', 'Color', myColors(kk,:));
+
+end
+
+set(gcf, 'Position', [500 500 750 500])
+
+ylabel({'Mean h^2'})
+xlabel('Node degree, k');
+xlim([min(nodeData)-0.5,max(nodeData)+0.5]);
+set(gca,'fontsize', 18);
+ylim([0 0.05])
+
+figureName = sprintf('makeFigures/rand/%s_curves_meanALL.png', whatFactors{k});
+print(gcf,figureName,'-dpng','-r600');
+
 end
 

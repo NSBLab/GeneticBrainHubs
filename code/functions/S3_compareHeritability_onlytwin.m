@@ -1,18 +1,15 @@
-function [heritMatrix, nodeData, groupAdjlog, realTrajectory_save] = S3_compareHeritability_perm(plotOptions, plotWhat, numPerm)
+function [heritMatrix, nodeData, groupAdjlog, realTrajectory_save] = S3_compareHeritability_onlytwin(plotOptions, plotWhat)
  % indTOP, mask
  if nargin <2
      plotWhat = 'Afactor';
  end
  
- if nargin <3
-     numPerm = 5000; 
- end
 
 whatDistribution = plotOptions.whatDistribution; 
 colorOut = plotOptions.colorOut; 
 colorIn = plotOptions.colIn; 
 
-heritFile = 'heritabilityACTEnoOUTLIERSnew_wSATpVals_allEdges_variance_twinEdges_HCP_iFOD2_FA_strength20.mat-1.txt'; 
+heritFile = 'heritabilityACEnoOUTLIERSnew_wSATpVals_allEdges_variance_twinEdges_HCP_iFOD2_FA_strength20_only_twin.mat.txt'; 
 heritabilityACE = importHeritabilityResultwP(heritFile); 
 load('twinEdges_HCP_iFOD2_FA_strength20.mat', 'groupAdjlog')
 % count the number of edges for every model    
@@ -62,7 +59,7 @@ heritMatrix = heritMatrix+heritMatrix';
 %
 nodeData = degrees_und(groupAdjlog); 
 % make a curve plot for the whole brain 
-RichClubHuman_permutation(groupAdjlog,heritMatrix, nodeData,'right', whatDistribution, colorOut, colorIn, numPerm);
+RichClubHuman(groupAdjlog,heritMatrix, nodeData,'right', whatDistribution, colorOut, colorIn);
 set(gcf, 'Position', [500 500 750 550])
 set(gca,'fontsize', 20);
 

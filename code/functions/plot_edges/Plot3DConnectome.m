@@ -59,7 +59,7 @@ fvc = surf2patch(x,y,z,'triangles');
 
 % Define the size of all nodes. Can easily change the code to have a 
 
-NodeSize = Nodedata/75; 
+NodeSize = Nodedata*5/max(Nodedata); 
 
 % Define the radius of each edge
 

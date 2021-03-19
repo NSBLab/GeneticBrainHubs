@@ -15,7 +15,7 @@ plotOptions.whatDistribution = 'histogram';
 
 for k=1:length(whatFactors)
     
-    [heritMatrix, nodeData, groupAdjlog] = S3_compareHeritability_perm(plotOptions, whatFactors{k}, numPerm); 
+    [heritMatrix, nodeData, groupAdjlog, isSig] = S3_compareHeritability_perm(plotOptions, whatFactors{k}, numPerm); 
     
     figureName = sprintf('makeFigures/log_tstat_ratio_nperm%d.png', numPerm);
     print(gcf,figureName,'-dpng','-r600');

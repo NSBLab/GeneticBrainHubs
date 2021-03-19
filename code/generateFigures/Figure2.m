@@ -58,7 +58,7 @@ set(gcf, 'Position', [10 10 700 1000]);
 maskFULL = mask+mask';
 HIher = double(maskFULL==2); 
 HImap = [[215,48,31]/255; [215,48,31]/255]; 
-plot_edges_brain(HIher,nodeData,HImap); 
+plot_edges_brain(HIher,nodeData.^2,HImap); 
 figureName = 'makeFigures/heritability_highest_brain_top.png';
 print(f,figureName,'-dpng','-r300');
 
@@ -70,7 +70,7 @@ f=figure('color','white');
 set(gcf, 'Position', [10 10 700 1000]);
 LOher = double(maskFULL==1); 
 LOmap = [[33,113,181]/255; [33,113,181]/255]; 
-plot_edges_brain(LOher,nodeData,LOmap); 
+plot_edges_brain(LOher,nodeData.^2,LOmap); 
 figureName = 'makeFigures/heritability_lowest_brain_top.png';
 print(f,figureName,'-dpng','-r300');
 

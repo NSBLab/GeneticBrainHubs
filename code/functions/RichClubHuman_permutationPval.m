@@ -1,4 +1,4 @@
-function [tStats_ratio_mean, isSig_save] = RichClubHuman_permutation(Adj,pairwiseMeasure,nodeData, whatTail, whatDistribution, colorOut, colorIn, numPerm)
+function [tStats_ratio_mean, isSig_save] = RichClubHuman_permutationPval(Adj,pairwiseMeasure,nodeData, whatTail, whatDistribution, colorOut, colorIn, numPerm)
 % ------------------------------------------------------------------------------
 % Function plots coexpression for rich/feeder/peripheral lins as a function
 % of degree using mean to summarise coexpression at each threshold
@@ -46,12 +46,12 @@ krAll = min(nodeData):max(nodeData);
 % Go through each class of links and compute statistics on the set of link
 % data compared to the nulls:
 
-whatLinks = {'rich'};
+whatLinks = {'rich', 'feeder', 'peripheral'};
 % Ben Fulcher, 2015-01-06
 % Computes a t-test between special and non-special links for each k, and each link-type:
+tStats = zeros(length(kr),length(whatLinks));
 allHubHub = cell(1,1); % make a 1-component cell for consistency with null version
 allHubHub{1} = cell(length(kr),length(whatLinks));
-
 tStats_rand = zeros(length(kr), length(whatLinks),numPerm); 
 for i = 1:length(kr)
     for j = 1:length(whatLinks) % loop across rich, feedin, feedout, and local connections:
@@ -92,7 +92,6 @@ for i = 1:length(kr)
         
         % now randomise special vs non-special link assignment 5000 times
         % and do the t-test
-        if j==1 % do this only for rich links
             
         for n=1:numPerm
             % combine both types and randomise values
@@ -114,33 +113,13 @@ for i = 1:length(kr)
         end
         %
         % get the p-value comparing the tests
-        pvalues(i) = mean(tStats_real(i)<tStats_rand(i,:)); 
-        end
+        tStats(i,j) = mean(tStats_real(i)<tStats_rand(i,j,:)); 
+
 
     end
 
 end
 
-tStats_rand = squeeze(tStats_rand); 
-
-% plot t/<trand> as a function of degree
-tStats_data = tStats_real(:,1); % select for rich only
-
-% divide real by random for each run
-ratio_distrib = log(tStats_data./abs(tStats_rand));
-tStats_ratio_mean{1} = nanmean(ratio_distrib,2); 
-
-%tStats_ratio_mean{1} = nanmean(squeeze(log(abs(tStats_data./tStats_rand))),2); %abs(tStats_data./tStats_randmean); 
-%tStats_ratio_all{1} = log(squeeze(abs(tStats_data./tStats_rand))); 
-
-%tStats_ratio_mean{1} = nanmean(squeeze(tStats_data./tStats_rand),2);
-%%abs(tStats_data./tStats_randmean); %
-%tStats_ratio_mean{1} = log(squeeze(tStats_data./tStats_randmean)); 
-%tStats_ratio_mean{1} = squeeze(tStats_data-tStats_randmean);
-
-% ------------------------------------------------------------------------------
-% Plot as rich plots
-% ------------------------------------------------------------------------------
 myColors = GiveMeColors('RFPU'); 
 % % reorder colours for correct overlay, so rich are plotted at the top
 % % [BF_getcmap('spectral',4,1),BF_getcmap('set2',4,1)];
@@ -150,7 +129,7 @@ myColors = GiveMeColors('RFPU');
 
 plotOnOne = true; % plot all on one figure
 includeHist = true;
-plotJustRich = true;
+plotJustRich = false;
 sigThresh = 0.05;
 
 for j = 1:length(whatLinks)
@@ -205,28 +184,52 @@ for j = 1:length(whatLinks)
     % rich are now labeled 3
     if j==1
 
-        plot([kr(1),krAll(end)],zeros(2,1),':','color','k','LineWidth',3); 
+        plot([kr(1),krAll(end)],ones(2,1)*nanmean(allHubHub{1}{1,j}),':','color','k','LineWidth',3)
 
     end
 
-    realTrajectory = tStats_ratio_mean{1};
+    valsPlot = allHubHub{1}(:,j);
+    realTrajectory = cellfun(@nanmean,valsPlot);
     xlim([min(nodeData)-0.5,max(nodeData)+0.5]);
 
 
     % p-values from 2-sample t-test with unequal variances:
+    pvalues = tStats(:,j);
+
     isSig = (pvalues < sigThresh); % significantly higher than null
-    if j==1
-        isSig_save = isSig;
-    end
 
     % meadian (real data trajectory):
     markerStyle = 'o';
-    plot_distribution_SD(kr,ratio_distrib', 'Color', myColors(j,:)); 
+
+    % meadian trajectory:
+    % +/- std:
+    % find max number of values across all distributions for a selected
+    % link type
+    Lv = zeros(length(valsPlot),1); 
+    for w=1:length(valsPlot)
+        Lv(w) = length(valsPlot{w});
+    end
+
+    A = nan(length(kr), max(Lv));
+    for p=1:length(kr)
+        V = valsPlot{p};
+        for q=1:length(V)
+
+            A(p,q) = valsPlot{p}(q);
+
+        end
+    end
+    
+    % NaNs can't be plotted, in that case make x and y variables shorter
+    INDkeep = find(~isnan(nanmean(A,2))); 
+    %if ~isempty(INDkeep)
+    plot_distribution(kr(INDkeep),A(INDkeep,:)', 'Color', myColors(j,:)); 
     hold on;
+    %end
 
     if any(isSig)
         plot(kr(isSig),realTrajectory(isSig),markerStyle,'MarkerEdgeColor',myColors(j,:),...
-        'MarkerFaceColor',colorIn,'LineWidth',1.5,'MarkerSize',6)
+            'MarkerFaceColor',colorIn,'LineWidth',1.5,'MarkerSize',6)
     end
 
     xLimits = get(gca,'xlim'); yLimits = get(gca,'ylim');
@@ -240,10 +243,11 @@ end
 
 set(gcf, 'Position', [500 500 750 500])
 
-axisName = {'log(t-stat ratio)', 'rich links'};
+axisName = {'Mean correlated', 'gene expression'};
 ylabel(axisName, 'FontSize', 18)
 xlabel('Node degree, k','FontSize', 18);
-set(gca,'fontsize', 18);
-%ylim([min(getMinVal) max(getMaxVal)+nanstd(getMaxVal)])
-ylim([-2 6])
+getMaxVal = cellfun(@nanmean,allHubHub{1}(:,1));
+getMinVal = cellfun(@nanmean,allHubHub{1}(:,3));
+ylim([min(getMinVal) max(getMaxVal)+nanstd(getMaxVal)])
+
 end
