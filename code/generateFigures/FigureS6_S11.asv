@@ -2,7 +2,6 @@
 % Figure S6-S11: CGE and MPC
 %--------------------------------------------------%
 function FigureS6_S11()
-
 whatDWI = 'HCP';
 weight = 'standard'; %for GenCog'standard';
 parc = 'HCP';
@@ -30,12 +29,13 @@ groupAdjlog = groupAdjlog(1:numLC, 1:numLC);
 nodeData = nodeData(1:numLC);
 
 % use exponential fit to correct for distance effect
-% Figure S6 and 8 A-C
+% Figure S8
 CGEmatrix_uncorrected = corr(coexpData.parcelExpression(:,2:end)');
 [CGEmatrix, FitCurve, c] = measure_correctDistance(CGEmatrix_uncorrected, coexpData.averageDistance, 'Correlated gene expression');
 CGEmatrix(groupAdjlog==0) = NaN;
 
 % plot CGE for different distance bins as violin plots
+% Figure S8
 [RvsF, FvsP, dataCell, xThresholds] = plot_distanceViolin(CGEmatrix , distMatr, groupAdjlog, nodeData, op.khub, numThr, 'CGE');
 figureName = sprintf('makeFigures/CGEdist_%s_%d.png', parc, round(op.densThreshold*100));
 print(gcf,figureName,'-dpng','-r600');
@@ -46,7 +46,42 @@ for k=1:length(dataCell)
     tRP(k) = statsRP.tstat;
 end
 
-% Figure S7 and S8D-F
+% Figure S8
+% for each of cell-specific gene groups, make R/F/P curves.
+[cellGenesUNIQUE,cellGroups] = getCellSpecificGenes('all_gene_data.csv');
+nG = length(cellGroups); 
+
+% for each cell-specific list of genes find ones in the expression data
+listGenes = getCellExpression(cellGenesUNIQUE,cellGroups,coexpData); 
+
+for g=1:length(cellGroups)
+    % extract expression measures for each gene group
+    groupExp = listGenes{g,3};
+    groupCGE = corr(groupExp');
+    % correct CGE for distance effects using the "fitCurve" based on all genes
+    groupCGE_DC = groupCGE-FitCurve;
+    
+    % plot curves
+    RichClubHuman(groupAdjlog,groupCGE_DC, nodeData, 'right', plotOptions.whatDistribution, plotOptions.colorOut, plotOptions.colIn);
+    ylabel({'Mean spatially-corrected', 'correlated gene expression'})
+    set(gcf, 'Position', [500 500 750 550])
+    set(gca,'fontsize', 18);
+    ylim([-0.05 0.18])
+    
+    % remove "-" from group name for saving the figure;
+    groupName = listGenes{g,1};
+    isD = contains(groupName,'-');
+    
+    if isD
+        groupName = erase(groupName,'-');
+    end
+    
+    figureName = sprintf('makeFigures/CGEcurves_%sgenes_%s_%d.png', listGenes{g,1}, parc, round(op.densThreshold*100));
+    print(gcf,figureName,'-dpng','-r600');
+end
+
+
+% Figure S7
 parcs = {'HCP','random500'};
 tract = 'iFOD2';
 
@@ -97,18 +132,17 @@ for pa=1:length(parcs)
         figureName = sprintf('makeFigures/CGEcurves_%s_%d.png', parc, densThreshold);
         print(gcf,figureName,'-dpng','-r600');
         
-        if strcmp(parc, 'random500') || densThreshold==0.1
+        
         % plot for different distance bins as violin plots
         [RvsF, FvsP, dataCell,~,f0] = plot_distanceViolin(CGEmatrix, coexpData.averageDistance, groupAdjlog, nodeData, khubs(pa,de), numThr, 'CGE');
         figureName = sprintf('makeFigures/CGE_distributions_distance_%s_%d.png', parc, densThreshold);
         print(f0,figureName,'-dpng','-r600');
-        end
         
     end
 end
 
 
-% Figure S9A
+% Figure S9
 % make RFP plot using Monash dataset connectome
 [coexpData, A, matrices, coordinates, avWeight, sub_monash] = giveConnExp_GenCog('HCP',op.tract,op.probe,op.conW,op.brainPart,op.nRem);
 GrSC_GC = giveMeRichClub(matrices, coordinates, op.groupConn, op.densThreshold, false, op.cvMeasure, op.consThr);
@@ -134,9 +168,6 @@ ylim([-0.05 0.1])
 
 figureName = sprintf('makeFigures/CGEcurves_%s_%d_%s.png', parc, densThreshold, whatDWI);
 print(gcf,figureName,'-dpng','-r600');
-
-% Figure S9B - MPC as a function of degree random500 parcellation
-FigureS9(); 
 
 % Figure S10
 % make CGE plots for Celegans and mouse
@@ -166,42 +197,6 @@ ylim([0 0.25])
 
 figureName = sprintf('makeFigures/CGEcurves_mouse.png');
 print(gcf,figureName,'-dpng','-r600');
-
-% Figure S11
-% for each of cell-specific gene groups, make R/F/P curves.
-[cellGenesUNIQUE,cellGroups] = getCellSpecificGenes('all_gene_data.csv');
-nG = length(cellGroups); 
-
-% for each cell-specific list of genes find ones in the expression data
-listGenes = getCellExpression(cellGenesUNIQUE,cellGroups,coexpData); 
-
-for g=1:length(cellGroups)
-    % extract expression measures for each gene group
-    groupExp = listGenes{g,3};
-    groupCGE = corr(groupExp');
-    % correct CGE for distance effects using the "fitCurve" based on all genes
-    groupCGE_DC = groupCGE-FitCurve;
-    
-    % plot curves
-    RichClubHuman(groupAdjlog,groupCGE_DC, nodeData, 'right', plotOptions.whatDistribution, plotOptions.colorOut, plotOptions.colIn);
-    ylabel({'Mean spatially-corrected', 'correlated gene expression'})
-    set(gcf, 'Position', [500 500 750 550])
-    set(gca,'fontsize', 18);
-    ylim([-0.05 0.18])
-    
-    % remove "-" from group name for saving the figure;
-    groupName = listGenes{g,1};
-    isD = contains(groupName,'-');
-    
-    if isD
-        groupName = erase(groupName,'-');
-    end
-    
-    figureName = sprintf('makeFigures/CGEcurves_%sgenes_%s_%d.png', listGenes{g,1}, parc, round(op.densThreshold*100));
-    print(gcf,figureName,'-dpng','-r600');
-end
-
-
 end
 
 

@@ -1,8 +1,9 @@
 %--------------------------------------------------% 
 % Figure S12
 %--------------------------------------------------%
-function FigureS12()
+function FigureS9()
 
+% FigureS9 B
 weight = 'standard'; %for GenCog'standard'; 
 parc = 'random500';
 op = selectCONmetrics(parc, weight); 
