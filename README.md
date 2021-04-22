@@ -14,25 +14,26 @@ First, add all sub-folders to the path using `setupPaths()` function from the ro
 Code to reproduce the figures is located in the `generateFigures` folder. Script `generateFigures.m` calls all the functions to plot the figures. Run the scripts from the root directory. Figures will be saved in `makeFigures` folder in the root directory.
 
 
-`Figure2()` - main text: heritability
+`Figure2_and_FigureS2()` - main text: heritability and supplementary figure S2 visualising spatial distribution of most and least heritable links. 
+
+`Figure3()` - main text: correlated gene expression.
+
+`Figure4('energy')` - main text: generative modelling (space and topology) when optimising max KS.
+
+`Figure5()` - main text: generative modelling (space, topology and genes). 
+
+`FigureS1()` - supplementary: topological properties of the connectome.
+
+`FigureS3_S5()` - supplementary: heritability-related analyses. 
+
+`FigureS6_uncorrectedCGE()` - supplementary: correlated gene expression without correction for distance effects.
+
+`FigureS6_S11()` - supplementary: correlated gene expression related analyses. 
+
+`FigureS12()` - supplementary: generative modelling (space and topology) when optimising degree correlation.
+
+`FigureS13()` - supplementary: heritability for rich, feeder and peripheal links where the significance is evaluated using label randomisation. 
+
+`FigureS14()` - supplementary: genetic variance.
 
 
-`Figure3()` - main text: correlated gene expression
-
-
-`Figure4()` - main text: generative modelling
-
-
-`FigureS1()` - supplementary: topological properties of the connectome
-
-
-`FigureS2_S5()` - supplementary: heritability-related analyses
-
-
-`FigureS6_S11()` - supplementary: correlated gene expression related analyses
-
-
-`FigureS12()` - supplementary: microstructure related analysis
-
-
-`FigureS13()` - supplementary: generative modelling
