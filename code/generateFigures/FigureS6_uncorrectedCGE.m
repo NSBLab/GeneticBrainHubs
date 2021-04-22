@@ -1,4 +1,4 @@
-function Figure3_uncorrectedCGE()
+function FigureS6_uncorrectedCGE()
 %results presented in Figure S6 C
 
 whatDWI = 'HCP';
