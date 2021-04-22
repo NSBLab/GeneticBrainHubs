@@ -64,6 +64,7 @@ print(f0,figureName,'-dpng','-r600');
 figureName = sprintf('makeFigures/Heritability_NRexcluded_subjects_%s.png', parcellation);
 print(gcf,figureName,'-dpng','-r300');
 
+
 [RvsF_variance, FvsP_variance] = compare_numberExcludedSubjects('VARrem'); 
 figureName = sprintf('makeFigures/Heritability_Variance_%s.png', parcellation);
 print(gcf,figureName,'-dpng','-r300');
@@ -75,7 +76,8 @@ ylabel({'Mean h^2'})
 figureName = sprintf('makeFigures/Heritability_WITHoutliers_%s.png', parcellation);
 print(gcf,figureName,'-dpng','-r300');
 
-% S4 - heritability for different parcellations and densities;
+
+% S5 - heritability for different parcellations and densities;
 parcs = {'HCP','random500'};
 tractography = 'iFOD2';
 conWeight = 'FA';
@@ -107,7 +109,6 @@ for pa=1:length(parcs)
 
 
 
-end
 end
 
 
