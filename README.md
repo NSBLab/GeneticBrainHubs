@@ -36,6 +36,3 @@ Code to reproduce the figures is located in the `generateFigures` folder. Script
 
 
 `FigureS13()` - supplementary: generative modelling
-
-
-`[pORA_eQTL_HCP, pORA_eQTL_Monash, pORA_eQTL_Consensus] = edgeGWAS_eQTL_ORA;` - edge-wise GWAS results
