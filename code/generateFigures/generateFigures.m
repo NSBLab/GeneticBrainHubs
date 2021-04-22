@@ -18,7 +18,6 @@ Figure3()
 %--------------------------------------------------%
 Figure4('energy')
 
-
 %--------------------------------------------------%
 % Figure 5 - main text: generative modelling (space, topology and genes). 
 %--------------------------------------------------%
@@ -39,19 +38,22 @@ FigureS3_S5()
 % Figure S6-S11 - supplementary: correlated gene 
 % expression related analyses
 %--------------------------------------------------%
+FigureS6_uncorrectedCGE()
 FigureS6_S11()
 
 %--------------------------------------------------%
-% Figure S12 - supplementary: microstructure related analysis
+% Figure S12 - supplementary: generative modelling (space and topology) 
+% when optimising degree correlation.
 %--------------------------------------------------%
 FigureS12()
 
 %--------------------------------------------------%
-% Figure S13 - supplementary: generative modelling 
+% Figure S13 - supplementary: heritability for rich, feeder and peripheal links 
+% where the significance is evaluated using label randomisation.
 %--------------------------------------------------%
-Figure4('degCorr')
+FigureS13()
 
 %--------------------------------------------------%
-% edge-wise GWAS results
+% Figure S14 - supplementary: genetic variance.
 %--------------------------------------------------%
-[pORA_eQTL_HCP, pORA_eQTL_Monash, pORA_eQTL_Consensus] = edgeGWAS_eQTL_ORA(); 
+FigureS14()
