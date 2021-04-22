@@ -1,7 +1,7 @@
 %--------------------------------------------------%
 % Figure 2
 %--------------------------------------------------%
-function Figure2()
+function Figure2_and_FigureS2()
 
 parcellation = 'HCP';
 conWeight = 'FA';
