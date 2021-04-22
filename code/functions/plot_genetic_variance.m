@@ -1,3 +1,5 @@
+function plot_genetic_variance()
+
 parcellation = 'HCP';
 conWeight = 'FA';
 op = selectCONmetrics(parcellation, conWeight);
@@ -11,3 +13,5 @@ plotOptions.whatDistribution = 'histogram';
 [heritMatrix, nodeData, groupAdjlog, mask] = S3_compareHeritability_var(parcellation,op.tract,whatFactors{1},op.weight,op.densThreshold,op.cvMeasure, plotOptions, false);
 
 print(gcf,'makeFigures/genetic_variance.png','-dpng','-r600');
+
+end
