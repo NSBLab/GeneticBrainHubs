@@ -4,9 +4,9 @@
 
 setupPaths()
 %--------------------------------------------------%
-% Figure 2 - main text: heritability
+% Figure 2 - main text: heritability and supplementary figure S2 visualising spatial distribution of most and least heritable links. 
 %--------------------------------------------------%
-Figure2()
+Figure2_and_FigureS2()
 
 %--------------------------------------------------%
 % Figure 3 - main text: correlated gene expression
@@ -14,9 +14,15 @@ Figure2()
 Figure3()
 
 %--------------------------------------------------%
-% Figure 4 - main text: generative modelling
+% Figure 4 - main text: generative modelling (space and topology) when optimising max KS.
 %--------------------------------------------------%
 Figure4('energy')
+
+
+%--------------------------------------------------%
+% Figure 5 - main text: generative modelling (space, topology and genes). 
+%--------------------------------------------------%
+Figure5()
 
 %--------------------------------------------------%
 % Figure S1 - supplementary: topological properties 
@@ -25,9 +31,9 @@ Figure4('energy')
 FigureS1()
 
 %--------------------------------------------------%
-% Figure S2-S5 - supplementary: heritability-related analyses
+% Figure S3-S5 - supplementary: heritability-related analyses
 %--------------------------------------------------%
-FigureS2_S5()
+FigureS3_S5()
 
 %--------------------------------------------------%
 % Figure S6-S11 - supplementary: correlated gene 

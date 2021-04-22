@@ -1,7 +1,7 @@
 %--------------------------------------------------%
 % Figure S2-S5: Heritability
 %--------------------------------------------------%
-function FigureS2_S5()
+function FigureS3_S5()
 
 parcellation = 'HCP';
 weight = 'FA';
@@ -11,7 +11,7 @@ plotOptions.colIn = [1 1 1];
 plotOptions.colorOut = [82 82 82]/255; %[0,69,41]/255; %[.35 .35 .35]; %[4 90 141]/255; %[.45 .45 .45]; %[5 113 176]/255;
 plotOptions.whatDistribution = 'histogram';
 
-% S2 make a plot for ACTE model for all edges
+% S2 a - make a plot for ACTE model for all edges
 heritMatrixACTE = S3_compareHeritability('HCP',op.tract,'Afactor', weight,op.densThreshold,op.cvMeasure, plotOptions, true);
 ylim([0.2 0.6])
 ylabel({'Mean h^2'})
@@ -19,10 +19,34 @@ ylabel({'Mean h^2'})
 figureName = sprintf('makeFigures/Afactorcurves_ACTEonly_%s_%d.png', 'HCP', 0.2);
 print(gcf,figureName,'-dpng','-r600');
 
+% S3 b,c - heritability for SC weight
+whatFactors = {'Afactor', 'Efactor'};
+weightSC = 'standard';
+
+for k=1:length(whatFactors)
+    
+    [heritMatrixSC, nodeData, groupAdjlog, mask] = S3_compareHeritability('HCP',op.tract,whatFactors{k}, weightSC, op.densThreshold,op.cvMeasure, plotOptions, false);
+    
+    switch whatFactors{k}
+        case 'Efactor'
+            ylim([0.6 1])
+            ylabel({'Mean e^2'})
+            
+        case 'Afactor'
+            ylim([0 0.4])
+            ylabel({'Mean h^2'})
+    end
+    
+    figureName = sprintf('makeFigures/%s_curves_%s_%s_%d.png', whatFactors{k}, weightSC, parcellation, round(op.densThreshold*100));
+    print(gcf,figureName,'-dpng','-r600');
+    
+end
+
 
 % S3 - heritability in distance ranges
 % get heritability for best-fitting models
 [heritMatrix, nodeData, groupAdjlog, mask] = S3_compareHeritability(parcellation,op.tract,'Afactor',weight,op.densThreshold,op.cvMeasure, plotOptions, false);
+ylim([0.3 0.7]); 
 numThr = 4;
 distMatr = giveConnDistance(parcellation, op.tract, groupAdjlog);
 
@@ -45,28 +69,6 @@ print(gcf,figureName,'-dpng','-r300');
 figureName = sprintf('makeFigures/Heritability_Variance_%s.png', parcellation);
 print(gcf,figureName,'-dpng','-r300');
 
-% S4 - heritability for SC weight
-whatFactors = {'Afactor', 'Efactor'};
-weightSC = 'standard';
-
-for k=1:length(whatFactors)
-    
-    [heritMatrixSC, nodeData, groupAdjlog, mask] = S3_compareHeritability('HCP',op.tract,whatFactors{k}, weightSC, op.densThreshold,op.cvMeasure, plotOptions, false);
-    
-    switch whatFactors{k}
-        case 'Efactor'
-            ylim([0.6 1])
-            ylabel({'Mean e^2'})
-            
-        case 'Afactor'
-            ylim([0 0.4])
-            ylabel({'Mean h^2'})
-    end
-    
-    figureName = sprintf('makeFigures/%s_curves_%s_%s_%d.png', whatFactors{k}, weightSC, parcellation, round(op.densThreshold*100));
-    print(gcf,figureName,'-dpng','-r600');
-    
-end
 
 % S5 - heritability for different parcellations and densities;
 parcs = {'HCP','random500'};

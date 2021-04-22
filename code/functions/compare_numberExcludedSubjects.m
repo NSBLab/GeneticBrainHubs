@@ -66,9 +66,5 @@ heritMatrix = heritMatrixHalf+heritMatrixHalf';
 heritMatrixHalf = maskuHalf(heritMatrix);
 
 [RvsF, FvsP, dataCell,xThresholds,f0] = plot_distanceViolin(heritMatrixHalf, valMatrix, groupAdjlog, nodeData, op.khub, numThr, 'Heritability');
-getMaxVal = RichClubHuman(groupAdjlog,valMatrix,nodeData, 'right', plotOptions.whatDistribution, plotOptions.colorOut, plotOptions.colIn)
-ylabel('Number of excluded subjects')
-xlabel('Node degree, k');
-ylim([0 30])
-set(gca,'fontsize', 18);
+
 end
