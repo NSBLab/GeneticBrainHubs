@@ -49,7 +49,8 @@ FigureS12()
 
 %--------------------------------------------------%
 % Figure S13 - supplementary: heritability for rich, feeder and peripheal links 
-% where the significance is evaluated using label randomisation.
+% where the significance is evaluated using label randomisation 
+% NOTE: randomisation at each degree threshold takes a while to run.
 %--------------------------------------------------%
 FigureS13()
 
