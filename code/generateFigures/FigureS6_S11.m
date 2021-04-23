@@ -46,6 +46,41 @@ for k=1:length(dataCell)
     tRP(k) = statsRP.tstat;
 end
 
+% Figure S11
+% for each of cell-specific gene groups, make R/F/P curves.
+[cellGenesUNIQUE,cellGroups] = getCellSpecificGenes('all_gene_data.csv');
+nG = length(cellGroups); 
+
+% for each cell-specific list of genes find ones in the expression data
+listGenes = getCellExpression(cellGenesUNIQUE,cellGroups,coexpData); 
+
+for g=1:length(cellGroups)
+    % extract expression measures for each gene group
+    groupExp = listGenes{g,3};
+    groupCGE = corr(groupExp');
+    % correct CGE for distance effects using the "fitCurve" based on all genes
+    groupCGE_DC = groupCGE-FitCurve;
+    
+    % plot curves
+    RichClubHuman(groupAdjlog,groupCGE_DC, nodeData, 'right', plotOptions.whatDistribution, plotOptions.colorOut, plotOptions.colIn);
+    ylabel({'Mean spatially-corrected', 'correlated gene expression'})
+    set(gcf, 'Position', [500 500 750 550])
+    set(gca,'fontsize', 18);
+    ylim([-0.05 0.18])
+    
+    % remove "-" from group name for saving the figure;
+    groupName = listGenes{g,1};
+    isD = contains(groupName,'-');
+    
+    if isD
+        groupName = erase(groupName,'-');
+    end
+    
+    figureName = sprintf('makeFigures/CGEcurves_%sgenes_%s_%d.png', listGenes{g,1}, parc, round(op.densThreshold*100));
+    print(gcf,figureName,'-dpng','-r600');
+end
+
+
 % Figure S7 and S8D-F
 parcs = {'HCP','random500'};
 tract = 'iFOD2';
@@ -167,42 +202,6 @@ ylim([0 0.25])
 figureName = sprintf('makeFigures/CGEcurves_mouse.png');
 print(gcf,figureName,'-dpng','-r600');
 
-% Figure S11
-% for each of cell-specific gene groups, make R/F/P curves.
-[cellGenesUNIQUE,cellGroups] = getCellSpecificGenes('all_gene_data.csv');
-nG = length(cellGroups); 
-
-% for each cell-specific list of genes find ones in the expression data
-listGenes = getCellExpression(cellGenesUNIQUE,cellGroups,coexpData); 
-
-for g=1:length(cellGroups)
-    % extract expression measures for each gene group
-    groupExp = listGenes{g,3};
-    groupCGE = corr(groupExp');
-    % correct CGE for distance effects using the "fitCurve" based on all genes
-    groupCGE_DC = groupCGE-FitCurve;
-    
-    % plot curves
-    RichClubHuman(groupAdjlog,groupCGE_DC, nodeData, 'right', plotOptions.whatDistribution, plotOptions.colorOut, plotOptions.colIn);
-    ylabel({'Mean spatially-corrected', 'correlated gene expression'})
-    set(gcf, 'Position', [500 500 750 550])
-    set(gca,'fontsize', 18);
-    ylim([-0.05 0.18])
-    
-    % remove "-" from group name for saving the figure;
-    groupName = listGenes{g,1};
-    isD = contains(groupName,'-');
-    
-    if isD
-        groupName = erase(groupName,'-');
-    end
-    
-    figureName = sprintf('makeFigures/CGEcurves_%sgenes_%s_%d.png', listGenes{g,1}, parc, round(op.densThreshold*100));
-    print(gcf,figureName,'-dpng','-r600');
-end
 
 
 end
-
-
-
