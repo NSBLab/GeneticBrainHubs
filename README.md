@@ -1,4 +1,7 @@
 # GeneticBrainHubs
+
+![image](https://user-images.githubusercontent.com/14971156/116356515-b8fd9f80-a83e-11eb-8e7a-5dcfe3f7ba79.png)
+
 This repository provides Matlab code for reproducing figures from the paper entitled:
 
 - Arnatkeviciute et al. (2021) [:green_book: 'Genetic influences on hub connectivity ofthe human connectome'](https://doi.org/10.1101/2020.06.21.163915).
