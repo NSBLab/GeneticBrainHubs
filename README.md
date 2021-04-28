@@ -6,7 +6,7 @@ Dependencies: [Brain Connectivity Toolbox](https://sites.google.com/site/bctnet/
 Contact Aurina Arnatkeviciute by [email](mailto:aurina.arnatkeviciute@monash.edu).
 
 ### Data files
-Data files required for this project are hosted on [this figshare repository](https://figshare.com/s/9f59ce2db221accd1dfe).
+Data files required for this project are hosted in on the associated [Zenodo repository](https://doi.org/10.5281/zenodo.4724186).
 Please download and unzip the data in the root directory.
 
 ### Reproducing figures
