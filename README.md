@@ -1,6 +1,6 @@
 # GeneticBrainHubs
 
-![image](https://user-images.githubusercontent.com/14971156/116356515-b8fd9f80-a83e-11eb-8e7a-5dcfe3f7ba79.png)
+[![DOI](https://zenodo.org/badge/265760715.svg)](https://zenodo.org/badge/latestdoi/265760715)
 
 This repository provides Matlab code for reproducing figures from the paper entitled:
 
