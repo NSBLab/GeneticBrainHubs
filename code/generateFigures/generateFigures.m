@@ -58,3 +58,8 @@ FigureS13()
 % Figure S14 - supplementary: genetic variance.
 %--------------------------------------------------%
 FigureS14()
+
+%--------------------------------------------------%
+% TableS1 - supplementary: enrichment table
+%--------------------------------------------------%
+TableS1()
