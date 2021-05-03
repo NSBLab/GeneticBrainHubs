@@ -43,4 +43,6 @@ Code to reproduce the figures is located in the `generateFigures` folder. Script
 
 `FigureS14()` - supplementary: genetic variance.
 
+`TableS1()` - supplementary: enrichment table. 
+
 
