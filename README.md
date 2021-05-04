@@ -13,7 +13,7 @@ Dependencies: [Brain Connectivity Toolbox](https://sites.google.com/site/bctnet/
 Contact Aurina Arnatkeviciute by [email](mailto:aurina.arnatkeviciute@monash.edu).
 
 ### Data files
-Data files required for this project are hosted in on the associated [Zenodo repository](https://doi.org/10.5281/zenodo.4724186).
+Data files required for this project are hosted in on the associated [Zenodo repository](http://doi.org/10.5281/zenodo.4733297).
 Please download and unzip the data in the root directory.
 
 ### Reproducing figures
@@ -42,5 +42,7 @@ Code to reproduce the figures is located in the `generateFigures` folder. Script
 `FigureS13()` - supplementary: heritability for rich, feeder and peripheal links where the significance is evaluated using label randomisation. 
 
 `FigureS14()` - supplementary: genetic variance.
+
+`TableS1()` - supplementary: enrichment table. 
 
 
