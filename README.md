@@ -18,8 +18,7 @@ Please download and unzip the data in the root directory.
 
 ### Reproducing figures
 First, add all sub-folders to the path using `setupPaths()` function from the root directory. This will also create a `makeFigures` folder.
-Code to reproduce the figures is located in the `generateFigures` folder. Script `generateFigures.m` calls all the functions to plot the figures. Run the scripts from the root directory. Figures will be saved in `makeFigures` folder in the root directory.
-
+Code to reproduce the figures is located in the `generateFigures` folder. Script `generateFigures.m` calls all the functions to plot the figures. Run the scripts from the root directory. Figures will be saved in `makeFigures` folder in the root directory. It takes around 15 minutes to generate all figres on a standard laptop (except for `FigureS13()`, which requires additional randomisations that take ~1h to complete). 
 
 `Figure2_and_FigureS2()` - main text: heritability and supplementary figure S2 visualising spatial distribution of most and least heritable links. 
 
