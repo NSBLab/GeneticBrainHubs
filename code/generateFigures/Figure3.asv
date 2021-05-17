@@ -153,12 +153,8 @@ set(gcf, 'Position', [500 500 750 550])
 set(gca,'fontsize', 18);
 ylim([0.6 1.1])
 
-% save export data
 writetable(data_export_mpc,'data_export/source_data.xlsx','Sheet','Figure3h','WriteVariableNames',true);
-degree = nodeDeg';
-region = (1:length(degree))';  
-node_degree = table(region,degree); 
-writetable(node_degree,'data_export/source_data.xlsx','Sheet','Figure3g','WriteVariableNames',true);
+
 
 % plot MPC vs distance
 
