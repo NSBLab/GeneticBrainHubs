@@ -1,4 +1,4 @@
-function F = plot_proportionHubsModule(netassignments, nodeData,plotOptions)
+function [F,Hp, k_range] = plot_proportionHubsModule(netassignments, nodeData,plotOptions)
 
 colorOut = plotOptions.colorOut;         
 modulesColor = GiveMeColors('funcModules'); 
@@ -7,6 +7,7 @@ k=linspace(1,max(nodeData), max(nodeData));
 numMod = max(unique(netassignments)); 
 
 Hp = zeros(numMod, max(k)-1); 
+k_range = 1:max(k)-1; 
 for i=1:max(k)-1
     isHub = nodeData>k(i); 
     numHubs = length(find(isHub)); 

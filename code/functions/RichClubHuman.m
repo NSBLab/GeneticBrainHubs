@@ -1,4 +1,4 @@
-function getMaxVal = RichClubHuman(Adj,pairwiseMeasure,nodeData, whatTail, whatDistribution, colorOut, colorIn)
+function [getMaxVal,data_export] = RichClubHuman(Adj,pairwiseMeasure,nodeData, whatTail, whatDistribution, colorOut, colorIn)
 % ------------------------------------------------------------------------------
 % Function plots coexpression for rich/feeder/peripheral lins as a function
 % of degree using mean to summarise coexpression at each threshold
@@ -207,9 +207,19 @@ for j = 1:length(whatLinks)
 %     if ~plotJustRich
 %         text(xLimits(1)+0.1*diff(xLimits),yLimits(1)+0.9*diff(yLimits)-j/20,whatLinks{j},'color',myColors(j,:),'FontSize',18)
 %     end
-
+%data_export{1} = kr; 
+%data_export{j+1} = realTrajectory; 
+     node_degree = kr'; 
+     if j==1
+         rich_links = realTrajectory;
+     elseif j==2
+         feeder_links = realTrajectory;
+     elseif j==3
+         peripheral_links = realTrajectory;
+     end
 
 end
+data_export = table(node_degree,rich_links,feeder_links,peripheral_links); 
 
 set(gcf, 'Position', [500 500 750 500])
 

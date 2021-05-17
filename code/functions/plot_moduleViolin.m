@@ -1,4 +1,4 @@
-function [res,f] = plot_moduleViolin(allData, measureModRICH, netNamesAll, netassignments, pairwiseMeasure, nodeData, groupAdjlog, plotWhat, khub)
+function [res,f, S_export] = plot_moduleViolin(allData, measureModRICH, netNamesAll, netassignments, pairwiseMeasure, nodeData, groupAdjlog, plotWhat, khub)
 
 % colours for modules
 c = GiveMeColors('RFPU');
@@ -147,5 +147,7 @@ ax = gca;
 ax.XAxis.TickLength = [0,0];
 xticklabels(violinLabels); 
 xtickangle(30)
+
+S_export = rmfield(S,{'gap11', 'gap12', 'gap21', 'gap22'});
 
 end

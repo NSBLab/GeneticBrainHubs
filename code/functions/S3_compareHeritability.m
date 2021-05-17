@@ -1,4 +1,4 @@
-function [heritMatrix, nodeData, groupAdjlog, mask] = S3_compareHeritability(parcellation,tractography,plotWhat,weight2,densThreshold,cvMeasure, plotOptions, onlyACTE,n)
+function [heritMatrix, nodeData, groupAdjlog, mask, data_export] = S3_compareHeritability(parcellation,tractography,plotWhat,weight2,densThreshold,cvMeasure, plotOptions, onlyACTE,n)
  % indTOP, mask
 if nargin < 8
     n = 100;
@@ -82,7 +82,7 @@ heritMatrix = heritMatrix+heritMatrix';
 %
 nodeData = degrees_und(groupAdjlog); 
 % make a curve plot for the whole brain 
-getMaxVal = RichClubHuman(groupAdjlog,heritMatrix, nodeData,'right', whatDistribution, colorOut, colorIn);
+[getMaxVal,data_export] = RichClubHuman(groupAdjlog,heritMatrix, nodeData,'right', whatDistribution, colorOut, colorIn);
 %getMaxVal = RichClubHuman_median(groupAdjlog,heritMatrix, nodeData,'right', whatDistribution, colorOut, colorIn);
 ylabel('Mean edge heritability')
 set(gcf, 'Position', [500 500 750 550])

@@ -15,7 +15,7 @@ plotOptions.whatDistribution = 'histogram';
 
 for k=1:length(whatFactors)
     
-    [heritMatrix, nodeData, groupAdjlog, mask] = S3_compareHeritability(parcellation,op.tract,whatFactors{k},op.weight,op.densThreshold,op.cvMeasure, plotOptions, false, 1000);
+    [heritMatrix, nodeData, groupAdjlog, mask, data_export] = S3_compareHeritability(parcellation,op.tract,whatFactors{k},op.weight,op.densThreshold,op.cvMeasure, plotOptions, false, 1000);
     
     switch whatFactors{k}
         case 'Efactor'
@@ -45,7 +45,20 @@ for k=1:length(whatFactors)
     
     figureName = sprintf('makeFigures/%s_curves_%s_%s_%d.png', whatFactors{k}, conWeight, parcellation, round(op.densThreshold*100));
     print(gcf,figureName,'-dpng','-r600');
+    
+    % save data export to excel
+    switch whatFactors{k}
+        case 'Efactor'
+    writetable(data_export,'data_export/source_data.xlsx','Sheet','Figure2d','WriteVariableNames',true);
+        case 'Afactor'
+    writetable(data_export,'data_export/source_data.xlsx','Sheet','Figure2c','WriteVariableNames',true);
+    end
+    
 end
+degree = nodeData';
+region = (1:360)';  
+node_degree = table(region,degree); 
+writetable(node_degree,'data_export/source_data.xlsx','Sheet','Figure2b','WriteVariableNames',true);
 
 heritMatrixHalf = maskuHalf(heritMatrix);
 heritMatrixHalf(groupAdjlog==0) = NaN;
@@ -78,56 +91,24 @@ view([90 0]); camlight('right')
 figureName = 'makeFigures/heritability_lowest_brain_side.png';
 print(f,figureName,'-dpng','-r300');
 
-% make separate matrices for rich/feeder/peripheral links that will be used
-% to plot values on the brain
-% numNodes = length(nodeData); 
-% 
-% isHub = nodeData>op.khub; 
-% rich_mask = zeros(numNodes,numNodes);
-% rich_mask(isHub,isHub) = 1; 
-% 
-% feeder_mask = false(numNodes,numNodes);
-% feeder_mask(isHub,~isHub) = 1;
-% feeder_mask(~isHub,isHub) = 1;
-% 
-% peripheral_mask = false(numNodes,numNodes);
-% peripheral_mask(~isHub,~isHub) = 1;
-% 
-% % RICH LINKS
-% rich_links = heritMatrix.*rich_mask.*groupAdjlog;
-% rich_links(isnan(rich_links)) = 0; 
-% % make a figure
-% f=figure('color','white');
-% set(gcf, 'Position', [10 10 700 1000]);
-% plot_edges_brain(rich_links, [0 1]); 
-% figureName = 'makeFigures/heritability_rich_brain.png';
-% print(f,figureName,'-dpng','-r600');
-% 
-% % FEEDER LINKS
-% feeder_links = heritMatrix.*feeder_mask.*groupAdjlog; 
-% feeder_links(isnan(feeder_links)) = 0; 
-% 
-% f=figure('color','white');
-% set(gcf, 'Position', [10 10 700 1000]);
-% plot_edges_brain(feeder_links, [0 1]); 
-% figureName = 'makeFigures/heritability_feeder_brain.png';
-% print(f,figureName,'-dpng','-r600');
-% 
-% % PERIPHERAL LINKS
-% peripheral_links = heritMatrix.*peripheral_mask.*groupAdjlog; 
-% peripheral_links(isnan(peripheral_links)) = 0; 
-% 
-% f=figure('color','white');
-% set(gcf, 'Position', [10 10 700 1000]);
-% plot_edges_brain(peripheral_links, [0 1]); 
-% figureName = 'makeFigures/heritability_peripheral_brain.png';
-% print(f,figureName,'-dpng','-r600');
-
 
 % plot violin distributions for modules add brain representation
 load('data/modules/cortex_parcel_network_assignments.mat')
 [resMod,netNamesAll,allData, measureModRICH] = compareMeasure_modules(heritMatrixHalf, netassignments, groupAdjlog, nodeData, op.khub);
-[resINTERINTRA,f] = plot_moduleViolin(allData, measureModRICH, netNamesAll, netassignments, heritMatrixHalf, nodeData, groupAdjlog, 'heritability', op.khub);
+[resINTERINTRA,f,S] = plot_moduleViolin(allData, measureModRICH, netNamesAll, netassignments, heritMatrixHalf, nodeData, groupAdjlog, 'heritability', op.khub);
+
+% prepare data for export
+num_points = cellfun(@length,struct2cell(S)); 
+num_violins = length(fieldnames(S)); 
+names_fields = fieldnames(S); 
+
+S_exp = nan(max(num_points),num_violins);
+for pp=1:num_violins
+    S_exp(1:num_points(pp),pp) = S.(names_fields{pp});
+end
+
+S_export = array2table(S_exp,'VariableNames',names_fields); 
+writetable(S_export,'data_export/source_data.xlsx','Sheet','Figure2g-i','WriteVariableNames',true);
 
 figureName = 'makeFigures/heritability_modules_distributions.png';
 print(f,figureName,'-dpng','-r600');
@@ -147,10 +128,15 @@ figureName = sprintf('makeFigures/MOD_brainR_outside_%s.png', parcellation);
 print(f4,figureName,'-dpng','-r300');
 
 % plot the proportion of hubs in each module as a function of degree
-F = plot_proportionHubsModule(netassignments, nodeData,plotOptions);
+[F, Hp, k_range] = plot_proportionHubsModule(netassignments, nodeData,plotOptions);
 figureName = sprintf('makeFigures/proportion_HubsModules.png');
 print(F,figureName,'-dpng','-r600');
 
+% prepare data for exort
+degree_threshold = [k_range; Hp];
+net_names = [{''};names_fields(1:12)]; 
+Hp_export = table(net_names,degree_threshold); 
+writetable(Hp_export,'data_export/source_data.xlsx','Sheet','Figure2f','WriteVariableNames',true);
 
 % plot degree on the cortical surface for 3 hub thresholds
 ts = [145,125,105]; % hub thresholds, degree at which regions are labeled hubs;
