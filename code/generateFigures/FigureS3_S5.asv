@@ -63,12 +63,11 @@ writetable(node_degree,'data_export/source_data.xlsx','Sheet','Figure3a','WriteV
 
 % S5 - heritability in distance ranges
 % get heritability for best-fitting models
-[heritMatrix, nodeData, groupAdjlog, mask, data_exp] = S3_compareHeritability(parcellation,op.tract,'Afactor',weight,op.densThreshold,op.cvMeasure, plotOptions, false);
+[heritMatrix, nodeData, groupAdjlog, mask] = S3_compareHeritability(parcellation,op.tract,'Afactor',weight,op.densThreshold,op.cvMeasure, plotOptions, false);
 ylim([0.3 0.7]); 
 numThr = 4;
 distMatr = giveConnDistance(parcellation, op.tract, groupAdjlog);
 
-writetable(data_exp,'data_export/source_data.xlsx','Sheet','Supplementary Figure3d','WriteVariableNames',true);
 
 % bin data into distance bins
 heritMatrixHalf = maskuHalf(heritMatrix);
@@ -80,20 +79,57 @@ distMatr = maskuHalf(distMatr);
 figureName = sprintf('makeFigures/heritability_distributions_distance_%s.png', parcellation);
 print(f0,figureName,'-dpng','-r600');
 
-[RvsF_subj, FvsP_subj] = compare_numberExcludedSubjects('BOTH'); 
+% export distance values
+% save data for each subplot separately
+names_fields = {'rich', 'feeder', 'peripheral'}; 
+cell_ranges = {'A:C', 'D:F', 'G:I'};
+for rr=1:length(dataCell)
+    
+S_export = export_violins(dataCell{rr});
+writetable(S_export,'data_export/source_data.xlsx','Sheet','Supplementary Fifure5a-c','Range',cell_ranges{rr},'WriteVariableNames',true);
+
+end
+
+
+[RvsF_subj, FvsP_subj, dataCell] = compare_numberExcludedSubjects('BOTH'); 
 figureName = sprintf('makeFigures/Heritability_NRexcluded_subjects_%s.png', parcellation);
 print(gcf,figureName,'-dpng','-r300');
 
-[RvsF_variance, FvsP_variance] = compare_numberExcludedSubjects('VARrem'); 
+% export to excell
+for rr=1:length(dataCell)
+    
+S_export = export_violins(dataCell{rr});
+writetable(S_export,'data_export/source_data.xlsx','Sheet','Supplementary Fifure5d-f','Range',cell_ranges{rr},'WriteVariableNames',true);
+
+end
+    
+
+[RvsF_variance, FvsP_variance, dataCell] = compare_numberExcludedSubjects('VARrem'); 
 figureName = sprintf('makeFigures/Heritability_Variance_%s.png', parcellation);
 print(gcf,figureName,'-dpng','-r300');
 
+% export to excell
+for rr=1:length(dataCell)
+    
+S_export = export_violins(dataCell{rr});
+writetable(S_export,'data_export/source_data.xlsx','Sheet','Supplementary Fifure5g-i','Range',cell_ranges{rr},'WriteVariableNames',true);
+
+end
+
 % plot R/F/P curves without excluding outlies for heritability calculation
-heritMatrixACTE = S3_compareHeritability_withOutliers('HCP',op.tract,'Afactor', weight,op.densThreshold,op.cvMeasure, plotOptions);
+[~, nodeData_out, data_export] = S3_compareHeritability_withOutliers('HCP',op.tract,'Afactor', weight,op.densThreshold,op.cvMeasure, plotOptions);
 ylim([0 0.7])
 ylabel({'Mean h^2'})
 figureName = sprintf('makeFigures/Heritability_WITHoutliers_%s.png', parcellation);
 print(gcf,figureName,'-dpng','-r300');
+
+% export to excell
+writetable(data_export,'data_export/source_data.xlsx','Sheet','Supplementary Figure3j-k','WriteVariableNames',true);
+degree = nodeData';
+region = (1:360)';  
+node_degree = table(region,degree); 
+writetable(node_degree,'data_export/source_data.xlsx','Sheet','Figure3a','WriteVariableNames',true);\
+
 
 % S4 - heritability for different parcellations and densities;
 parcs = {'HCP','random500'};
@@ -105,7 +141,8 @@ khubs = [90, 105, 120; % for HCP parcellation
     35, 70, 100]; % for random 500 parcellation
 yVals = [[0.3, 0.7]; [0.3 0.7]];
 cvMeasure = 'strength';
-
+label_name = {'a', 'b', 'c', 'd', 'e', 'f'}; 
+qq=1; 
 for pa=1:length(parcs)
     parc = parcs{pa};
     yVal = yVals(pa,:);
@@ -114,14 +151,24 @@ for pa=1:length(parcs)
         densThreshold = densThresholds(pa,de);
         khub = khubs(pa,de);
         
-        [heritMatrix, nodeData, groupAdjlog, mask] = S3_compareHeritability(parc,tractography,'Afactor', conWeight,densThreshold,cvMeasure, plotOptions);
+        [heritMatrix, nodeData, groupAdjlog, mask, data_exp_parc] = S3_compareHeritability(parc,tractography,'Afactor', conWeight,densThreshold,cvMeasure, plotOptions);
         
         figureName = sprintf('makeFigures/Afactor_curves_%s_%d.png', parc, densThreshold);
         ylim(yVal)
         ylabel({'Mean h^2'})
         
-        print(gcf,figureName,'-dpng','-r600');
+        % save to excell
+        sheet_name = sprintf('Supplementary Figure4%s', label_name{qq}); 
+        writetable(data_exp_parc,'data_export/source_data.xlsx','Sheet',sheet_name,'WriteVariableNames',true);
         
+        degree = nodeData';
+        region = (1:length(nodeData))';
+        node_degree = table(region,degree);
+        writetable(node_degree,'data_export/source_data.xlsx','Sheet',sheet_name,'Range','G:H','WriteVariableNames',true);
+
+
+        print(gcf,figureName,'-dpng','-r600');
+        qq=qq+1; 
 
     end
 

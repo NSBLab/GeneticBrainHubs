@@ -1,4 +1,4 @@
-function [RvsF, FvsP] = compare_numberExcludedSubjects(plotWhat)
+function [RvsF, FvsP, dataCell] = compare_numberExcludedSubjects(plotWhat)
 
 if nargin < 1
     plotWhat = 'BOTH';

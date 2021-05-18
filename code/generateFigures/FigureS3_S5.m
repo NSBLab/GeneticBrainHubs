@@ -79,20 +79,59 @@ distMatr = maskuHalf(distMatr);
 figureName = sprintf('makeFigures/heritability_distributions_distance_%s.png', parcellation);
 print(f0,figureName,'-dpng','-r600');
 
-[RvsF_subj, FvsP_subj] = compare_numberExcludedSubjects('BOTH'); 
+% export distance values
+% save data for each subplot separately
+names_fields = {'rich', 'feeder', 'peripheral'}; 
+cell_ranges = {'A:C', 'D:F', 'G:I'};
+for rr=1:length(dataCell)
+    
+    S_export = export_violins(dataCell{rr});
+    writetable(S_export,'data_export/source_data.xlsx','Sheet','Supplementary Fifure5a-c','Range',cell_ranges{rr},'WriteVariableNames',true);
+    
+end
+
+[RvsF_subj, FvsP_subj, dataCell] = compare_numberExcludedSubjects('BOTH'); 
 figureName = sprintf('makeFigures/Heritability_NRexcluded_subjects_%s.png', parcellation);
 print(gcf,figureName,'-dpng','-r300');
 
-[RvsF_variance, FvsP_variance] = compare_numberExcludedSubjects('VARrem'); 
+% export to excell
+for rr=1:length(dataCell)
+    
+    S_exp = export_violins(dataCell{rr});
+    S_export = array2table(S_exp,'VariableNames',names_fields);
+    
+    writetable(S_export,'data_export/source_data.xlsx','Sheet','Supplementary Fifure5d-f','Range',cell_ranges{rr},'WriteVariableNames',true);
+    
+end
+    
+
+[RvsF_variance, FvsP_variance, dataCell] = compare_numberExcludedSubjects('VARrem'); 
 figureName = sprintf('makeFigures/Heritability_Variance_%s.png', parcellation);
 print(gcf,figureName,'-dpng','-r300');
 
+% export to excell
+for rr=1:length(dataCell)
+    
+    S_exp = export_violins(dataCell{rr});
+    S_export = array2table(S_exp,'VariableNames',names_fields);
+    writetable(S_export,'data_export/source_data.xlsx','Sheet','Supplementary Fifure5g-i','Range',cell_ranges{rr},'WriteVariableNames',true);
+    
+end
+
 % plot R/F/P curves without excluding outlies for heritability calculation
-heritMatrixACTE = S3_compareHeritability_withOutliers('HCP',op.tract,'Afactor', weight,op.densThreshold,op.cvMeasure, plotOptions);
+[~, nodeData_out, data_export] = S3_compareHeritability_withOutliers('HCP',op.tract,'Afactor', weight,op.densThreshold,op.cvMeasure, plotOptions);
 ylim([0 0.7])
 ylabel({'Mean h^2'})
 figureName = sprintf('makeFigures/Heritability_WITHoutliers_%s.png', parcellation);
 print(gcf,figureName,'-dpng','-r300');
+
+% export to excell
+writetable(data_export,'data_export/source_data.xlsx','Sheet','Supplementary Figure3j-k','WriteVariableNames',true);
+degree = nodeData_out';
+region = (1:360)';  
+node_degree = table(region,degree); 
+writetable(node_degree,'data_export/source_data.xlsx','Sheet','Supplementary Figure5j','WriteVariableNames',true);
+
 
 % S4 - heritability for different parcellations and densities;
 parcs = {'HCP','random500'};
@@ -120,8 +159,15 @@ for pa=1:length(parcs)
         ylim(yVal)
         ylabel({'Mean h^2'})
         
-        sheet_name = sprintf('Supplementary Figured%s', label_name{qq}); 
+        % save to excell
+        sheet_name = sprintf('Supplementary Figure4%s', label_name{qq}); 
         writetable(data_exp_parc,'data_export/source_data.xlsx','Sheet',sheet_name,'WriteVariableNames',true);
+        
+        degree = nodeData';
+        region = (1:length(nodeData))';
+        node_degree = table(region,degree);
+        writetable(node_degree,'data_export/source_data.xlsx','Sheet',sheet_name,'Range','G:H','WriteVariableNames',true);
+
 
         print(gcf,figureName,'-dpng','-r600');
         qq=qq+1; 
