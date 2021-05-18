@@ -105,7 +105,7 @@ for nn=1:length(Networks{1,1}{1,1})
 end
 % CDFs plotted using networks from violin
 BESTmodel_networks = allNET(INDselected{V}); 
-plot_modellingCDF(E, BESTmodel_networks, D, 100);
+[curve_all_export,curve_exp_export] = plot_modellingCDF(E, BESTmodel_networks, D, 100);
 % save the figure
 print(gcf,figureName,'-dpng','-r300');
 

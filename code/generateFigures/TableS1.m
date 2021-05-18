@@ -19,9 +19,12 @@ GOtableCON.Pval = round(CONall.pval*(10^num_dig))/(10^num_dig);
 GOtableCON.Pval_corr = round(CONall.corr_pval*(10^num_dig))/(10^num_dig);
 
 % save file as .csv
-cd('data/enrichment'); 
-fileOUTname = sprintf('ermineJresults%s.csv', type); 
+fileOUTname = sprintf('data/enrichment/ermineJresults%s.csv', type); 
 writetable(GOtableCON,fileOUTname)
+
+% save to source data excel file
+writetable(GOtableCON,'data_export/source_data.xlsx','Sheet','Supplementary Table 1','WriteVariableNames',true);
+
 
 end
 

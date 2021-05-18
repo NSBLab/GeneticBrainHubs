@@ -56,7 +56,7 @@ for k=1:length(whatFactors)
     
 end
 degree = nodeData';
-region = (1:360)';  
+region = (1:length(nodeData))';  
 node_degree = table(region,degree); 
 writetable(node_degree,'data_export/source_data.xlsx','Sheet','Figure2b','WriteVariableNames',true);
 
