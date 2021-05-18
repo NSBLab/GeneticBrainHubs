@@ -69,7 +69,7 @@ writetable(RC_weifa,'data_export/source_data.xlsx','Sheet','Supplementary Figure
 
 
 % d) connection length as a function of degree
-dist_vals = RichClubHuman_TOPO(GrFA,mDIST,nodeDeg, true, whatDistribution, colorOut, colorIn);
+[dist_vals, ~, kr_plot] = RichClubHuman_TOPO(GrFA,mDIST,nodeDeg, true, whatDistribution, colorOut, colorIn);
 axisName = {'Mean connection', 'distance (mm)'};
 ylabel(axisName, 'FontSize', 18)
 xlabel('Node degree, k','FontSize', 18);
@@ -78,14 +78,14 @@ figureName = sprintf('makeFigures/DIST_%s_%d.png', parcellation, round(op.densTh
 print(gcf,figureName,'-dpng','-r300');
 
 % save to excel
-mean_dist = table(kRange', dist_vals', 'VariableNames', {'node_degree', 'distance'}); 
+mean_dist = table(kr_plot', dist_vals, 'VariableNames', {'node_degree', 'distance'}); 
 writetable(mean_dist,'data_export/source_data.xlsx','Sheet','Supplementary Figure1d','WriteVariableNames',true);
 
 
 % e) binary normalised edge communicability as a function of degree
 % - null, is randomising topology
 ComNormBIN = normCommunicability(GrFA, 'bin', numShuffle, numRepeats, 'randmio_und');
-com_bin = RichClubHuman_TOPO(GrFA,ComNormBIN,nodeDeg, true, whatDistribution, colorOut, colorIn);
+[com_bin, ~, kr_plot] = RichClubHuman_TOPO(GrFA,ComNormBIN,nodeDeg, true, whatDistribution, colorOut, colorIn);
 axisName = {'Mean edge','communicability (binary)'};
 ylabel(axisName, 'FontSize', 18)
 xlabel('Node degree, k','FontSize', 18);
@@ -93,13 +93,13 @@ figureName = sprintf('makeFigures/COMMbin_%s_%d.png', parcellation, round(op.den
 print(gcf,figureName,'-dpng','-r300');
 
 % save to excel
-com_bin_exp = table(kRange', com_bin', 'VariableNames', {'node_degree', 'com_bin'}); 
+com_bin_exp = table(kr_plot', com_bin, 'VariableNames', {'node_degree', 'com_bin'}); 
 writetable(com_bin_exp,'data_export/source_data.xlsx','Sheet','Supplementary Figure1e','WriteVariableNames',true);
 
 % f) weighted normalised edge communicability as a function of degree
 % - null, is randomising weights while keeping the topology
 ComNormWEI = normCommunicability(GrFA, 'wei', numShuffle, numRepeats, 'shuffleWeights');
-com_wei = RichClubHuman_TOPO(GrFA,ComNormWEI, nodeDeg, true, whatDistribution, colorOut, colorIn);
+[com_wei, ~, kr_plot] = RichClubHuman_TOPO(GrFA,ComNormWEI, nodeDeg, true, whatDistribution, colorOut, colorIn);
 axisName = {'Mean edge', 'communicability (weighted)'};
 ylabel(axisName, 'FontSize', 18)
 xlabel('Node degree, k','FontSize', 18);
@@ -107,7 +107,7 @@ figureName = sprintf('makeFigures/COMMwei_%s_%d.png', parcellation, round(op.den
 print(gcf,figureName,'-dpng','-r300');
 
 % save to excel
-com_wei_exp = table(kRange', com_wei', 'VariableNames', {'node_degree', 'com_wei'}); 
+com_wei_exp = table(kr_plot', com_wei, 'VariableNames', {'node_degree', 'com_wei'}); 
 writetable(com_wei_exp,'data_export/source_data.xlsx','Sheet','Supplementary Figure1f','WriteVariableNames',true);
 
 end

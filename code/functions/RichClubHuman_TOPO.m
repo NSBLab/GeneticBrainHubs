@@ -1,4 +1,4 @@
-function [realTrajectory, isSig] = RichClubHuman_TOPO(Adj,averageCoexpression,nodeData, plotONLYhubs, whatDistribution, colorOut, colorIn)
+function [realTrajectory, isSig, kr] = RichClubHuman_TOPO(Adj,averageCoexpression,nodeData, plotONLYhubs, whatDistribution, colorOut, colorIn)
 %colorInbarCo = [158 202 225]/255;
 colorInbarCo = colorOut;
 
