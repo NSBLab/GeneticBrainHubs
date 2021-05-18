@@ -37,7 +37,7 @@ degEMP = degrees_und(E);
 
 switch optimiseWhat
     case 'degCorr' % for degree correlations look for max values
-
+        
         % plot top 100 highest correlation values
         [S, INDselected] = plotMODviolin(SPEAR{rowIND,colIND}, 100, mtype, 'highest');
         ylim([0 0.35])
@@ -45,7 +45,7 @@ switch optimiseWhat
         ylabel('Degree correlation')
         figureName = sprintf('makeFigures/MODELfit_%s_%s_Highestcorrelation_optimise_%s.png',parcellation, hemi, optimiseWhat);
         
-        
+        %
         % get CORRELATION values for those selected networks
         CS = cell(1,length(mtype)-1);
         for p=1:length(mtype)-1
@@ -60,14 +60,26 @@ switch optimiseWhat
         set(gca,'FontSize',18)
         ylabel('Model fit (KS)')
         figureName = sprintf('makeFigures/MODELfit_%s_%s_Lowestenergy_optimise_%s.png',parcellation, hemi, optimiseWhat);
-
+        
         % get the correlations based on lowest energy
         CS = cell(1,length(mtype)-1);
         for p=1:length(mtype)-1
             CS{p} = SPEAR{rowIND,colIND}{p}(INDselected{p});
         end
-        
 end
+
+% export data
+num_points = cellfun(@length,struct2cell(S));
+num_lines = length(fieldnames(S));
+names_fields = fieldnames(S);
+
+S_exp = nan(max(num_points),num_lines);
+for pp=1:num_lines
+    S_exp(1:num_points(pp),pp) = S.(names_fields{pp});
+end
+
+S_export = array2table(S_exp,'VariableNames',names_fields);
+writetable(S_export,'data_export/source_data.xlsx','Sheet','Figure4a','WriteVariableNames',true);
 
 % select best model based on 10000 runs
 for t=1:length(mtype)-1
@@ -93,9 +105,47 @@ for nn=1:length(Networks{1,1}{1,1})
      allNET{nn} = N; 
 end
 BESTmodel_networks = allNET(INDselected{V}); 
-plot_modellingCDF(E, BESTmodel_networks, D, 100);
+[curve_all_export,curve_exp_export] = plot_modellingCDF(E, BESTmodel_networks, D, 100);
 % save the figure
 print(gcf,figureName,'-dpng','-r600');
+
+% save data for each subplot separately
+temp_all = [curve_exp_export, curve_all_export]; 
+num_points = cellfun(@length,temp_all);
+num_lines = size(temp_all,2); 
+panel_label = {'b', 'c', 'd', 'e'}; 
+% make a separate table for each measure
+for uu=1:size(curve_all_export,1)
+    S_exp = nan(max(num_points(uu,:)),num_lines*2);
+    
+    pp=1; 
+    for tt=1:num_lines
+        S_exp(1:num_points(uu,tt),pp:pp+1) = temp_all{uu,tt};
+        
+        if tt==1
+        names_fields{pp} = sprintf('x data'); 
+        names_fields{pp+1} = sprintf('y data');
+        else
+        names_fields{pp} = sprintf('x%d', tt-1); 
+        names_fields{pp+1} = sprintf('y%d', tt-1);
+        end
+        pp=pp+2; 
+        
+    end
+    % save data for one plot
+    S_export = array2table(S_exp,'VariableNames',names_fields); 
+    switch optimiseWhat
+        case 'degCorr'
+            sheet_name_line = sprintf('Supplementary Figure12%s',panel_label{uu});
+            sheet_name_scatter = 'Supplementary Figure12g';
+            sheet_name_histo = 'Supplementary Figure12h';
+        case 'energy'
+            sheet_name_line = sprintf('Figure4%s',panel_label{uu});
+            sheet_name_scatter = 'Figure4g';
+            sheet_name_histo = 'Figure4h';
+    end  
+    writetable(S_export,'data_export/source_data.xlsx','Sheet',sheet_name_line,'WriteVariableNames',true);
+end
 
 BESTmodel = allNET{MenergyIND(V)}; 
 
@@ -118,6 +168,10 @@ degMOD = degrees_und(BESTmodel);
 fprintf ('Best model correlation with empirical data in scatter r=%d\n', rS)
 [rP,pP] = corr(degMOD', degEMP');
 CorrLE_ALL = cat(1, CS{:});
+
+%save scatter data to export
+T_exp = table(degMOD', degEMP', 'VariableNames', {'Degree empirical', 'Degree model'}); 
+writetable(T_exp,'data_export/source_data.xlsx','Sheet',sheet_name_scatter,'WriteVariableNames',true);
 
 whatLine = 'fit';
 figure('color','w');
@@ -171,6 +225,11 @@ set(gca,'fontsize', 20);
 
 figureName = sprintf('makeFigures/MODdegree_EMPvsMOD_%s_%s_%s.png', optimiseWhat,parcellation, hemi);
 print(gcf,figureName,'-dpng','-r600');
+
+% save to export
+H_exp = table(CorrLE_ALL, 'VariableNames', {'Spearman correlation'}); 
+writetable(H_exp,'data_export/source_data.xlsx','Sheet',sheet_name_histo,'WriteVariableNames',true);
+
 
 plot_hubsSurface_SO('HCP',degEMP(1:180),tsEMP, 'inside', 'lh');
 figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s.png', optimiseWhat, parcellation, 'inside', 'lh');

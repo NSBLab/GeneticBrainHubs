@@ -63,11 +63,12 @@ writetable(node_degree,'data_export/source_data.xlsx','Sheet','Figure3a','WriteV
 
 % S5 - heritability in distance ranges
 % get heritability for best-fitting models
-[heritMatrix, nodeData, groupAdjlog, mask] = S3_compareHeritability(parcellation,op.tract,'Afactor',weight,op.densThreshold,op.cvMeasure, plotOptions, false);
+[heritMatrix, nodeData, groupAdjlog, mask, data_exp] = S3_compareHeritability(parcellation,op.tract,'Afactor',weight,op.densThreshold,op.cvMeasure, plotOptions, false);
 ylim([0.3 0.7]); 
 numThr = 4;
 distMatr = giveConnDistance(parcellation, op.tract, groupAdjlog);
 
+writetable(data_exp,'data_export/source_data.xlsx','Sheet','Supplementary Figure3d','WriteVariableNames',true);
 
 % bin data into distance bins
 heritMatrixHalf = maskuHalf(heritMatrix);
@@ -104,8 +105,7 @@ khubs = [90, 105, 120; % for HCP parcellation
     35, 70, 100]; % for random 500 parcellation
 yVals = [[0.3, 0.7]; [0.3 0.7]];
 cvMeasure = 'strength';
-label_name = {'a', 'b', 'c', 'd', 'e', 'f'}; 
-qq=1; 
+
 for pa=1:length(parcs)
     parc = parcs{pa};
     yVal = yVals(pa,:);
@@ -114,17 +114,14 @@ for pa=1:length(parcs)
         densThreshold = densThresholds(pa,de);
         khub = khubs(pa,de);
         
-        [heritMatrix, nodeData, groupAdjlog, mask, data_exp_parc] = S3_compareHeritability(parc,tractography,'Afactor', conWeight,densThreshold,cvMeasure, plotOptions);
+        [heritMatrix, nodeData, groupAdjlog, mask] = S3_compareHeritability(parc,tractography,'Afactor', conWeight,densThreshold,cvMeasure, plotOptions);
         
         figureName = sprintf('makeFigures/Afactor_curves_%s_%d.png', parc, densThreshold);
         ylim(yVal)
         ylabel({'Mean h^2'})
         
-        sheet_name = sprintf('Supplementary Figured%s', label_name{qq}); 
-        writetable(data_exp_parc,'data_export/source_data.xlsx','Sheet',sheet_name,'WriteVariableNames',true);
-
         print(gcf,figureName,'-dpng','-r600');
-        qq=qq+1; 
+        
 
     end
 

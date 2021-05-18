@@ -200,10 +200,8 @@ degMOD = degrees_und(BESTmodel);
 
 [rS,pS] = corr(degMOD', degEMP', 'rows', 'complete', 'type', 'Spearman');
 [rP,pP] = corr(degMOD', degEMP', 'rows', 'complete');
+CorrLE_ALL = cat(1, CS{:});
 
-% save histogram data to export
-CT_tab = array2table(horzcat(CS{:}),'VariableNames', {'ST', 'SG', 'TG', 'S', 'G'});
-writetable(CT_tab,'data_export/source_data.xlsx','Sheet',sheet_name_histo,'WriteVariableNames',true);
 
 % save to export
 T_exp = table(degMOD', degEMP', 'VariableNames', {'Degree empirical', 'Degree model'}); 
