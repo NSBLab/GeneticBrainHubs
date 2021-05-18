@@ -1,11 +1,10 @@
 %--------------------------------------------------%
-% Figure S12
+% Figure 4
 %--------------------------------------------------%
-function FigureS12()
+function Figure4(optimiseWhat)
 
 hemi = 'left'; %if using degCorr, select only 'left'
 parcellation = 'HCP';
-optimiseWhat = 'degCorr';
 
 switch optimiseWhat
     case 'energy'
@@ -38,14 +37,15 @@ degEMP = degrees_und(E);
 
 switch optimiseWhat
     case 'degCorr' % for degree correlations look for max values
-        excell_name = 'Figure12a'; 
+        excell_name = 'Figure12a';
         % plot top 100 highest correlation values
         [S, INDselected] = plotMODviolin(SPEAR{rowIND,colIND}, 100, mtype, 'highest');
+        ylim([0 0.35])
         set(gca,'FontSize',18)
         ylabel('Degree correlation')
         figureName = sprintf('makeFigures/MODELfit_%s_%s_Highestcorrelation_optimise_%s.png',parcellation, hemi, optimiseWhat);
         
-        
+        %
         % get CORRELATION values for those selected networks
         CS = cell(1,length(mtype)-1);
         for p=1:length(mtype)-1
@@ -54,18 +54,19 @@ switch optimiseWhat
         
         
     case 'energy' % for KS look for minimal values
-        excell_name = 'Figure4a'; 
+        
+        excell_name = 'Figure4a';
         [S, INDselected] = plotMODviolin(ENERGY{rowIND,colIND}, 100, mtype, 'lowest');
+        ylim([0.1 0.4])
         set(gca,'FontSize',18)
         ylabel('Model fit (KS)')
         figureName = sprintf('makeFigures/MODELfit_%s_%s_Lowestenergy_optimise_%s.png',parcellation, hemi, optimiseWhat);
-
+        
         % get the correlations based on lowest energy
         CS = cell(1,length(mtype)-1);
         for p=1:length(mtype)-1
             CS{p} = SPEAR{rowIND,colIND}{p}(INDselected{p});
         end
-        
 end
 
 % export data
@@ -79,7 +80,7 @@ for pp=1:num_lines
 end
 
 S_export = array2table(S_exp,'VariableNames',names_fields);
-writetable(S_export,'data_export/source_data.xlsx','Sheet',excell_name,'WriteVariableNames',true);
+writetable(S_export,'data_export/source_data.xlsx','Sheet','Figure4a','WriteVariableNames',true);
 
 % select best model based on 10000 runs
 for t=1:length(mtype)-1
@@ -103,9 +104,8 @@ for nn=1:length(Networks{1,1}{1,1})
      N = N+N';
      allNET{nn} = N; 
 end
-% CDFs plotted using networks from violin
 BESTmodel_networks = allNET(INDselected{V}); 
-plot_modellingCDF(E, BESTmodel_networks, D, 100);
+[curve_all_export,curve_exp_export] = plot_modellingCDF(E, BESTmodel_networks, D, 100);
 % save the figure
 print(gcf,figureName,'-dpng','-r300');
 
@@ -147,7 +147,6 @@ for uu=1:size(curve_all_export,1)
     writetable(S_export,'data_export/source_data.xlsx','Sheet',sheet_name_line,'WriteVariableNames',true);
 end
 
-
 BESTmodel = allNET{MenergyIND(V)}; 
 
 fprintf ('model %s has the "best" network\n', mtype{V})
@@ -166,6 +165,7 @@ end
 degMOD = degrees_und(BESTmodel);
 
 [rS,pS] = corr(degMOD', degEMP', 'type', 'Spearman');
+fprintf ('Best model correlation with empirical data in scatter r=%d\n', rS)
 [rP,pP] = corr(degMOD', degEMP');
 CorrLE_ALL = cat(1, CS{:});
 
@@ -230,6 +230,7 @@ print(gcf,figureName,'-dpng','-r300');
 H_exp = table(CorrLE_ALL, 'VariableNames', {'Spearman correlation'}); 
 writetable(H_exp,'data_export/source_data.xlsx','Sheet',sheet_name_histo,'WriteVariableNames',true);
 
+
 plot_hubsSurface_SO('HCP',degEMP(1:180),tsEMP, 'inside', 'lh');
 figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s.png', optimiseWhat, parcellation, 'inside', 'lh');
 print(gcf,figureName,'-dpng','-r300');
@@ -259,4 +260,3 @@ for s=1:2
     end
 end
 end
-

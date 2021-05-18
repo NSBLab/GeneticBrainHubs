@@ -37,7 +37,6 @@ CGEmatrix(groupAdjlog==0) = NaN;
 
 writetable(data_exp,'data_export/source_data.xlsx','Sheet','Supplementary Figure6ab','WriteVariableNames',true);
 
-
 % plot CGE for different distance bins as violin plots
 [RvsF, FvsP, dataCell, xThresholds] = plot_distanceViolin(CGEmatrix , distMatr, groupAdjlog, nodeData, op.khub, numThr, 'CGE');
 figureName = sprintf('makeFigures/CGEdist_%s_%d.png', parc, round(op.densThreshold*100));
@@ -69,6 +68,8 @@ nG = length(cellGroups);
 % for each cell-specific list of genes find ones in the expression data
 listGenes = getCellExpression(cellGenesUNIQUE,cellGroups,coexpData); 
 
+label_name_cell = {'a', 'b', 'c', 'd', 'e', 'f', 'g'};
+
 for g=1:length(cellGroups)
     % extract expression measures for each gene group
     groupExp = listGenes{g,3};
@@ -77,16 +78,20 @@ for g=1:length(cellGroups)
     groupCGE_DC = groupCGE-FitCurve;
     
     % plot curves
-    [~,data_export] = RichClubHuman(groupAdjlog,groupCGE_DC, nodeData, 'right', plotOptions.whatDistribution, plotOptions.colorOut, plotOptions.colIn);
+    [~,data_export_cell] = RichClubHuman(groupAdjlog,groupCGE_DC, nodeData, 'right', plotOptions.whatDistribution, plotOptions.colorOut, plotOptions.colIn);
     ylabel({'Mean spatially-corrected', 'correlated gene expression'})
     set(gcf, 'Position', [500 500 750 550])
     set(gca,'fontsize', 18);
     ylim([-0.05 0.18])
     
-    
     % save to excell
+    sheet_name = sprintf('Supplementary Figure11%s', label_name_cell{g});
+    writetable(data_export_cell,'data_export/source_data.xlsx','Sheet',sheet_name,'WriteVariableNames',true);
     
-    writetable(data_export,'data_export/source_data.xlsx','Sheet','Supplementary Figure8d-f','WriteVariableNames',true);
+    degree = nodeData';
+    region = (1:length(nodeData))';
+    node_degree = table(region,degree);
+    writetable(node_degree,'data_export/source_data.xlsx','Sheet',sheet_name,'Range','G:H','WriteVariableNames',true);
     
     % remove "-" from group name for saving the figure;
     groupName = listGenes{g,1};

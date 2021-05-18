@@ -37,7 +37,7 @@ degEMP = degrees_und(E);
 
 switch optimiseWhat
     case 'degCorr' % for degree correlations look for max values
-        
+        excell_name = 'Figure12a';
         % plot top 100 highest correlation values
         [S, INDselected] = plotMODviolin(SPEAR{rowIND,colIND}, 100, mtype, 'highest');
         ylim([0 0.35])
@@ -55,6 +55,7 @@ switch optimiseWhat
         
     case 'energy' % for KS look for minimal values
         
+        excell_name = 'Figure4a';
         [S, INDselected] = plotMODviolin(ENERGY{rowIND,colIND}, 100, mtype, 'lowest');
         ylim([0.1 0.4])
         set(gca,'FontSize',18)
@@ -79,7 +80,7 @@ for pp=1:num_lines
 end
 
 S_export = array2table(S_exp,'VariableNames',names_fields);
-writetable(S_export,'data_export/source_data.xlsx','Sheet','Figure4a','WriteVariableNames',true);
+writetable(S_export,'data_export/source_data.xlsx','Sheet',excell_name,'WriteVariableNames',true);
 
 % select best model based on 10000 runs
 for t=1:length(mtype)-1
@@ -95,7 +96,6 @@ end
 % select best parameters based on MenergyIND values 
 bestPARAM = Params{rowIND,colIND}{V}(MenergyIND(V),:); 
 
-% CHANGE THIS TO networks from violins!!!
 % get networks corresponding to violin points for the best model
 allNET = cell(length(Networks{1,1}{1,1}),1); 
 for nn=1:length(Networks{1,1}{1,1})
@@ -107,7 +107,7 @@ end
 BESTmodel_networks = allNET(INDselected{V}); 
 [curve_all_export,curve_exp_export] = plot_modellingCDF(E, BESTmodel_networks, D, 100);
 % save the figure
-print(gcf,figureName,'-dpng','-r600');
+print(gcf,figureName,'-dpng','-r300');
 
 % save data for each subplot separately
 temp_all = [curve_exp_export, curve_all_export]; 
@@ -224,7 +224,7 @@ xlim([-0.35 0.35]); box off
 set(gca,'fontsize', 20);
 
 figureName = sprintf('makeFigures/MODdegree_EMPvsMOD_%s_%s_%s.png', optimiseWhat,parcellation, hemi);
-print(gcf,figureName,'-dpng','-r600');
+print(gcf,figureName,'-dpng','-r300');
 
 % save to export
 H_exp = table(CorrLE_ALL, 'VariableNames', {'Spearman correlation'}); 
@@ -233,11 +233,11 @@ writetable(H_exp,'data_export/source_data.xlsx','Sheet',sheet_name_histo,'WriteV
 
 plot_hubsSurface_SO('HCP',degEMP(1:180),tsEMP, 'inside', 'lh');
 figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s.png', optimiseWhat, parcellation, 'inside', 'lh');
-print(gcf,figureName,'-dpng','-r600');
+print(gcf,figureName,'-dpng','-r300');
 
 plot_hubsSurface_SO('HCP',degEMP(1:180),tsEMP, 'outside', 'lh');
 figureName = sprintf('makeFigures/hubsSurface_EMP_%s_%s_%s_%s.png', optimiseWhat, parcellation, 'outside', 'lh');
-print(gcf,figureName,'-dpng','-r600');
+print(gcf,figureName,'-dpng','-r300');
 
 
 sides = {'inside'; 'outside'};
