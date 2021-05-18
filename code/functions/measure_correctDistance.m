@@ -1,4 +1,4 @@
-function [pairMeasCorr,FitCurve, c] = measure_correctDistance(pairwiseMeasure, distanceMatrix, measureName, fitType, doPlot)
+function [pairMeasCorr,FitCurve, c, data_uncorr] = measure_correctDistance(pairwiseMeasure, distanceMatrix, measureName, fitType, doPlot)
 if nargin<4
     fitType = 'exp';
     doPlot = true; 
@@ -28,18 +28,21 @@ pairMeasCorr = reshape(Residuals,[length(pairwiseMeasure) length(pairwiseMeasure
 
 % plot the distance relationship for visualisation
 if doPlot
-BF_PlotQuantiles(DISTmatrix(:),pairwiseMeasure(:),26,1,1);   ...
+[~, y_uncor, ~, x_uncor] = BF_PlotQuantiles(DISTmatrix(:),pairwiseMeasure(:),26,1,1);   ...
      xlabel('Distance between regions (mm)'); ...
      ylabel(sprintf('%s', measureName));...
      set(gca,'fontsize',18);
      ylim([-1 1]);
 hold on; scatter(DISTmatrix(:),FitCurveV,3, '.', 'r');
 
-BF_PlotQuantiles(DISTmatrix(:),pairMeasCorr(:),26,1,1);   ...
+[~, y_cor, ~, x_cor]  = BF_PlotQuantiles(DISTmatrix(:),pairMeasCorr(:),26,1,1);   ...
      xlabel('Distance between regions (mm)'); ...
      ylabel(sprintf('%s', measureName));...
      set(gca,'fontsize',18);
      ylim([-1 1]);
+     data_uncorr = table(x_uncor, y_uncor', x_cor, y_cor', 'VariableNames', {'Dist_uncorr','CGE_uncorr', 'Dist_corr','CGE_corr'}); 
 end
+
+
 
 end

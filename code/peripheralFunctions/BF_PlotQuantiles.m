@@ -1,4 +1,4 @@
-function [xThresholds,yMeans, yMedians] = BF_PlotQuantiles(xData,yData,numThresholds,alsoScatter,makeNewFigure, markerColor, doPlot)
+function [xThresholds,yMeans, yMedians, x_val] = BF_PlotQuantiles(xData,yData,numThresholds,alsoScatter,makeNewFigure, markerColor, doPlot)
 % Plots x-y scatter, but with mean of y plotted in quantiles of x
 % Ben Fulcher
 %-------------------------------------------------------------------------------
@@ -60,12 +60,20 @@ if alsoScatter
     %plot(xData,yData,'o', 'MarkerSize', 2 ,'MarkerFaceColor', [.7 .7 .7], 'MarkerEdgeColor', [.6 .6 .6]);
     plot(xData,yData,'.', 'MarkerSize', 6 ,'Color', [.5 .5 .5]); % 'MarkerEdgeColor', [.6 .6 .6]);
 end
-if doPlot
+
+x_val = nan(numThresholds-1,1);
 for k = 1:numThresholds-1
-    plot(xThresholds(k:k+1),ones(2,1)*yMeans(k),'LineStyle',theStyle,'LineWidth',theLineWidth,'Color', [.6 .6 .6]);
-    %plot(xThresholds(k:k+1),ones(2,1)*(yMeans(k)+yStds(k)),'LineStyle','--','LineWidth',theLineWidth,'MarkerFaceColor', [.59 .87 .82], 'MarkerEdgeColor', [.6 .6 .6])
-    %plot(xThresholds(k:k+1),ones(2,1)*(yMeans(k)-yStds(k)),'LineStyle','--','LineWidth',theLineWidth,'MarkerFaceColor', [.59 .87 .82], 'MarkerEdgeColor', [.6 .6 .6])
-    plot(mean(xThresholds(k:k+1)),yMeans(k),'o','MarkerSize',10,'MarkerFaceColor', markerColor, 'MarkerEdgeColor', [.6 .6 .6]); %, 'Color',theColor)
+    x_val(k) = mean(xThresholds(k:k+1));
 end
+
+if doPlot
+
+    for k = 1:numThresholds-1
+        
+        plot(xThresholds(k:k+1),ones(2,1)*yMeans(k),'LineStyle',theStyle,'LineWidth',theLineWidth,'Color', [.6 .6 .6]);
+        %plot(xThresholds(k:k+1),ones(2,1)*(yMeans(k)+yStds(k)),'LineStyle','--','LineWidth',theLineWidth,'MarkerFaceColor', [.59 .87 .82], 'MarkerEdgeColor', [.6 .6 .6])
+        %plot(xThresholds(k:k+1),ones(2,1)*(yMeans(k)-yStds(k)),'LineStyle','--','LineWidth',theLineWidth,'MarkerFaceColor', [.59 .87 .82], 'MarkerEdgeColor', [.6 .6 .6])
+        plot(mean(xThresholds(k:k+1)),yMeans(k),'o','MarkerSize',10,'MarkerFaceColor', markerColor, 'MarkerEdgeColor', [.6 .6 .6]); %, 'Color',theColor)
+    end
 end
 end

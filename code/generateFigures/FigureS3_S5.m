@@ -85,8 +85,9 @@ names_fields = {'rich', 'feeder', 'peripheral'};
 cell_ranges = {'A:C', 'D:F', 'G:I'};
 for rr=1:length(dataCell)
     
-    S_export = export_violins(dataCell{rr});
-    writetable(S_export,'data_export/source_data.xlsx','Sheet','Supplementary Fifure5a-c','Range',cell_ranges{rr},'WriteVariableNames',true);
+    S_exp = export_violins(dataCell{rr});
+    S_export = array2table(S_exp,'VariableNames',names_fields);
+    writetable(S_export,'data_export/source_data.xlsx','Sheet','Supplementary Figure5a-c','Range',cell_ranges{rr},'WriteVariableNames',true);
     
 end
 
@@ -100,7 +101,7 @@ for rr=1:length(dataCell)
     S_exp = export_violins(dataCell{rr});
     S_export = array2table(S_exp,'VariableNames',names_fields);
     
-    writetable(S_export,'data_export/source_data.xlsx','Sheet','Supplementary Fifure5d-f','Range',cell_ranges{rr},'WriteVariableNames',true);
+    writetable(S_export,'data_export/source_data.xlsx','Sheet','Supplementary Figure5d-f','Range',cell_ranges{rr},'WriteVariableNames',true);
     
 end
     
@@ -114,7 +115,7 @@ for rr=1:length(dataCell)
     
     S_exp = export_violins(dataCell{rr});
     S_export = array2table(S_exp,'VariableNames',names_fields);
-    writetable(S_export,'data_export/source_data.xlsx','Sheet','Supplementary Fifure5g-i','Range',cell_ranges{rr},'WriteVariableNames',true);
+    writetable(S_export,'data_export/source_data.xlsx','Sheet','Supplementary Figure5g-i','Range',cell_ranges{rr},'WriteVariableNames',true);
     
 end
 
@@ -126,7 +127,7 @@ figureName = sprintf('makeFigures/Heritability_WITHoutliers_%s.png', parcellatio
 print(gcf,figureName,'-dpng','-r300');
 
 % export to excell
-writetable(data_export,'data_export/source_data.xlsx','Sheet','Supplementary Figure3j-k','WriteVariableNames',true);
+writetable(data_export,'data_export/source_data.xlsx','Sheet','Supplementary Figure5k','WriteVariableNames',true);
 degree = nodeData_out';
 region = (1:360)';  
 node_degree = table(region,degree); 

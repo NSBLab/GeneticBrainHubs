@@ -26,11 +26,19 @@ nodeData = degrees_und(groupAdjlog);
 yregress = true; 
 [BBmean,microDist,distNorm, BBmpc, mp, BBskew] = getBBdata('random500', yregress);
 
-RichClubHuman(groupAdjlog,BBmpc,nodeData, 'right', plotOptions.whatDistribution, plotOptions.colorOut, plotOptions.colIn);
+[~, export_data] = RichClubHuman(groupAdjlog,BBmpc,nodeData, 'right', plotOptions.whatDistribution, plotOptions.colorOut, plotOptions.colIn);
 ylabel('Mean microstructural covariance')
 set(gcf, 'Position', [500 500 750 550])
 set(gca,'fontsize', 18);
 ylim([0.6 1.1])
+
+writetable(export_data,'data_export/source_data.xlsx','Sheet','Supplementary Figure9b','WriteVariableNames',true);
+
+degree = nodeData';
+region = (1:length(nodeData))';
+node_degree = table(region,degree);
+writetable(node_degree,'data_export/source_data.xlsx','Sheet','Supplementary Figure9b','Range','G:H','WriteVariableNames',true);
+
 
 figureName = sprintf('makeFigures/MPCmean_%s_%d.png', parc, round(op.densThreshold*100));
 print(gcf,figureName,'-dpng','-r600');

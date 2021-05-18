@@ -50,11 +50,18 @@ CGEmatrix(groupAdjlog==0) = NaN;
 
 % plot R/F/P lines for CGE
 whatTail = 'right'; 
-RichClubHuman(groupAdjlog,CGEmatrix, nodeData, whatTail, plotOptions.whatDistribution, plotOptions.colorOut, plotOptions.colIn); 
+[~, data_export] = RichClubHuman(groupAdjlog,CGEmatrix, nodeData, whatTail, plotOptions.whatDistribution, plotOptions.colorOut, plotOptions.colIn); 
 ylabel({'Mean correlated gene expression'})
 set(gcf, 'Position', [500 500 750 550])
 set(gca,'fontsize', 18);
 ylim([0.05 0.45])
+
+writetable(data_export,'data_export/source_data.xlsx','Sheet','Supplementary Figure6c','WriteVariableNames',true);
+degree = nodeData';
+region = (1:length(nodeData))';
+node_degree = table(region,degree);
+writetable(node_degree,'data_export/source_data.xlsx','Sheet','Supplementary Figure6c','Range','G:H','WriteVariableNames',true);
+
 
 figureName = sprintf('makeFigures/CGEcurves_uncorrected_%s_%d.png', parc,round(op.densThreshold*100));
 print(gcf,figureName,'-dpng','-r300');

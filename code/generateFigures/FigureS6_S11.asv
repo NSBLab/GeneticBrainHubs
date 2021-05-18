@@ -213,10 +213,11 @@ print(gcf,figureName,'-dpng','-r600');
 
 writetable(data_export_monash,'data_export/source_data.xlsx','Sheet','Supplementary Figure9a','WriteVariableNames',true);
 
-degree = nodeDataGC';
-region = (1:length(nodeDataGC))';
+degree = nodeData';
+region = (1:length(nodeData))';
 node_degree = table(region,degree);
-writetable(node_degree,'data_export/source_data.xlsx','Sheet','Supplementary Figure9a','Range','G:H','WriteVariableNames',true);
+writetable(node_degree,'data_export/source_data.xlsx','Sheet',sheet_name,'Range','G:H','WriteVariableNames',true);
+
 
 % Figure S9B - MPC as a function of degree random500 parcellation
 FigureS9(); 
@@ -231,16 +232,8 @@ Adj_worm = C.Adj_B{1,3};
 CGE_worm = G.Corr.Pearson_noLR; 
 [~,~,nodeData_worm] = degrees_dir(Adj_worm); 
 
-[~, export_worm] = RichClubCelegans(Adj_worm,CGE_worm, nodeData_worm, 'right', plotOptions.whatDistribution, plotOptions.colorOut, plotOptions.colIn); 
+RichClubCelegans(Adj_worm,CGE_worm, nodeData_worm, 'right', plotOptions.whatDistribution, plotOptions.colorOut, plotOptions.colIn); 
 ylim([0 0.5])
-
-writetable(export_worm,'data_export/source_data.xlsx','Sheet','Supplementary Figure10a','WriteVariableNames',true);
-
-degree = nodeData_worm';
-region = (1:length(nodeData_worm))';
-node_degree = table(region,degree);
-writetable(node_degree,'data_export/source_data.xlsx','Sheet','Supplementary Figure10a','Range','G:H','WriteVariableNames',true);
-
 
 figureName = sprintf('makeFigures/CGEcurves_Celegans.png');
 print(gcf,figureName,'-dpng','-r600');
@@ -251,20 +244,13 @@ Adj_mouse = allAdj;
 CGE_mouse = allLinkData; 
 
 [~,~,nodeData_mouse] = degrees_dir(Adj_mouse); 
-[~, export_mouse] = RichClubMouse(Adj_mouse,CGE_mouse, nodeData_mouse, 'right', plotOptions.whatDistribution, plotOptions.colorOut, plotOptions.colIn); 
+
+RichClubMouse(Adj_mouse,CGE_mouse, nodeData_mouse, 'right', plotOptions.whatDistribution, plotOptions.colorOut, plotOptions.colIn); 
 ylim([0 0.25])
 
 figureName = sprintf('makeFigures/CGEcurves_mouse.png');
 print(gcf,figureName,'-dpng','-r600');
 
-% export to excell
-
-writetable(export_mouse,'data_export/source_data.xlsx','Sheet','Supplementary Figure10b','WriteVariableNames',true);
-
-degree = nodeData_mouse';
-region = (1:length(nodeData_mouse))';
-node_degree = table(region,degree);
-writetable(node_degree,'data_export/source_data.xlsx','Sheet','Supplementary Figure10b','Range','G:H','WriteVariableNames',true);
 
 
 end

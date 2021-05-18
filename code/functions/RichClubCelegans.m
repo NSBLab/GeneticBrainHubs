@@ -1,4 +1,4 @@
-function getMaxVal = RichClubCelegans(Adj,pairwiseMeasure,nodeData, whatTail, whatDistribution, colorOut, colorIn)
+function [getMaxVal, data_export] = RichClubCelegans(Adj,pairwiseMeasure,nodeData, whatTail, whatDistribution, colorOut, colorIn)
 % ------------------------------------------------------------------------------
 % Function plots coexpression for rich/feeder/peripheral lins as a function
 % of degree using mean to summarise coexpression at each threshold
@@ -199,7 +199,17 @@ for j = 1:length(whatLinks)
 
     xLimits = get(gca,'xlim'); yLimits = get(gca,'ylim');
 
+    node_degree = kr'; 
+     if j==1
+         rich_links = realTrajectory;
+     elseif j==2
+         feeder_links = realTrajectory;
+     elseif j==3
+         peripheral_links = realTrajectory;
+     end
+
 end
+data_export = table(node_degree,rich_links,feeder_links,peripheral_links); 
 
 set(gcf, 'Position', [500 500 750 500])
 
