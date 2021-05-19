@@ -58,7 +58,7 @@ end
 degree = nodeData';
 region = (1:360)';  
 node_degree = table(region,degree); 
-writetable(node_degree,'data_export/source_data.xlsx','Sheet','Figure3a','WriteVariableNames',true);
+writetable(node_degree,'data_export/source_data.xlsx','Sheet','Supplementary Figure3a','WriteVariableNames',true);
 
 
 % S5 - heritability in distance ranges
